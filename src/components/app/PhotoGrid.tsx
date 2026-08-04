@@ -21,12 +21,12 @@ interface Photo {
 }
 
 const STATUS_CLS: Record<string, string> = {
-  ENHANCED:   'bg-sage-500 text-white border-sage-500',
-  PROCESSING: 'bg-sage-500 text-white border-sage-500',
-  QUEUED:     'bg-white/90 text-midnight border-white/90',
+  ENHANCED:   'bg-accent-500 text-white border-accent-500',
+  PROCESSING: 'bg-accent-500 text-white border-accent-500',
+  QUEUED:     'bg-white/90 text-charcoal border-white/90',
   FAILED:     'bg-rose-500 text-white border-rose-500',
-  UPLOADED:   'bg-midnight-900/60 text-offwhite border-white/15',
-  EXPIRED:    'bg-midnight-900/60 text-offwhite border-white/15',
+  UPLOADED:   'bg-charcoal-900/60 text-white border-white/15',
+  EXPIRED:    'bg-charcoal-900/60 text-white border-white/15',
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -94,16 +94,16 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
   if (photos.length === 0) {
     return (
       <div className="px-6 lg:px-10 py-20 flex flex-col items-center justify-center text-center max-w-sm mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-sage-50 border border-sage-100 flex items-center justify-center mb-5">
-          <ImageIcon className="w-7 h-7 text-sage-500" strokeWidth={1.5} />
+        <div className="w-16 h-16 rounded-2xl bg-accent-50 border border-accent-100 flex items-center justify-center mb-5">
+          <ImageIcon className="w-7 h-7 text-accent-500" strokeWidth={1.5} />
         </div>
-        <h2 className="font-display font-semibold text-lg text-midnight mb-2">Aucun rendu encore</h2>
-        <p className="text-midnight/50 text-sm mb-6">
-          Téléchargez une photo de votre jardin et Verdia génère un rendu photoréaliste en 60 secondes.
+        <h2 className="font-display font-semibold text-lg text-charcoal mb-2">Aucun rendu encore</h2>
+        <p className="text-charcoal/50 text-sm mb-6">
+          Téléchargez une photo de votre véhicule et CarGlow génère un rendu photoréaliste en 60 secondes.
         </p>
         <Link
           href="/app/editor"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-semibold text-sm transition-all shadow-sm shadow-sage-500/20"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm transition-all shadow-sm shadow-accent-500/20"
         >
           Générer mon premier rendu <ArrowRight className="w-4 h-4" />
         </Link>
@@ -122,7 +122,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
             <button
               key={p.id}
               onClick={() => setPreviewIdx(idx)}
-              className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-white border border-sage-100 ring-2 ring-transparent hover:ring-sage-300 hover:border-sage-300 shadow-sm hover:shadow-md hover:shadow-sage-500/10 transition-all text-left"
+              className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-white border border-accent-100 ring-2 ring-transparent hover:ring-accent-300 hover:border-accent-300 shadow-sm hover:shadow-md hover:shadow-accent-500/10 transition-all text-left"
             >
               {p.thumbnailUrl ? (
                 // Older photos still have a base64 data: URI (pre-fal.ai-storage migration) —
@@ -131,30 +131,30 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={p.thumbnailUrl}
-                    alt={p.vehicleName ?? 'Rendu jardin'}
+                    alt={p.vehicleName ?? 'Rendu véhicule'}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <Image
                     src={p.thumbnailUrl}
-                    alt={p.vehicleName ?? 'Rendu jardin'}
+                    alt={p.vehicleName ?? 'Rendu véhicule'}
                     fill
                     sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 )
               ) : (
-                <div className="absolute inset-0 bg-sage-50 flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-sage-300" strokeWidth={1.5} />
+                <div className="absolute inset-0 bg-accent-50 flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-accent-300" strokeWidth={1.5} />
                 </div>
               )}
 
-              <div className="absolute inset-0 bg-gradient-to-t from-midnight-900/90 via-midnight-900/10 to-midnight-900/30" />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/90 via-charcoal-900/10 to-charcoal-900/30" />
 
               {p.isVideo && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-midnight-900/60 backdrop-blur-md flex items-center justify-center">
-                    <Play className="w-4 h-4 text-offwhite fill-offwhite" strokeWidth={0} />
+                  <div className="w-10 h-10 rounded-full bg-charcoal-900/60 backdrop-blur-md flex items-center justify-center">
+                    <Play className="w-4 h-4 text-white fill-white" strokeWidth={0} />
                   </div>
                 </div>
               )}
@@ -175,9 +175,9 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
 
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 {p.vehicleName && (
-                  <div className="text-[13px] font-medium text-offwhite truncate">{p.vehicleName}</div>
+                  <div className="text-[13px] font-medium text-charcoal truncate">{p.vehicleName}</div>
                 )}
-                <div className="text-[11px] text-offwhite/50 mt-0.5 flex items-center gap-1.5">
+                <div className="text-[11px] text-charcoal/50 mt-0.5 flex items-center gap-1.5">
                   <span>{p.styleUsed ?? 'Personnalisé'}</span>
                   <span>·</span>
                   <span>{timeAgo(p.createdAt)}</span>
@@ -191,7 +191,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
       {/* Preview modal */}
       {preview && previewIdx !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-midnight-900/85 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-charcoal-900/85 backdrop-blur-sm"
           onClick={close}
         >
           <div
@@ -202,9 +202,9 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
             <div className="flex items-center justify-between mb-3">
               <div className="min-w-0">
                 {preview.vehicleName && (
-                  <div className="text-sm font-medium text-offwhite truncate">{preview.vehicleName}</div>
+                  <div className="text-sm font-medium text-charcoal truncate">{preview.vehicleName}</div>
                 )}
-                <div className="text-[12px] text-offwhite/50 flex items-center gap-1.5">
+                <div className="text-[12px] text-charcoal/50 flex items-center gap-1.5">
                   <span>{preview.styleUsed ?? 'Personnalisé'}</span>
                   <span>·</span>
                   <span>{timeAgo(preview.createdAt)}</span>
@@ -216,7 +216,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 {preview.status === 'ENHANCED' && !preview.isRetouch && (
                   <button
                     onClick={() => setShowMarketingKit(true)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/[0.12] hover:bg-white/[0.06] text-offwhite font-semibold text-sm transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/[0.12] hover:bg-white/[0.06] text-charcoal font-semibold text-sm transition-all"
                   >
                     <Clapperboard className="w-4 h-4" strokeWidth={2} /> Kit marketing
                   </button>
@@ -224,16 +224,16 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 {preview.fullUrl && (
                   <a
                     href={preview.fullUrl}
-                    download={`verdia-${preview.vehicleName ?? preview.id}.${preview.isVideo ? 'mp4' : 'png'}`}
+                    download={`carglow-${preview.vehicleName ?? preview.id}.${preview.isVideo ? 'mp4' : 'png'}`}
                     onClick={() => markDownloaded(preview.id)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sage-500 hover:bg-sage-600 text-midnight font-semibold text-sm transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm transition-all"
                   >
                     <Download className="w-4 h-4" strokeWidth={2} /> Télécharger
                   </a>
                 )}
                 <button
                   onClick={close}
-                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] flex items-center justify-center text-offwhite/70 hover:text-offwhite transition-colors"
+                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] flex items-center justify-center text-charcoal/70 hover:text-charcoal transition-colors"
                   aria-label="Fermer"
                 >
                   <X className="w-4 h-4" strokeWidth={2} />
@@ -249,10 +249,10 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 disabled={!hasPrev}
                 className={cn(
                   'absolute left-1 sm:left-0 sm:-translate-x-1/2 z-10 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all',
-                  'bg-midnight-800/90 border border-white/[0.12] backdrop-blur',
+                  'bg-charcoal-800/90 border border-white/[0.12] backdrop-blur',
                   hasPrev
-                    ? 'text-offwhite hover:bg-white/[0.12] hover:border-white/[0.25] cursor-pointer'
-                    : 'text-offwhite/20 cursor-not-allowed'
+                    ? 'text-charcoal hover:bg-white/[0.12] hover:border-white/[0.25] cursor-pointer'
+                    : 'text-charcoal/20 cursor-not-allowed'
                 )}
                 aria-label="Rendu précédent"
               >
@@ -260,7 +260,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
               </button>
 
               {/* Image */}
-              <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-midnight-900 flex items-center justify-center w-full">
+              <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-offwhite-300 flex items-center justify-center w-full">
                 {preview.fullUrl ? (
                   preview.isVideo ? (
                     <video
@@ -276,15 +276,15 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                     <img
                       key={preview.id}
                       src={preview.fullUrl}
-                      alt={preview.vehicleName ?? 'Rendu jardin'}
+                      alt={preview.vehicleName ?? 'Rendu véhicule'}
                       className="max-h-[75vh] w-auto object-contain"
                     />
                   )
                 ) : (
                   <div className="h-64 flex flex-col items-center justify-center gap-2 py-16">
-                    <ImageIcon className="w-10 h-10 text-offwhite/20" strokeWidth={1.5} />
+                    <ImageIcon className="w-10 h-10 text-charcoal/20" strokeWidth={1.5} />
                     {preview.status === 'EXPIRED' && (
-                      <p className="text-xs text-offwhite/40 max-w-[220px] text-center leading-relaxed">
+                      <p className="text-xs text-charcoal/40 max-w-[220px] text-center leading-relaxed">
                         Ce rendu n&apos;a pas été téléchargé dans les 30 jours et a été supprimé.
                       </p>
                     )}
@@ -298,10 +298,10 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 disabled={!hasNext}
                 className={cn(
                   'absolute right-1 sm:right-0 sm:translate-x-1/2 z-10 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all',
-                  'bg-midnight-800/90 border border-white/[0.12] backdrop-blur',
+                  'bg-charcoal-800/90 border border-white/[0.12] backdrop-blur',
                   hasNext
-                    ? 'text-offwhite hover:bg-white/[0.12] hover:border-white/[0.25] cursor-pointer'
-                    : 'text-offwhite/20 cursor-not-allowed'
+                    ? 'text-charcoal hover:bg-white/[0.12] hover:border-white/[0.25] cursor-pointer'
+                    : 'text-charcoal/20 cursor-not-allowed'
                 )}
                 aria-label="Rendu suivant"
               >

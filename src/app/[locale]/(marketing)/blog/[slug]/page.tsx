@@ -86,7 +86,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   } : null
 
   return (
-    <article className="pt-32 pb-20 bg-cream-50">
+    <article className="pt-32 pb-20 bg-offwhite">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       {faqPageLd && (
@@ -95,34 +95,34 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
       <div className="page-container max-w-3xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 text-xs text-midnight/40 mb-6" aria-label="Fil d'ariane">
-          <Link href="/" className="hover:text-midnight/70">Accueil</Link>
+        <nav className="flex items-center gap-1.5 text-xs text-charcoal/40 mb-6" aria-label="Fil d'ariane">
+          <Link href="/" className="hover:text-charcoal/70">Accueil</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-midnight/70">Blog</Link>
+          <Link href="/blog" className="hover:text-charcoal/70">Blog</Link>
           <span>/</span>
-          <span className="text-midnight/60 truncate">{title}</span>
+          <span className="text-charcoal/60 truncate">{title}</span>
         </nav>
 
-        <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm text-midnight/50 hover:text-midnight mb-8">
+        <Link href="/blog" className="inline-flex items-center gap-1.5 text-sm text-charcoal/50 hover:text-charcoal mb-8">
           <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.75} />
           Tous les articles
         </Link>
 
-        <span className="inline-block px-2.5 py-1 rounded-md bg-sage-50 border border-sage-200/60 text-sage-700 text-xs font-semibold mb-4">
+        <span className="inline-block px-2.5 py-1 rounded-md bg-accent-50 border border-accent-200/60 text-accent-700 text-xs font-semibold mb-4">
           {category}
         </span>
 
-        <h1 className="font-display font-bold text-midnight leading-[1.15] mb-5" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
+        <h1 className="font-display font-bold text-charcoal leading-[1.15] mb-5" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
           {title}
         </h1>
-        <p className="text-lg text-midnight/50 leading-relaxed mb-8">{description}</p>
+        <p className="text-lg text-charcoal/50 leading-relaxed mb-8">{description}</p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-5 border-y border-midnight/[0.08] mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-5 border-y border-charcoal/[0.08] mb-10">
           <div>
-            <p className="text-sm font-semibold text-midnight">{author}</p>
-            <p className="text-xs text-midnight/45">{authorRole}</p>
+            <p className="text-sm font-semibold text-charcoal">{author}</p>
+            <p className="text-xs text-charcoal/45">{authorRole}</p>
           </div>
-          <div className="flex flex-wrap items-center gap-4 text-xs text-midnight/45">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-charcoal/45">
             <span className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5" strokeWidth={1.75} />
               {formatDate(date)}
@@ -134,15 +134,15 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
           </div>
         </div>
 
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border border-midnight/[0.08] mb-10">
+        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border border-charcoal/[0.08] mb-10">
           <BlogImage src={image} alt={imageAlt} title={title} priority />
         </div>
 
         <ArticleBody segments={segments} />
 
-        <div className="mt-12 pt-6 border-t border-midnight/[0.08]">
-          <p className="text-sm text-midnight/45">
-            Écrit par <span className="font-semibold text-midnight/70">{author}</span> — {authorRole}
+        <div className="mt-12 pt-6 border-t border-charcoal/[0.08]">
+          <p className="text-sm text-charcoal/45">
+            Écrit par <span className="font-semibold text-charcoal/70">{author}</span> — {authorRole}
           </p>
         </div>
       </div>

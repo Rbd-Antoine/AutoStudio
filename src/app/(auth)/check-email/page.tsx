@@ -46,12 +46,12 @@ function CheckEmailContent() {
     return (
       <div className="text-center">
         <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" strokeWidth={1.5} />
-        <h1 className="font-display font-bold text-2xl text-midnight mb-2">Lien expiré</h1>
-        <p className="text-midnight/50 text-[15px] mb-6">
+        <h1 className="font-display font-bold text-2xl text-charcoal mb-2">Lien expiré</h1>
+        <p className="text-charcoal/50 text-[15px] mb-6">
           Ce lien de vérification a expiré (valable 24h). Demandez-en un nouveau.
         </p>
         <button onClick={resend} disabled={loading || sent}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-60 text-white text-sm font-semibold transition-colors">
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-60 text-white text-sm font-semibold transition-colors">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           {sent ? 'Email envoyé !' : 'Renvoyer un lien'}
         </button>
@@ -63,10 +63,10 @@ function CheckEmailContent() {
     return (
       <div className="text-center">
         <AlertCircle className="w-12 h-12 text-rose-400 mx-auto mb-4" strokeWidth={1.5} />
-        <h1 className="font-display font-bold text-2xl text-midnight mb-2">Lien invalide</h1>
-        <p className="text-midnight/50 text-[15px] mb-6">Ce lien n&apos;est pas valide.</p>
+        <h1 className="font-display font-bold text-2xl text-charcoal mb-2">Lien invalide</h1>
+        <p className="text-charcoal/50 text-[15px] mb-6">Ce lien n&apos;est pas valide.</p>
         <button onClick={resend} disabled={loading || sent}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-60 text-white text-sm font-semibold transition-colors">
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-60 text-white text-sm font-semibold transition-colors">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           {sent ? 'Email envoyé !' : 'Recevoir un nouveau lien'}
         </button>
@@ -76,29 +76,29 @@ function CheckEmailContent() {
 
   return (
     <div className="text-center">
-      <div className="w-16 h-16 rounded-2xl bg-sage-50 border border-sage-200 flex items-center justify-center mx-auto mb-5">
-        <Mail className="w-8 h-8 text-sage-500" strokeWidth={1.5} />
+      <div className="w-16 h-16 rounded-2xl bg-accent-50 border border-accent-200 flex items-center justify-center mx-auto mb-5">
+        <Mail className="w-8 h-8 text-accent-500" strokeWidth={1.5} />
       </div>
-      <h1 className="font-display font-bold text-2xl text-midnight mb-2">Vérifiez votre boîte mail</h1>
-      <p className="text-midnight/50 text-[15px] leading-relaxed mb-8">
+      <h1 className="font-display font-bold text-2xl text-charcoal mb-2">Vérifiez votre boîte mail</h1>
+      <p className="text-charcoal/50 text-[15px] leading-relaxed mb-8">
         Nous vous avons envoyé un email avec un lien de confirmation.<br />
         Cliquez dessus pour activer votre compte.
       </p>
 
-      <div className="bg-cream-50 border border-sage-100 rounded-2xl p-5 mb-6 text-left">
-        <p className="text-xs font-semibold text-midnight/40 uppercase tracking-widest mb-2">À faire</p>
-        <ol className="space-y-2 text-sm text-midnight/60">
-          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-sage-400 shrink-0" strokeWidth={2} /> Ouvrez votre boîte mail</li>
-          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-sage-400 shrink-0" strokeWidth={2} /> Cherchez un email de <strong>noreply@verdia-app.com</strong></li>
-          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-sage-400 shrink-0" strokeWidth={2} /> Cliquez sur le bouton de confirmation</li>
+      <div className="bg-offwhite border border-accent-100 rounded-2xl p-5 mb-6 text-left">
+        <p className="text-xs font-semibold text-charcoal/40 uppercase tracking-widest mb-2">À faire</p>
+        <ol className="space-y-2 text-sm text-charcoal/60">
+          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Ouvrez votre boîte mail</li>
+          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Cherchez un email de <strong>noreply@carglow-app.com</strong></li>
+          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Cliquez sur le bouton de confirmation</li>
         </ol>
       </div>
 
       {sent ? (
-        <p className="text-sm text-sage-600 font-medium mb-3">✓ Nouvel email envoyé !</p>
+        <p className="text-sm text-accent-600 font-medium mb-3">✓ Nouvel email envoyé !</p>
       ) : (
         <button onClick={resend} disabled={loading}
-          className="inline-flex items-center gap-2 text-sm text-midnight/40 hover:text-sage-600 transition-colors disabled:opacity-60">
+          className="inline-flex items-center gap-2 text-sm text-charcoal/40 hover:text-accent-600 transition-colors disabled:opacity-60">
           {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
           Renvoyer l&apos;email
         </button>
@@ -106,9 +106,9 @@ function CheckEmailContent() {
 
       {resendErr && <p className="text-xs text-rose-500 mt-2">{resendErr}</p>}
 
-      <div className="mt-8 pt-6 border-t border-midnight/[0.07]">
+      <div className="mt-8 pt-6 border-t border-charcoal/[0.07]">
         <button onClick={backToSignIn} disabled={signingOut}
-          className="text-sm text-midnight/40 hover:text-sage-600 transition-colors disabled:opacity-60">
+          className="text-sm text-charcoal/40 hover:text-accent-600 transition-colors disabled:opacity-60">
           ← Retour à la connexion
         </button>
       </div>
@@ -118,7 +118,7 @@ function CheckEmailContent() {
 
 export default function CheckEmailPage() {
   return (
-    <Suspense fallback={<div className="text-midnight/40 text-sm text-center">Chargement…</div>}>
+    <Suspense fallback={<div className="text-charcoal/40 text-sm text-center">Chargement…</div>}>
       <CheckEmailContent />
     </Suspense>
   )

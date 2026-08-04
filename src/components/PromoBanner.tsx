@@ -13,7 +13,7 @@ interface Promo {
   endDate: string
 }
 
-const DISMISS_KEY = 'verdia-promo-dismissed'
+const DISMISS_KEY = 'carglow-promo-dismissed'
 
 // Single source of truth for whether a promo is live is activePromo() in src/lib/pricing.ts —
 // this just renders whatever /api/pricing already decided. Dismissing hides it for the
@@ -56,25 +56,25 @@ export function PromoBanner({ ctaHref }: { ctaHref: string }) {
   }
 
   return (
-    <div className="relative bg-midnight text-offwhite">
+    <div className="relative bg-offwhite text-charcoal">
       <div className="page-container flex items-center justify-center gap-2 sm:gap-3 py-2.5 pr-8 text-[13px] sm:text-sm flex-wrap text-center">
-        <Sparkles className="w-4 h-4 text-sage-300 shrink-0" strokeWidth={2} />
+        <Sparkles className="w-4 h-4 text-accent-300 shrink-0" strokeWidth={2} />
         <span className="font-semibold">{promo.label}</span>
-        <span className="text-offwhite/50 hidden sm:inline">·</span>
+        <span className="text-charcoal/50 hidden sm:inline">·</span>
         <span>
-          <span className="line-through text-offwhite/40 mr-1">{promo.originalPrice}€</span>
-          <span className="font-bold text-sage-300">{promo.discountedPrice}€/mois</span> la 1ère année
+          <span className="line-through text-charcoal/40 mr-1">{promo.originalPrice}€</span>
+          <span className="font-bold text-accent-300">{promo.discountedPrice}€/mois</span> la 1ère année
         </span>
-        <span className="text-offwhite/50 hidden sm:inline">·</span>
+        <span className="text-charcoal/50 hidden sm:inline">·</span>
         <button
           onClick={copyCode}
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/15 border border-white/15 font-mono text-xs transition-colors"
           aria-label="Copier le code promo"
         >
-          {copied ? <Check className="w-3 h-3 text-sage-300" /> : <Copy className="w-3 h-3 text-offwhite/60" />}
+          {copied ? <Check className="w-3 h-3 text-accent-300" /> : <Copy className="w-3 h-3 text-charcoal/60" />}
           {promo.code}
         </button>
-        {endDateLabel && <span className="text-offwhite/40 text-xs hidden md:inline">jusqu&apos;au {endDateLabel}</span>}
+        {endDateLabel && <span className="text-charcoal/40 text-xs hidden md:inline">jusqu&apos;au {endDateLabel}</span>}
         {/* Plain <a>, not next/link — this component renders inside both the marketing site
             (locale-prefixed routes, e.g. /fr/pricing) and the app shell (/app/* explicitly
             bypasses locale routing in middleware.ts), so no single Link helper is correct for
@@ -82,7 +82,7 @@ export function PromoBanner({ ctaHref }: { ctaHref: string }) {
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href={ctaHref}
-          className="ml-1 inline-flex items-center px-3 py-1 rounded-lg bg-sage-500 hover:bg-sage-400 text-midnight font-semibold text-xs transition-colors"
+          className="ml-1 inline-flex items-center px-3 py-1 rounded-lg bg-accent-500 hover:bg-accent-400 text-white font-semibold text-xs transition-colors"
         >
           En profiter
         </a>
@@ -91,7 +91,7 @@ export function PromoBanner({ ctaHref }: { ctaHref: string }) {
         onClick={dismiss}
         aria-label="Masquer"
         className={cn(
-          'absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-offwhite/40 hover:text-offwhite hover:bg-white/10 transition-colors',
+          'absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-charcoal/40 hover:text-charcoal hover:bg-white/10 transition-colors',
         )}
       >
         <X className="w-4 h-4" />

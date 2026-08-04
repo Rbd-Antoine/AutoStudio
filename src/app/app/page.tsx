@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   const creditsRemaining = workspace.monthlyCredits + workspace.bonusCredits
 
   return (
-    <div className="pb-24 lg:pb-12 bg-cream-50 min-h-screen">
+    <div className="pb-24 lg:pb-12 bg-offwhite min-h-screen">
 
       {/* No-credits banner */}
       {creditsRemaining === 0 && (
@@ -58,20 +58,20 @@ export default async function DashboardPage() {
       )}
 
       {/* Header */}
-      <section className="border-b border-sage-100 bg-gradient-to-b from-sage-50 to-transparent">
+      <section className="border-b border-accent-100 bg-gradient-to-b from-accent-50 to-transparent">
         <div className="px-6 lg:px-10 py-8 lg:py-10 max-w-[1480px]">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-midnight">
+              <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-charcoal">
                 Tableau de bord
               </h1>
-              <p className="text-midnight/45 mt-2 text-[15px]">
-                <span className="text-sage-700 font-semibold">{creditsRemaining.toLocaleString()}</span> crédits restants
+              <p className="text-charcoal/45 mt-2 text-[15px]">
+                <span className="text-accent-700 font-semibold">{creditsRemaining.toLocaleString()}</span> crédits restants
               </p>
             </div>
             <Link
               href="/app/editor"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-semibold text-sm transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm transition-all"
             >
               <Leaf className="w-4 h-4" /> Générer un rendu
             </Link>
@@ -87,36 +87,36 @@ export default async function DashboardPage() {
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
-          <div className="rounded-2xl border border-sage-100 bg-white px-5 py-4 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-sage-50 border border-sage-200/60 flex items-center justify-center shrink-0">
-              <ImageIcon className="w-5 h-5 text-sage-500" strokeWidth={1.75} />
+          <div className="rounded-2xl border border-accent-100 bg-white px-5 py-4 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-accent-50 border border-accent-200/60 flex items-center justify-center shrink-0">
+              <ImageIcon className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
             </div>
             <div>
-              <p className="font-display font-bold text-xl text-midnight leading-none">{totalRenders}</p>
-              <p className="text-xs text-midnight/45 mt-1">Rendu{totalRenders !== 1 ? 's' : ''} généré{totalRenders !== 1 ? 's' : ''} au total</p>
+              <p className="font-display font-bold text-xl text-charcoal leading-none">{totalRenders}</p>
+              <p className="text-xs text-charcoal/45 mt-1">Rendu{totalRenders !== 1 ? 's' : ''} généré{totalRenders !== 1 ? 's' : ''} au total</p>
             </div>
           </div>
-          <div className="rounded-2xl border border-sage-100 bg-white px-5 py-4 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-sage-50 border border-sage-200/60 flex items-center justify-center shrink-0">
-              <Clock3 className="w-5 h-5 text-sage-500" strokeWidth={1.75} />
+          <div className="rounded-2xl border border-accent-100 bg-white px-5 py-4 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-accent-50 border border-accent-200/60 flex items-center justify-center shrink-0">
+              <Clock3 className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
             </div>
             <div>
-              <p className="font-display font-bold text-xl text-midnight leading-none">{creditsRemaining.toLocaleString()}</p>
-              <p className="text-xs text-midnight/45 mt-1">Crédits restants</p>
+              <p className="font-display font-bold text-xl text-charcoal leading-none">{creditsRemaining.toLocaleString()}</p>
+              <p className="text-xs text-charcoal/45 mt-1">Crédits restants</p>
             </div>
           </div>
         </div>
 
         {/* Library */}
-        <section className="rounded-2xl border border-sage-100 bg-white overflow-hidden shadow-sm">
-          <header className="flex items-center justify-between px-5 py-4 border-b border-sage-100 gap-3">
+        <section className="rounded-2xl border border-accent-100 bg-white overflow-hidden shadow-sm">
+          <header className="flex items-center justify-between px-5 py-4 border-b border-accent-100 gap-3">
             <div>
-              <h2 className="font-display font-semibold text-[15px] text-midnight">Mes 3 derniers rendus</h2>
-              <p className="text-[11px] text-midnight/40 mt-0.5">
+              <h2 className="font-display font-semibold text-[15px] text-charcoal">Mes 3 derniers rendus</h2>
+              <p className="text-[11px] text-charcoal/40 mt-0.5">
                 Un rendu non téléchargé est automatiquement supprimé après 30 jours.
               </p>
             </div>
-            <Link href="/app/library" className="text-[12px] text-sage-600 hover:text-sage-700 inline-flex items-center gap-1 font-medium shrink-0">
+            <Link href="/app/library" className="text-[12px] text-accent-600 hover:text-accent-700 inline-flex items-center gap-1 font-medium shrink-0">
               Voir tout <ArrowRight className="w-3 h-3" />
             </Link>
           </header>

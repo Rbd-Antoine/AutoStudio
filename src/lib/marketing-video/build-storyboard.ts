@@ -42,7 +42,7 @@ export function buildStoryboardFromPhoto(
     width,
     height,
     accentColor: options.accentColor?.trim() || brandKit.primaryColor,
-    endText: options.endText?.trim() || 'Transformez votre jardin.',
+    endText: options.endText?.trim() || 'Prêt pour la route.',
     ctaText: options.ctaText?.trim() || 'Demandez votre devis.',
     logoUrl: options.logoUrl?.trim() || brandKit.logoUrl,
     businessName: options.businessName?.trim() || brandKit.businessName,

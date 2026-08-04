@@ -21,7 +21,7 @@ export function generateMetadata(): Metadata {
       title: frontmatter.title,
       description: frontmatter.ogDescription,
       url,
-      images: [{ url: '/blog/images/rendu-ia-jardin-comparaison.webp', alt: frontmatter.title }],
+      images: [{ url: '/blog/images/rendu-ia-voiture-comparaison.webp', alt: frontmatter.title }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -73,13 +73,13 @@ export default function GuidePage() {
   const howToLd = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    name: 'Comment créer un rendu de jardin avec Verdia',
+    name: 'Comment créer un rendu de véhicule avec CarGlow',
     description: frontmatter.description,
     step: howToSteps,
   }
 
   return (
-    <div className="pt-32 pb-20 bg-cream-50">
+    <div className="pt-32 pb-20 bg-offwhite">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToLd) }} />
       {faqPageLd && (
@@ -87,19 +87,19 @@ export default function GuidePage() {
       )}
 
       <div className="page-container max-w-6xl">
-        <nav className="flex items-center gap-1.5 text-xs text-midnight/40 mb-6" aria-label="Fil d'ariane">
-          <Link href="/" className="hover:text-midnight/70">Accueil</Link>
+        <nav className="flex items-center gap-1.5 text-xs text-charcoal/40 mb-6" aria-label="Fil d'ariane">
+          <Link href="/" className="hover:text-charcoal/70">Accueil</Link>
           <span>/</span>
-          <span className="text-midnight/60">Guide</span>
+          <span className="text-charcoal/60">Guide</span>
         </nav>
 
         <div className="max-w-2xl mb-10">
           <p className="eyebrow mb-3">Guide utilisateur</p>
-          <h1 className="font-display font-bold text-midnight mb-4" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
-            De la photo au rendu<br /><span className="text-gradient">qui fait signer.</span>
+          <h1 className="font-display font-bold text-charcoal mb-4" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
+            De la photo au rendu<br /><span className="text-gradient">qui fait vendre.</span>
           </h1>
-          <p className="text-midnight/50 text-lg leading-relaxed mb-4">{frontmatter.description}</p>
-          <div className="flex items-center gap-4 text-xs text-midnight/40">
+          <p className="text-charcoal/50 text-lg leading-relaxed mb-4">{frontmatter.description}</p>
+          <div className="flex items-center gap-4 text-xs text-charcoal/40">
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" strokeWidth={1.75} />
               {frontmatter.readingTime} min de lecture

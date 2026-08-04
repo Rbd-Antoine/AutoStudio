@@ -51,15 +51,15 @@ export default function AdminReviewsPage() {
   }
 
   if (state === 'loading') {
-    return <div className="p-10 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-sage-400" /></div>
+    return <div className="p-10 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-accent-400" /></div>
   }
 
   if (state === 'forbidden') {
     return (
       <div className="p-10 flex flex-col items-center text-center gap-3 max-w-md mx-auto mt-16">
         <ShieldAlert className="w-8 h-8 text-rose-400" />
-        <p className="font-display font-semibold text-midnight">Accès réservé</p>
-        <p className="text-sm text-midnight/50">Cette page est réservée aux administrateurs.</p>
+        <p className="font-display font-semibold text-charcoal">Accès réservé</p>
+        <p className="text-sm text-charcoal/50">Cette page est réservée aux administrateurs.</p>
       </div>
     )
   }
@@ -72,12 +72,12 @@ export default function AdminReviewsPage() {
   const approved = reviews.filter(r => r.approved)
 
   return (
-    <div className="pb-24 lg:pb-12 bg-cream-50 min-h-screen">
-      <section className="border-b border-sage-100 bg-gradient-to-b from-sage-50 to-transparent">
+    <div className="pb-24 lg:pb-12 bg-offwhite min-h-screen">
+      <section className="border-b border-accent-100 bg-gradient-to-b from-accent-50 to-transparent">
         <div className="px-6 lg:px-10 py-8 lg:py-10 max-w-[1000px]">
-          <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-sage-600/80 mb-2">Administration</div>
-          <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-midnight">Avis clients</h1>
-          <p className="text-midnight/45 mt-2 text-[15px]">
+          <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-600/80 mb-2">Administration</div>
+          <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-charcoal">Avis clients</h1>
+          <p className="text-charcoal/45 mt-2 text-[15px]">
             {pending.length} en attente · {approved.length} publié{approved.length > 1 ? 's' : ''}
           </p>
         </div>
@@ -85,12 +85,12 @@ export default function AdminReviewsPage() {
 
       <section className="px-6 lg:px-10 py-8 max-w-[1000px] space-y-10">
         {reviews.length === 0 && (
-          <p className="text-sm text-midnight/45">Aucun avis pour l&apos;instant.</p>
+          <p className="text-sm text-charcoal/45">Aucun avis pour l&apos;instant.</p>
         )}
 
         {pending.length > 0 && (
           <div>
-            <h2 className="font-display font-semibold text-sm text-midnight/70 uppercase tracking-wide mb-3">En attente de validation</h2>
+            <h2 className="font-display font-semibold text-sm text-charcoal/70 uppercase tracking-wide mb-3">En attente de validation</h2>
             <div className="space-y-3">
               {pending.map(r => <ReviewCard key={r.id} r={r} onApprove={() => setApproved(r.id, true)} onRemove={() => remove(r.id)} />)}
             </div>
@@ -99,7 +99,7 @@ export default function AdminReviewsPage() {
 
         {approved.length > 0 && (
           <div>
-            <h2 className="font-display font-semibold text-sm text-midnight/70 uppercase tracking-wide mb-3">Publiés</h2>
+            <h2 className="font-display font-semibold text-sm text-charcoal/70 uppercase tracking-wide mb-3">Publiés</h2>
             <div className="space-y-3">
               {approved.map(r => <ReviewCard key={r.id} r={r} onUnpublish={() => setApproved(r.id, false)} onRemove={() => remove(r.id)} />)}
             </div>
@@ -119,11 +119,11 @@ function ReviewCard({ r, onApprove, onUnpublish, onRemove }: {
   return (
     <div className={cn(
       'rounded-2xl border bg-white shadow-sm p-5',
-      r.approved ? 'border-sage-200' : 'border-sage-100',
+      r.approved ? 'border-accent-200' : 'border-accent-100',
     )}>
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex items-center gap-1">
-          {Array.from({ length: r.stars }).map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-sage-500 fill-sage-500" />)}
+          {Array.from({ length: r.stars }).map((_, i) => <Star key={i} className="w-3.5 h-3.5 text-accent-500 fill-accent-500" />)}
         </div>
         <span className={cn(
           'text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border',
@@ -132,26 +132,26 @@ function ReviewCard({ r, onApprove, onUnpublish, onRemove }: {
           {r.approved ? 'Publié' : 'En attente'}
         </span>
       </div>
-      <p className="text-sm text-midnight/80 leading-relaxed mb-3">&ldquo;{r.quote}&rdquo;</p>
+      <p className="text-sm text-charcoal/80 leading-relaxed mb-3">&ldquo;{r.quote}&rdquo;</p>
       <div className="flex items-center justify-between gap-4">
-        <div className="text-xs text-midnight/45">
-          <span className="font-semibold text-midnight/70">{r.displayName}</span>
+        <div className="text-xs text-charcoal/45">
+          <span className="font-semibold text-charcoal/70">{r.displayName}</span>
           {r.role && <> · {r.role}</>}
           {r.location && <> · {r.location}</>}
           <span className="block mt-0.5">{r.email} · {new Date(r.createdAt).toLocaleDateString('fr-FR')}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {onApprove && (
-            <button onClick={onApprove} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-sage-500 hover:bg-sage-600 text-white text-xs font-semibold transition-colors">
+            <button onClick={onApprove} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-xs font-semibold transition-colors">
               <Check className="w-3.5 h-3.5" /> Publier
             </button>
           )}
           {onUnpublish && (
-            <button onClick={onUnpublish} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-midnight/[0.12] hover:border-midnight/[0.25] text-midnight/60 text-xs font-semibold transition-colors">
+            <button onClick={onUnpublish} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-charcoal/[0.12] hover:border-charcoal/[0.25] text-charcoal/60 text-xs font-semibold transition-colors">
               <X className="w-3.5 h-3.5" /> Dépublier
             </button>
           )}
-          <button onClick={onRemove} aria-label="Supprimer" className="p-1.5 rounded-lg text-midnight/30 hover:text-rose-500 hover:bg-rose-50 transition-colors">
+          <button onClick={onRemove} aria-label="Supprimer" className="p-1.5 rounded-lg text-charcoal/30 hover:text-rose-500 hover:bg-rose-50 transition-colors">
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>

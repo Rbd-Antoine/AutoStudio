@@ -38,26 +38,26 @@ function ContactForm() {
     }
   }
 
-  const inputCls = 'w-full bg-cream-50 border border-sage-200 rounded-xl px-4 py-3 text-base text-midnight placeholder:text-midnight/30 focus:outline-none focus:border-sage-400 focus:ring-2 focus:ring-sage-100 transition-all'
-  const labelCls = 'text-xs font-semibold text-midnight/50 uppercase tracking-widest mb-1.5 block'
+  const inputCls = 'w-full bg-offwhite border border-accent-200 rounded-xl px-4 py-3 text-base text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition-all'
+  const labelCls = 'text-xs font-semibold text-charcoal/50 uppercase tracking-widest mb-1.5 block'
 
   return (
     <div className="min-h-screen bg-white">
       <div className="page-container max-w-2xl py-32">
 
         <p className="eyebrow mb-3">Contact</p>
-        <h1 className="font-display font-bold text-midnight mb-3" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
+        <h1 className="font-display font-bold text-charcoal mb-3" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
           Une question ?<br /><span className="text-gradient">Écrivez-nous.</span>
         </h1>
-        <p className="text-midnight/50 text-[15px] leading-relaxed mb-10">
+        <p className="text-charcoal/50 text-[15px] leading-relaxed mb-10">
           Demande commerciale, support technique ou partenariat — nous répondons sous 24h.
         </p>
 
         {status === 'success' ? (
-          <div className="rounded-3xl border border-sage-200 bg-sage-50 p-10 text-center">
-            <CheckCircle className="w-12 h-12 text-sage-500 mx-auto mb-4" strokeWidth={1.5} />
-            <h2 className="font-display font-semibold text-xl text-midnight mb-2">Message envoyé !</h2>
-            <p className="text-midnight/50 text-sm">Nous vous répondrons dans les 24h.</p>
+          <div className="rounded-3xl border border-accent-200 bg-accent-50 p-10 text-center">
+            <CheckCircle className="w-12 h-12 text-accent-500 mx-auto mb-4" strokeWidth={1.5} />
+            <h2 className="font-display font-semibold text-xl text-charcoal mb-2">Message envoyé !</h2>
+            <p className="text-charcoal/50 text-sm">Nous vous répondrons dans les 24h.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -106,7 +106,7 @@ function ContactForm() {
             )}
 
             <button type="submit" disabled={status === 'loading'}
-              className="inline-flex items-center justify-center gap-2 py-4 rounded-2xl bg-sage-500 hover:bg-sage-600 text-white font-semibold text-sm shadow-sage-sm hover:shadow-sage-md transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+              className="inline-flex items-center justify-center gap-2 py-4 rounded-2xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm shadow-accent-sm hover:shadow-accent-md transition-all disabled:opacity-60 disabled:cursor-not-allowed">
               {status === 'loading' ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours…</>
               ) : (

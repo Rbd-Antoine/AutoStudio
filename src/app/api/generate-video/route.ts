@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
-import { GARDEN_STYLES, buildVideoPrompt } from '@/lib/gardenPrompts'
+import { CAR_STYLES, buildVideoPrompt } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
 import { uploadBase64WithFallback, uploadBufferWithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
@@ -104,12 +104,12 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const style = GARDEN_STYLES[styleSlug] ?? GARDEN_STYLES['gazon-fleurs']
+  const style = CAR_STYLES[styleSlug] ?? CAR_STYLES['studio-blanc']
 
   const photo = await db.photo.create({
     data: {
       workspaceId,
-      originalUrl: 'jardin-direct-upload',
+      originalUrl: 'car-direct-upload',
       status: 'PROCESSING',
       styleUsed: styleSlug,
       toolsUsed: ['gemini_image_generation', 'veo_video_generation'],
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
     // right before the final DB write — its latency is fully absorbed by the video generation.
     const originalUrlPromise = uploadBase64WithFallback(imageData, mimeType ?? 'image/jpeg', `original-${photo.id}.jpg`)
 
-    // Step 1: style the garden with Gemini image generation (same as /api/generate)
+    // Step 1: style the vehicle's background with Gemini image generation (same as /api/generate)
     const styled = await generateStyledImage(apiKey, imageData, mimeType ?? 'image/jpeg', style, characteristics)
 
     // Step 2: animate the styled image with Veo — no restyling, motion only

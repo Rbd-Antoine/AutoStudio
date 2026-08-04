@@ -4,7 +4,7 @@ import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayou
 
 export const metadata: Metadata = {
   title: 'Politique de cookies',
-  description: 'Quels cookies Verdia utilise et pourquoi.',
+  description: 'Quels cookies CarGlow utilise et pourquoi.',
 }
 
 export default function CookiesPage() {
@@ -19,7 +19,7 @@ export default function CookiesPage() {
       </LegalSection>
 
       <LegalSection title="Pourquoi nous utilisons des cookies">
-        <p>Verdia utilise des cookies afin :</p>
+        <p>CarGlow utilise des cookies afin :</p>
         <ul>
           <li>d&apos;assurer le fonctionnement du site ;</li>
           <li>de maintenir la session utilisateur ;</li>
@@ -41,7 +41,7 @@ export default function CookiesPage() {
       <LegalSection title="Contact">
         <p>
           Pour toute question, écrivez à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.
-          Voir aussi notre <Link href="/legal/privacy" className="text-sage-600 underline underline-offset-2 hover:text-sage-700">politique de confidentialité</Link>.
+          Voir aussi notre <Link href="/legal/privacy" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de confidentialité</Link>.
         </p>
       </LegalSection>
     </LegalPageLayout>

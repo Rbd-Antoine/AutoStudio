@@ -4,36 +4,37 @@ import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayou
 
 export const metadata: Metadata = {
   title: 'Conditions générales',
-  description: "Conditions générales d'utilisation et de vente de Verdia.",
+  description: "Conditions générales d'utilisation et de vente de CarGlow.",
 }
 
 export default function TermsPage() {
   return (
     <LegalPageLayout eyebrow="Conditions générales" title="Conditions générales d'utilisation et de vente" updated="17 juillet 2026">
       <LegalSection n="1" title="Éditeur">
-        <p>Verdia est exploité par une entreprise individuelle.</p>
+        <p>CarGlow est exploité par une entreprise individuelle.</p>
         <p>
-          <strong className="text-midnight/80 font-semibold">Adresse :</strong><br />
+          <strong className="text-charcoal/80 font-semibold">Adresse :</strong><br />
           201 Rua Saraiva de Carvalho<br />
           1250-247 Lisbonne<br />
           Portugal
         </p>
         <p>
-          <strong className="text-midnight/80 font-semibold">Contact :</strong>{' '}
+          <strong className="text-charcoal/80 font-semibold">Contact :</strong>{' '}
           <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>
         </p>
       </LegalSection>
 
       <LegalSection n="2" title="Objet du service">
         <p>
-          Verdia est une plateforme SaaS destinée aux professionnels du paysage permettant de générer, grâce à
-          l&apos;intelligence artificielle, des rendus photoréalistes, des propositions d&apos;aménagement, des
-          vidéos et d&apos;autres contenus visuels à partir de photographies fournies par l&apos;utilisateur.
+          CarGlow est une plateforme SaaS destinée aux professionnels de l&apos;automobile permettant de générer,
+          grâce à l&apos;intelligence artificielle, des arrière-plans photoréalistes, du masquage de plaque
+          d&apos;immatriculation, des vidéos et d&apos;autres contenus visuels à partir de photographies de
+          véhicules fournies par l&apos;utilisateur.
         </p>
       </LegalSection>
 
       <LegalSection n="3" title="Acceptation">
-        <p>L&apos;utilisation de Verdia implique l&apos;acceptation sans réserve des présentes conditions.</p>
+        <p>L&apos;utilisation de CarGlow implique l&apos;acceptation sans réserve des présentes conditions.</p>
         <p>Si l&apos;utilisateur n&apos;accepte pas ces conditions, il ne doit pas utiliser le service.</p>
       </LegalSection>
 
@@ -45,7 +46,7 @@ export default function TermsPage() {
           <li>de toute activité réalisée depuis son compte.</li>
         </ul>
         <p>
-          Verdia peut suspendre ou supprimer un compte en cas de fraude, d&apos;utilisation abusive, de tentative
+          CarGlow peut suspendre ou supprimer un compte en cas de fraude, d&apos;utilisation abusive, de tentative
           de piratage ou de violation des présentes conditions.
         </p>
       </LegalSection>
@@ -55,13 +56,13 @@ export default function TermsPage() {
         <ul>
           <li>disposer des droits nécessaires sur les photographies importées ;</li>
           <li>ne pas importer de contenus illicites, diffamatoires, haineux ou portant atteinte aux droits de tiers ;</li>
-          <li>utiliser Verdia uniquement dans un cadre légal.</li>
+          <li>utiliser CarGlow uniquement dans un cadre légal.</li>
         </ul>
         <p>Il est interdit de tenter de contourner les limitations techniques ou de perturber le fonctionnement du service.</p>
       </LegalSection>
 
       <LegalSection n="6" title="Intelligence artificielle">
-        <p>Verdia utilise notamment les modèles d&apos;intelligence artificielle de Google Gemini afin de générer les contenus demandés.</p>
+        <p>CarGlow utilise notamment les modèles d&apos;intelligence artificielle de Google Gemini afin de générer les contenus demandés.</p>
         <p>Les résultats produits sont générés automatiquement et peuvent contenir des erreurs, imprécisions ou différences par rapport aux attentes.</p>
         <p>Les rendus sont fournis uniquement comme aide à la conception et à la visualisation.</p>
         <p>Ils ne constituent pas :</p>
@@ -76,7 +77,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="7" title="Propriété intellectuelle">
-        <p>Verdia demeure propriétaire :</p>
+        <p>CarGlow demeure propriétaire :</p>
         <ul>
           <li>du logiciel ;</li>
           <li>du site internet ;</li>
@@ -101,12 +102,12 @@ export default function TermsPage() {
 
       <LegalSection n="9" title="Paiement">
         <p>Les paiements sont traités exclusivement par Stripe.</p>
-        <p>Verdia n&apos;a jamais accès aux numéros de cartes bancaires.</p>
+        <p>CarGlow n&apos;a jamais accès aux numéros de cartes bancaires.</p>
         <p>En cas d&apos;échec de paiement, l&apos;accès aux fonctionnalités payantes peut être suspendu.</p>
       </LegalSection>
 
       <LegalSection n="10" title="Disponibilité">
-        <p>Verdia s&apos;efforce d&apos;assurer une disponibilité maximale.</p>
+        <p>CarGlow s&apos;efforce d&apos;assurer une disponibilité maximale.</p>
         <p>Toutefois, aucune disponibilité permanente n&apos;est garantie.</p>
         <p>Des interruptions peuvent intervenir pour :</p>
         <ul>
@@ -118,7 +119,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="11" title="Limitation de responsabilité">
-        <p>Dans les limites autorisées par la loi, Verdia ne pourra être tenu responsable notamment :</p>
+        <p>Dans les limites autorisées par la loi, CarGlow ne pourra être tenu responsable notamment :</p>
         <ul>
           <li>des pertes d&apos;exploitation ;</li>
           <li>de la perte de clientèle ;</li>
@@ -126,11 +127,11 @@ export default function TermsPage() {
           <li>d&apos;une erreur de conception réalisée par l&apos;utilisateur ;</li>
           <li>de pertes indirectes ou immatérielles.</li>
         </ul>
-        <p>La responsabilité maximale de Verdia est limitée au montant effectivement payé par l&apos;utilisateur au cours des douze derniers mois.</p>
+        <p>La responsabilité maximale de CarGlow est limitée au montant effectivement payé par l&apos;utilisateur au cours des douze derniers mois.</p>
       </LegalSection>
 
       <LegalSection n="12" title="Protection des données">
-        <p>Verdia respecte le Règlement Général sur la Protection des Données (RGPD).</p>
+        <p>CarGlow respecte le Règlement Général sur la Protection des Données (RGPD).</p>
         <p>Les données peuvent comprendre notamment :</p>
         <ul>
           <li>nom ;</li>
@@ -141,17 +142,17 @@ export default function TermsPage() {
           <li>informations relatives aux abonnements.</li>
         </ul>
         <p>Les données bancaires sont exclusivement traitées par Stripe.</p>
-        <p>Pour le détail des traitements, consultez notre <Link href="/legal/privacy" className="text-sage-600 underline underline-offset-2 hover:text-sage-700">politique de confidentialité</Link>.</p>
+        <p>Pour le détail des traitements, consultez notre <Link href="/legal/privacy" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de confidentialité</Link>.</p>
       </LegalSection>
 
       <LegalSection n="13" title="Utilisation des images">
         <p>Les images envoyées par l&apos;utilisateur sont utilisées uniquement afin de produire les rendus demandés.</p>
         <p>Selon la fonctionnalité utilisée, elles peuvent être transmises de manière sécurisée à Google Gemini pour permettre la génération des contenus.</p>
-        <p>Verdia ne revendique aucun droit de propriété sur les photographies importées.</p>
+        <p>CarGlow ne revendique aucun droit de propriété sur les photographies importées.</p>
       </LegalSection>
 
       <LegalSection n="14" title="Prestataires">
-        <p>Verdia utilise différents prestataires techniques, notamment :</p>
+        <p>CarGlow utilise différents prestataires techniques, notamment :</p>
         <ul>
           <li>Google Gemini pour la génération de contenus IA ;</li>
           <li>Stripe pour les paiements ;</li>
@@ -183,7 +184,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="17" title="Cookies">
-        <p>Verdia utilise des cookies afin :</p>
+        <p>CarGlow utilise des cookies afin :</p>
         <ul>
           <li>d&apos;assurer le fonctionnement du site ;</li>
           <li>de maintenir la session utilisateur ;</li>
@@ -192,17 +193,17 @@ export default function TermsPage() {
         </ul>
         <p>
           Les cookies non essentiels sont soumis au consentement de l&apos;utilisateur lorsque la réglementation
-          l&apos;exige. Voir notre <Link href="/legal/cookies" className="text-sage-600 underline underline-offset-2 hover:text-sage-700">politique de cookies</Link>.
+          l&apos;exige. Voir notre <Link href="/legal/cookies" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de cookies</Link>.
         </p>
       </LegalSection>
 
       <LegalSection n="18" title="Sécurité">
-        <p>Verdia met en œuvre des mesures techniques et organisationnelles raisonnables afin de protéger les données contre toute perte, accès non autorisé ou divulgation.</p>
-        <p>Aucun système informatique ne pouvant garantir une sécurité absolue, Verdia ne peut toutefois garantir une protection totale contre tous les risques.</p>
+        <p>CarGlow met en œuvre des mesures techniques et organisationnelles raisonnables afin de protéger les données contre toute perte, accès non autorisé ou divulgation.</p>
+        <p>Aucun système informatique ne pouvant garantir une sécurité absolue, CarGlow ne peut toutefois garantir une protection totale contre tous les risques.</p>
       </LegalSection>
 
       <LegalSection n="19" title="Suspension ou résiliation">
-        <p>Verdia peut suspendre immédiatement un compte en cas :</p>
+        <p>CarGlow peut suspendre immédiatement un compte en cas :</p>
         <ul>
           <li>d&apos;utilisation frauduleuse ;</li>
           <li>de tentative de piratage ;</li>

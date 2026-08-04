@@ -50,7 +50,7 @@ const ERROR_META: Record<string, { title: string; description: string }> = {
 
 export default function AuthErrorPage() {
   return (
-    <Suspense fallback={<div className="text-center text-offwhite/55">Loading…</div>}>
+    <Suspense fallback={<div className="text-center text-charcoal/55">Loading…</div>}>
       <ErrorContent />
     </Suspense>
   )
@@ -71,25 +71,25 @@ function ErrorContent() {
         {meta.title}
       </h1>
       <p
-        className="text-offwhite/65 mt-3 text-[15px] max-w-sm mx-auto"
+        className="text-charcoal/65 mt-3 text-[15px] max-w-sm mx-auto"
         dangerouslySetInnerHTML={{ __html: meta.description }}
       />
 
-      <div className="mt-2 text-[11px] uppercase tracking-widest text-offwhite/35 font-mono">
+      <div className="mt-2 text-[11px] uppercase tracking-widest text-charcoal/35 font-mono">
         Code: {errorKey}
       </div>
 
       <div className="mt-8 flex flex-col gap-2">
         <Link
           href="/signin"
-          className="rounded-lg bg-sage-500 hover:bg-sage-600 text-midnight px-4 py-2.5 text-sm font-semibold shadow-sage-md inline-flex items-center justify-center gap-1.5"
+          className="rounded-lg bg-accent-500 hover:bg-accent-600 text-white px-4 py-2.5 text-sm font-semibold shadow-accent-md inline-flex items-center justify-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
           Back to sign in
         </Link>
         <Link
           href="/support"
-          className="text-xs text-offwhite/55 hover:text-offwhite py-2 inline-flex items-center justify-center gap-1.5"
+          className="text-xs text-charcoal/55 hover:text-charcoal py-2 inline-flex items-center justify-center gap-1.5"
         >
           <LifeBuoy className="w-3.5 h-3.5" strokeWidth={1.75} />
           Contact support

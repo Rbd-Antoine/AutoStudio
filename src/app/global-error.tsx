@@ -20,15 +20,15 @@ export default function GlobalError({
 
   return (
     <html lang="fr">
-      <body className="bg-cream-50 text-midnight antialiased">
+      <body className="bg-offwhite text-charcoal antialiased">
         <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center gap-4">
           <h1 className="font-bold text-2xl">Une erreur est survenue</h1>
-          <p className="text-midnight/50 max-w-md">
+          <p className="text-charcoal/50 max-w-md">
             Notre équipe a été notifiée. Réessayez, ou revenez à l&apos;accueil si le problème persiste.
           </p>
           <button
             onClick={reset}
-            className="rounded-xl bg-sage-500 hover:bg-sage-600 text-white px-5 py-2.5 font-semibold text-sm transition-colors"
+            className="rounded-xl bg-accent-500 hover:bg-accent-600 text-white px-5 py-2.5 font-semibold text-sm transition-colors"
           >
             Réessayer
           </button>

@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 import { identifyUser, resetAnalyticsIdentity } from '@/lib/analytics/client'
 import { PromoBanner } from './PromoBanner'
 
-const VERIFY_DISMISS_KEY = 'verdia-verify-reminder-dismissed'
+const VERIFY_DISMISS_KEY = 'carglow-verify-reminder-dismissed'
 
 // Non-blocking reminder for accounts that used their one free unverified generation
 // (see /api/generate) — everything past that (second render, video, retouch, kit
@@ -166,11 +166,11 @@ export default function AppLayoutClient({
   const avatarChar  = displayName.charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen bg-cream-50 text-midnight flex">
+    <div className="min-h-screen bg-offwhite text-charcoal flex">
       {/* Sidebar */}
-      <aside className="hidden lg:flex w-[210px] shrink-0 flex-col border-r border-sage-100 bg-white">
-        <Link href="/" className="flex items-center h-24 px-5 border-b border-sage-100">
-          <Image src="/logo%20verdia%20without%20background.png" alt="Verdia" height={500} width={500} className="h-16 w-auto object-contain" />
+      <aside className="hidden lg:flex w-[210px] shrink-0 flex-col border-r border-accent-100 bg-white">
+        <Link href="/" className="flex items-center h-24 px-5 border-b border-accent-100">
+          <Image src="/logo-carglow.png" alt="CarGlow" height={500} width={500} className="h-16 w-auto object-contain" />
         </Link>
 
         <nav className="flex-1 px-3 py-4 space-y-0.5">
@@ -183,18 +183,18 @@ export default function AppLayoutClient({
                 className={cn(
                   'relative flex items-center gap-3 h-9 px-3 rounded-xl text-sm font-medium transition-all',
                   active
-                    ? 'bg-sage-50 text-sage-700 border border-sage-200/80'
-                    : 'text-midnight/50 hover:text-midnight hover:bg-cream-100',
+                    ? 'bg-accent-50 text-accent-700 border border-accent-200/80'
+                    : 'text-charcoal/50 hover:text-charcoal hover:bg-charcoal/[0.06]',
                 )}>
-                {active && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-sage-500" />}
-                <item.icon className={cn('w-[17px] h-[17px] shrink-0', active ? 'text-sage-600' : 'text-midnight/35')} strokeWidth={1.75} />
+                {active && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-accent-500" />}
+                <item.icon className={cn('w-[17px] h-[17px] shrink-0', active ? 'text-accent-600' : 'text-charcoal/35')} strokeWidth={1.75} />
                 {item.label}
               </Link>
             )
           })}
         </nav>
 
-        <div className="border-t border-sage-100 p-3 space-y-2">
+        <div className="border-t border-accent-100 p-3 space-y-2">
           {/* Present on every /app page (this is the persistent sidebar) — the single most
               reliable place to catch a user at 0 credits regardless of which page they're on. */}
           <Link
@@ -203,27 +203,27 @@ export default function AppLayoutClient({
               'flex items-center justify-between px-3 py-2 rounded-xl border transition-colors',
               ws?.creditsRemaining === 0
                 ? 'bg-rose-50 border-rose-200 hover:border-rose-300 animate-pulse'
-                : 'bg-sage-50 border-sage-200 hover:border-sage-300',
+                : 'bg-accent-50 border-accent-200 hover:border-accent-300',
             )}
           >
-            <span className={cn('text-xs', ws?.creditsRemaining === 0 ? 'text-rose-600' : 'text-midnight/50')}>
+            <span className={cn('text-xs', ws?.creditsRemaining === 0 ? 'text-rose-600' : 'text-charcoal/50')}>
               {ws?.creditsRemaining === 0 ? "S'abonner" : 'Crédits'}
             </span>
-            <span className={cn('text-sm font-semibold tabular-nums', ws?.creditsRemaining === 0 ? 'text-rose-700' : 'text-sage-700')}>
+            <span className={cn('text-sm font-semibold tabular-nums', ws?.creditsRemaining === 0 ? 'text-rose-700' : 'text-accent-700')}>
               {ws ? ws.creditsRemaining.toLocaleString() : '—'}
             </span>
           </Link>
           <div className="flex items-center gap-2 px-2 py-1.5">
-            <div className="w-7 h-7 rounded-lg bg-sage-100 border border-sage-200 flex items-center justify-center shrink-0">
-              <span className="text-xs font-bold text-sage-600">{avatarChar}</span>
+            <div className="w-7 h-7 rounded-lg bg-accent-100 border border-accent-200 flex items-center justify-center shrink-0">
+              <span className="text-xs font-bold text-accent-600">{avatarChar}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[12px] font-medium text-midnight truncate">{displayName}</div>
-              <div className="text-[10px] text-midnight/40 truncate">{planLabel}</div>
+              <div className="text-[12px] font-medium text-charcoal truncate">{displayName}</div>
+              <div className="text-[10px] text-charcoal/40 truncate">{planLabel}</div>
             </div>
             <button
               onClick={handleSignOut}
-              className="text-midnight/30 hover:text-rose-500 transition-colors p-1 rounded hover:bg-rose-50"
+              className="text-charcoal/30 hover:text-rose-500 transition-colors p-1 rounded hover:bg-rose-50"
               title="Déconnexion"
               aria-label="Déconnexion"
             >
@@ -241,13 +241,13 @@ export default function AppLayoutClient({
         <main className="flex-1 min-w-0 overflow-auto pb-16 lg:pb-0">{children}</main>
       </div>
 
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-20 h-16 bg-white border-t border-sage-100 flex">
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-20 h-16 bg-white border-t border-accent-100 flex">
         {NAV_MOBILE.map(it => {
           const active = it.href === '/app' ? pathname === '/app' : !!pathname?.startsWith(it.href)
           return (
             <Link key={it.href} href={it.href}
               className={cn('flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors',
-                active ? 'text-sage-600' : 'text-midnight/40')}>
+                active ? 'text-accent-600' : 'text-charcoal/40')}>
               <it.icon className="w-5 h-5" strokeWidth={1.75} />
               <span className="text-[10px] font-medium">{it.label}</span>
             </Link>

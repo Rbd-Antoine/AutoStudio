@@ -124,15 +124,15 @@ export default function AdminPricingPage() {
   }
 
   if (state === 'loading') {
-    return <div className="p-10 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-sage-400" /></div>
+    return <div className="p-10 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-accent-400" /></div>
   }
 
   if (state === 'forbidden') {
     return (
       <div className="p-10 flex flex-col items-center text-center gap-3 max-w-md mx-auto mt-16">
         <ShieldAlert className="w-8 h-8 text-rose-400" />
-        <p className="font-display font-semibold text-midnight">Accès réservé</p>
-        <p className="text-sm text-midnight/50">Cette page est réservée aux administrateurs.</p>
+        <p className="font-display font-semibold text-charcoal">Accès réservé</p>
+        <p className="text-sm text-charcoal/50">Cette page est réservée aux administrateurs.</p>
       </div>
     )
   }
@@ -142,16 +142,16 @@ export default function AdminPricingPage() {
   }
 
   return (
-    <div className="pb-24 lg:pb-12 bg-cream-50 min-h-screen">
-      <section className="border-b border-sage-100 bg-gradient-to-b from-sage-50 to-transparent">
+    <div className="pb-24 lg:pb-12 bg-offwhite min-h-screen">
+      <section className="border-b border-accent-100 bg-gradient-to-b from-accent-50 to-transparent">
         <div className="px-6 lg:px-10 py-8 lg:py-10 max-w-[1200px]">
-          <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-sage-600/80 mb-2">
+          <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-600/80 mb-2">
             Administration
           </div>
-          <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-midnight">
+          <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-charcoal">
             Configuration tarifaire
           </h1>
-          <p className="text-midnight/45 mt-2 text-[15px]">
+          <p className="text-charcoal/45 mt-2 text-[15px]">
             Ces valeurs pilotent l&apos;ensemble de l&apos;application — plans, packs de crédits et coûts par action IA.
           </p>
         </div>
@@ -161,11 +161,11 @@ export default function AdminPricingPage() {
 
         {/* Plans */}
         <div>
-          <h2 className="font-display font-bold text-lg text-midnight mb-3">Plans d&apos;abonnement</h2>
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm overflow-x-auto">
+          <h2 className="font-display font-bold text-lg text-charcoal mb-3">Plans d&apos;abonnement</h2>
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm overflow-x-auto">
             <table className="w-full min-w-[480px] text-sm">
               <thead>
-                <tr className="border-b border-sage-100 text-left text-xs uppercase tracking-wide text-midnight/40">
+                <tr className="border-b border-accent-100 text-left text-xs uppercase tracking-wide text-charcoal/40">
                   <th className="px-4 py-3 font-semibold">Plan</th>
                   <th className="px-4 py-3 font-semibold">Prix (€/mois)</th>
                   <th className="px-4 py-3 font-semibold">Crédits / mois</th>
@@ -187,7 +187,7 @@ export default function AdminPricingPage() {
             date pass turns it off everywhere at once, no redeploy needed. */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display font-bold text-lg text-midnight">Promotion</h2>
+            <h2 className="font-display font-bold text-lg text-charcoal">Promotion</h2>
             <button
               onClick={() => updatePromoField('promoEnabled', !config.promoEnabled)}
               className={cn(
@@ -198,25 +198,25 @@ export default function AdminPricingPage() {
               {config.promoEnabled ? 'Active' : 'Désactivée'}
             </button>
           </div>
-          <p className="text-sm text-midnight/45 mb-3">
+          <p className="text-sm text-charcoal/45 mb-3">
             Affiche un prix barré partout (accueil, /pricing, facturation) et un bandeau sur tout le site tant qu&apos;elle est active et que la date de fin n&apos;est pas dépassée. Le code doit correspondre exactement au Code promotionnel créé dans Stripe (Produits → Coupons).
           </p>
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm p-4 grid sm:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm p-4 grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Libellé</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Libellé</label>
               <input
                 value={config.promoLabel ?? ''}
                 onChange={e => updatePromoField('promoLabel', e.target.value)}
                 placeholder="Offre d'été"
-                className="w-full rounded-lg border border-sage-200 px-3 py-2 text-sm focus:outline-none focus:border-sage-400"
+                className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400"
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Plan concerné</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Plan concerné</label>
               <select
                 value={config.promoPlan ?? ''}
                 onChange={e => updatePromoField('promoPlan', e.target.value || null)}
-                className="w-full rounded-lg border border-sage-200 px-3 py-2 text-sm bg-white focus:outline-none focus:border-sage-400"
+                className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm bg-white focus:outline-none focus:border-accent-400"
               >
                 <option value="">— Aucun —</option>
                 <option value="ESSENTIAL">Essentiel</option>
@@ -225,32 +225,32 @@ export default function AdminPricingPage() {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Prix promo (€/mois)</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Prix promo (€/mois)</label>
               <input
                 type="number"
                 min={0}
                 value={config.promoDiscountedPrice ?? ''}
                 onChange={e => updatePromoField('promoDiscountedPrice', e.target.value === '' ? null : Number(e.target.value))}
                 placeholder="19"
-                className="w-full rounded-lg border border-sage-200 px-3 py-2 text-sm tabular-nums focus:outline-none focus:border-sage-400"
+                className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm tabular-nums focus:outline-none focus:border-accent-400"
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Code promotionnel Stripe</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Code promotionnel Stripe</label>
               <input
                 value={config.promoCode ?? ''}
                 onChange={e => updatePromoField('promoCode', e.target.value.toUpperCase())}
                 placeholder="ETE19"
-                className="w-full rounded-lg border border-sage-200 px-3 py-2 text-sm font-mono focus:outline-none focus:border-sage-400"
+                className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent-400"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Date de fin</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Date de fin</label>
               <input
                 type="date"
                 value={config.promoEndDate ? config.promoEndDate.slice(0, 10) : ''}
                 onChange={e => updatePromoField('promoEndDate', e.target.value ? new Date(e.target.value).toISOString() : null)}
-                className="rounded-lg border border-sage-200 px-3 py-2 text-sm focus:outline-none focus:border-sage-400"
+                className="rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400"
               />
             </div>
           </div>
@@ -258,11 +258,11 @@ export default function AdminPricingPage() {
 
         {/* Credit packs */}
         <div>
-          <h2 className="font-display font-bold text-lg text-midnight mb-3">Packs de crédits (achat unique)</h2>
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm overflow-x-auto">
+          <h2 className="font-display font-bold text-lg text-charcoal mb-3">Packs de crédits (achat unique)</h2>
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm overflow-x-auto">
             <table className="w-full min-w-[420px] text-sm">
               <thead>
-                <tr className="border-b border-sage-100 text-left text-xs uppercase tracking-wide text-midnight/40">
+                <tr className="border-b border-accent-100 text-left text-xs uppercase tracking-wide text-charcoal/40">
                   <th className="px-4 py-3 font-semibold">Pack</th>
                   <th className="px-4 py-3 font-semibold">Prix (€)</th>
                   <th className="px-4 py-3 font-semibold">Crédits</th>
@@ -281,7 +281,7 @@ export default function AdminPricingPage() {
           <button
             onClick={saveConfig}
             disabled={savingConfig}
-            className="rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-50 text-white px-5 py-2.5 font-semibold text-sm transition-colors flex items-center gap-2"
+            className="rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white px-5 py-2.5 font-semibold text-sm transition-colors flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {savingConfig ? 'Enregistrement…' : 'Enregistrer les tarifs'}
@@ -295,14 +295,14 @@ export default function AdminPricingPage() {
 
         {/* AI features */}
         <div>
-          <h2 className="font-display font-bold text-lg text-midnight mb-3">Coût des actions IA</h2>
-          <p className="text-sm text-midnight/45 mb-3">
+          <h2 className="font-display font-bold text-lg text-charcoal mb-3">Coût des actions IA</h2>
+          <p className="text-sm text-charcoal/45 mb-3">
             Chaque action consomme des crédits déduits automatiquement. Désactiver une action la rend indisponible sans toucher au code.
           </p>
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm overflow-x-auto">
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm overflow-x-auto">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-sage-100 text-left text-xs uppercase tracking-wide text-midnight/40">
+                <tr className="border-b border-accent-100 text-left text-xs uppercase tracking-wide text-charcoal/40">
                   <th className="px-4 py-3 font-semibold">Clé</th>
                   <th className="px-4 py-3 font-semibold">Libellé</th>
                   <th className="px-4 py-3 font-semibold">Coût (crédits)</th>
@@ -311,13 +311,13 @@ export default function AdminPricingPage() {
               </thead>
               <tbody>
                 {features.map(f => (
-                  <tr key={f.key} className="border-b border-sage-50 last:border-0">
-                    <td className="px-4 py-3 font-mono text-xs text-midnight/50">{f.key}</td>
+                  <tr key={f.key} className="border-b border-accent-50 last:border-0">
+                    <td className="px-4 py-3 font-mono text-xs text-charcoal/50">{f.key}</td>
                     <td className="px-4 py-3">
                       <input
                         defaultValue={f.label}
                         onBlur={e => e.target.value !== f.label && updateFeature(f.key, { label: e.target.value })}
-                        className="w-full bg-transparent border border-transparent hover:border-sage-200 focus:border-sage-400 rounded-lg px-2 py-1 text-sm focus:outline-none"
+                        className="w-full bg-transparent border border-transparent hover:border-accent-200 focus:border-accent-400 rounded-lg px-2 py-1 text-sm focus:outline-none"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -329,7 +329,7 @@ export default function AdminPricingPage() {
                           const v = Number(e.target.value)
                           if (Number.isFinite(v) && v >= 0 && v !== f.creditCost) updateFeature(f.key, { creditCost: v })
                         }}
-                        className="w-24 bg-transparent border border-sage-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-sage-400"
+                        className="w-24 bg-transparent border border-accent-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-accent-400"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -352,43 +352,43 @@ export default function AdminPricingPage() {
 
         {/* Add feature */}
         <div>
-          <h2 className="font-display font-bold text-lg text-midnight mb-3">Ajouter une nouvelle action IA</h2>
-          <p className="text-sm text-midnight/45 mb-3">
+          <h2 className="font-display font-bold text-lg text-charcoal mb-3">Ajouter une nouvelle action IA</h2>
+          <p className="text-sm text-charcoal/45 mb-3">
             Ex : remplacement de ciel, panorama 360°, rendu de nuit, upscale vidéo, suppression d&apos;objet — définissez une clé stable, un libellé et un coût, sans toucher au backend.
           </p>
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm p-4 flex flex-wrap items-end gap-3">
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm p-4 flex flex-wrap items-end gap-3">
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Clé (unique)</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Clé (unique)</label>
               <input
                 value={newFeature.key}
                 onChange={e => setNewFeature(f => ({ ...f, key: e.target.value }))}
                 placeholder="skyReplacement"
-                className="rounded-lg border border-sage-200 px-3 py-2 text-sm focus:outline-none focus:border-sage-400"
+                className="rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400"
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Libellé</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Libellé</label>
               <input
                 value={newFeature.label}
                 onChange={e => setNewFeature(f => ({ ...f, label: e.target.value }))}
                 placeholder="Remplacement de ciel"
-                className="rounded-lg border border-sage-200 px-3 py-2 text-sm focus:outline-none focus:border-sage-400"
+                className="rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400"
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 block mb-1">Coût (crédits)</label>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 block mb-1">Coût (crédits)</label>
               <input
                 type="number"
                 min={0}
                 value={newFeature.creditCost}
                 onChange={e => setNewFeature(f => ({ ...f, creditCost: Number(e.target.value) }))}
-                className="w-24 rounded-lg border border-sage-200 px-3 py-2 text-sm tabular-nums focus:outline-none focus:border-sage-400"
+                className="w-24 rounded-lg border border-accent-200 px-3 py-2 text-sm tabular-nums focus:outline-none focus:border-accent-400"
               />
             </div>
             <button
               onClick={addFeature}
               disabled={addingFeature || !newFeature.key.trim() || !newFeature.label.trim()}
-              className="rounded-lg bg-sage-500 hover:bg-sage-600 disabled:opacity-50 text-white px-4 py-2 text-sm font-semibold flex items-center gap-1.5 transition-colors"
+              className="rounded-lg bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white px-4 py-2 text-sm font-semibold flex items-center gap-1.5 transition-colors"
             >
               <Plus className="w-4 h-4" />
               Ajouter
@@ -410,8 +410,8 @@ function ConfigRow({
   onChange: (field: NumericPricingField, value: number) => void
 }) {
   return (
-    <tr className="border-b border-sage-50 last:border-0">
-      <td className="px-4 py-3 text-midnight/70 font-medium">{label}</td>
+    <tr className="border-b border-accent-50 last:border-0">
+      <td className="px-4 py-3 text-charcoal/70 font-medium">{label}</td>
       <td className="px-4 py-3">
         {priceField ? (
           <input
@@ -419,10 +419,10 @@ function ConfigRow({
             min={0}
             value={config[priceField]}
             onChange={e => onChange(priceField, Number(e.target.value))}
-            className="w-24 bg-transparent border border-sage-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-sage-400"
+            className="w-24 bg-transparent border border-accent-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-accent-400"
           />
         ) : (
-          <span className="text-midnight/40">—</span>
+          <span className="text-charcoal/40">—</span>
         )}
       </td>
       <td className="px-4 py-3">
@@ -431,7 +431,7 @@ function ConfigRow({
           min={0}
           value={config[creditsField]}
           onChange={e => onChange(creditsField, Number(e.target.value))}
-          className="w-24 bg-transparent border border-sage-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-sage-400"
+          className="w-24 bg-transparent border border-accent-200 rounded-lg px-2 py-1 text-sm tabular-nums focus:outline-none focus:border-accent-400"
         />
       </td>
     </tr>

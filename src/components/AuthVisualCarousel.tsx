@@ -5,12 +5,12 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 const SLIDES = [
-  '/scroll-garden-1.jpeg',
-  '/scroll-garden-2.jpeg',
-  '/scroll-garden-3.jpeg',
-  '/scroll-garden-4.jpeg',
-  '/scroll-garden-5.jpeg',
-  '/scroll-garden-6.jpeg',
+  '/scroll-car-1.jpeg',
+  '/scroll-car-2.jpeg',
+  '/scroll-car-3.jpeg',
+  '/scroll-car-4.jpeg',
+  '/scroll-car-5.jpeg',
+  '/scroll-car-6.jpeg',
 ]
 
 export function AuthVisualCarousel() {
@@ -27,7 +27,7 @@ export function AuthVisualCarousel() {
         <Image
           key={src}
           src={src}
-          alt="Rendu de jardin généré par Verdia"
+          alt="Rendu de véhicule généré par CarGlow"
           fill
           priority={i === 0}
           className={cn(

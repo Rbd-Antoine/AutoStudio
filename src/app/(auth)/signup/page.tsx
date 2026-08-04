@@ -88,34 +88,34 @@ export default function SignUpPage() {
   return (
     <div>
       <div className="mb-7">
-        <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-sage-500 mb-2">
+        <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-500 mb-2">
           Essai gratuit
         </div>
-        <h1 className="font-display font-bold tracking-tight text-3xl xl:text-4xl leading-[1.1] text-midnight">
+        <h1 className="font-display font-bold tracking-tight text-3xl xl:text-4xl leading-[1.1] text-charcoal">
           Créer votre compte.
         </h1>
-        <p className="text-midnight/50 mt-2 text-[15px]">
+        <p className="text-charcoal/50 mt-2 text-[15px]">
           Déjà membre ?{' '}
-          <Link href="/signin" className="text-sage-500 hover:text-sage-600 font-medium">Se connecter</Link>
+          <Link href="/signin" className="text-accent-500 hover:text-accent-600 font-medium">Se connecter</Link>
         </p>
       </div>
 
       <button
         type="button"
         onClick={() => signIn('google', { callbackUrl: '/app' })}
-        className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-midnight/[0.14] hover:border-midnight/[0.28] hover:bg-midnight/[0.02] px-4 py-2.5 text-sm font-semibold text-midnight/85 transition-colors"
+        className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.02] px-4 py-2.5 text-sm font-semibold text-charcoal/85 transition-colors"
       >
         <GoogleIcon className="w-4 h-4" />
         S&apos;inscrire avec Google
       </button>
-      <p className="text-[11.5px] text-midnight/45 text-center mt-2">
+      <p className="text-[11.5px] text-charcoal/45 text-center mt-2">
         Accès immédiat à votre espace — aucune vérification d&apos;e-mail nécessaire.
       </p>
 
       <div className="flex items-center gap-3 my-6">
-        <div className="h-px flex-1 bg-midnight/[0.08]" />
-        <span className="text-[11px] uppercase tracking-widest text-midnight/35">ou avec e-mail</span>
-        <div className="h-px flex-1 bg-midnight/[0.08]" />
+        <div className="h-px flex-1 bg-charcoal/[0.08]" />
+        <span className="text-[11px] uppercase tracking-widest text-charcoal/35">ou avec e-mail</span>
+        <div className="h-px flex-1 bg-charcoal/[0.08]" />
       </div>
 
       <form onSubmit={submit} className="space-y-4">
@@ -126,7 +126,7 @@ export default function SignUpPage() {
 
         <Field label="Nom de l'entreprise (optionnel)" icon={Building2}>
           <input type="text" autoComplete="organization" value={companyName}
-            onChange={e => setCompanyName(e.target.value)} placeholder="Jardins Bernard" className="auth-input" />
+            onChange={e => setCompanyName(e.target.value)} placeholder="Concession Bernard" className="auth-input" />
         </Field>
 
         <Field label="Email" icon={Mail}>
@@ -135,15 +135,15 @@ export default function SignUpPage() {
         </Field>
 
         <div className="space-y-1.5">
-          <label className="text-[11px] font-semibold tracking-widest uppercase text-midnight/50">Mot de passe</label>
+          <label className="text-[11px] font-semibold tracking-widest uppercase text-charcoal/50">Mot de passe</label>
           <div className="relative">
-            <KeyRound className="w-4 h-4 text-midnight/35 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.75} />
+            <KeyRound className="w-4 h-4 text-charcoal/35 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.75} />
             <input type="password" required autoComplete="new-password" value={password}
               onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum" className="auth-input" />
           </div>
           {pwdError && <p className="text-[11px] text-rose-500">{pwdError}</p>}
           {!pwdError && password.length >= 8 && (
-            <p className="text-[11px] text-sage-600 flex items-center gap-1">
+            <p className="text-[11px] text-accent-600 flex items-center gap-1">
               <Check className="w-3 h-3" strokeWidth={3} /> Parfait
             </p>
           )}
@@ -153,7 +153,7 @@ export default function SignUpPage() {
 
         <button type="submit" disabled={loading || !valid}
           className={cn(
-            'w-full rounded-xl border border-midnight/[0.14] hover:border-midnight/[0.28] hover:bg-midnight/[0.02] disabled:opacity-60 disabled:cursor-not-allowed text-midnight/85 px-4 py-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 mt-2',
+            'w-full rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.02] disabled:opacity-60 disabled:cursor-not-allowed text-charcoal/85 px-4 py-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 mt-2',
           )}>
           {loading
             ? <Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} />
@@ -161,18 +161,18 @@ export default function SignUpPage() {
           }
         </button>
 
-        <p className="text-[11px] text-midnight/40 text-center leading-relaxed">
+        <p className="text-[11px] text-charcoal/40 text-center leading-relaxed">
           En créant un compte, vous acceptez nos{' '}
-          <Link href="/terms" className="text-midnight/60 underline-offset-2 hover:underline">CGU</Link>
+          <Link href="/terms" className="text-charcoal/60 underline-offset-2 hover:underline">CGU</Link>
           {' '}et notre{' '}
-          <Link href="/privacy" className="text-midnight/60 underline-offset-2 hover:underline">Politique de confidentialité</Link>.
+          <Link href="/privacy" className="text-charcoal/60 underline-offset-2 hover:underline">Politique de confidentialité</Link>.
         </p>
       </form>
 
-      <ul className="mt-8 pt-6 border-t border-midnight/[0.07] space-y-2">
+      <ul className="mt-8 pt-6 border-t border-charcoal/[0.07] space-y-2">
         {benefits.map(b => (
-          <li key={b} className="flex items-center gap-2 text-xs text-midnight/55">
-            <Check className="w-3.5 h-3.5 text-sage-500 flex-shrink-0" strokeWidth={2.5} />
+          <li key={b} className="flex items-center gap-2 text-xs text-charcoal/55">
+            <Check className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" strokeWidth={2.5} />
             {b}
           </li>
         ))}
@@ -203,9 +203,9 @@ export default function SignUpPage() {
 function Field({ label, icon: Icon, children }: { label: string; icon: typeof Mail; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[11px] font-semibold tracking-widest uppercase text-midnight/50">{label}</label>
+      <label className="text-[11px] font-semibold tracking-widest uppercase text-charcoal/50">{label}</label>
       <div className="relative">
-        <Icon className="w-4 h-4 text-midnight/35 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.75} />
+        <Icon className="w-4 h-4 text-charcoal/35 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.75} />
         {children}
       </div>
     </div>

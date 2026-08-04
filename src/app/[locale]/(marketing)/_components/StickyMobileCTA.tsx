@@ -24,7 +24,7 @@ export function StickyMobileCTA() {
         'lg:hidden fixed left-0 right-0 bottom-0 z-40 px-4 pt-3',
         // No backdrop-blur — same reasoning as Nav.tsx: this bar is fixed and visible
         // during scroll, exactly when a live backdrop re-blur costs the most.
-        'bg-white/98 border-t border-midnight/[0.08] shadow-[0_-8px_24px_-8px_rgba(13,31,17,0.12)]',
+        'bg-white/98 border-t border-charcoal/[0.08] shadow-[0_-8px_24px_-8px_rgba(13,31,17,0.12)]',
         'transition-transform duration-300',
         // Both this bar and the cookie banner are fixed to the bottom of the screen —
         // a new mobile visitor who scrolls before deciding on cookies would otherwise
@@ -35,12 +35,12 @@ export function StickyMobileCTA() {
     >
       <div className="flex items-center gap-3 max-w-md mx-auto">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-midnight leading-tight">1er rendu offert</p>
-          <p className="text-[11px] text-midnight/45 leading-tight">Sans carte bancaire · 60 secondes</p>
+          <p className="text-sm font-semibold text-charcoal leading-tight">1er rendu offert</p>
+          <p className="text-[11px] text-charcoal/45 leading-tight">Sans carte bancaire · 60 secondes</p>
         </div>
         <Link href="/signup"
           onClick={() => trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'sticky_mobile', label: 'Recevoir', location: 'sticky_mobile' })}
-          className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-bold text-sm whitespace-nowrap transition-all shadow-sage-sm">
+          className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-bold text-sm whitespace-nowrap transition-all shadow-accent-sm">
           Recevoir <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

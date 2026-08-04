@@ -145,7 +145,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
     sendInvoiceEmail(email, {
       invoiceNumber: invoiceNum,
       date,
-      description:   `Abonnement ${plan ?? 'Verdia'} — renouvellement mensuel`,
+      description:   `Abonnement ${plan ?? 'CarGlow'} — renouvellement mensuel`,
       amountEur,
       receiptUrl:    invoice.hosted_invoice_url ?? undefined,
     })

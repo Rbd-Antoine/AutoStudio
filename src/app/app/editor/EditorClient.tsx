@@ -11,7 +11,7 @@ import {
   Wand2, RefreshCw, Palette, Send, AlertTriangle, X, Clapperboard, Check, Star,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { GARDEN_STYLES } from '@/lib/gardenStyles'
+import { CAR_STYLES } from '@/lib/carStyles'
 import { downloadUrlAsFile } from '@/lib/download-file'
 import { MarketingKitModal } from '@/components/app/MarketingKitModal'
 import { VerifyEmailModal } from '@/components/app/VerifyEmailModal'
@@ -127,7 +127,7 @@ export default function EditorClient() {
   const [mode, setMode]                      = useState<Mode>('image')
   const [file, setFile]                      = useState<File | null>(null)
   const [previewUrl, setPreviewUrl]          = useState<string | null>(null)
-  const [styleSlug, setStyleSlug]            = useState('gazon-fleurs')
+  const [styleSlug, setStyleSlug]            = useState('studio-blanc')
   const [characteristics, setCharacteristics] = useState('')
   const [gen, setGen]                        = useState<GenState>({ status: 'idle' })
   const [uploadError, setUploadError]        = useState<string | null>(null)
@@ -177,7 +177,7 @@ export default function EditorClient() {
   }, [])
 
   useEffect(() => { refreshCredits() }, [refreshCredits])
-  useEffect(() => { setMarketingKitSeen(localStorage.getItem('verdia-marketing-kit-seen') === '1') }, [])
+  useEffect(() => { setMarketingKitSeen(localStorage.getItem('carglow-marketing-kit-seen') === '1') }, [])
 
   const selected = selectedIdx !== null ? versions[selectedIdx] : null
 
@@ -232,7 +232,7 @@ export default function EditorClient() {
 
   const handleGenerate = useCallback(async () => {
     if (!file) {
-      setGen({ status: 'error', error: 'Ajoutez une photo de votre jardin avant de générer.' })
+      setGen({ status: 'error', error: 'Ajoutez une photo de votre véhicule avant de générer.' })
       focusAndScroll(uploadSectionRef)
       return
     }
@@ -345,7 +345,7 @@ export default function EditorClient() {
     const url = selected?.url ?? gen.resultUrl
     if (!url) return
     const ext = (selected?.mode ?? mode) === 'video' ? 'mp4' : 'png'
-    await downloadUrlAsFile(url, `verdia-${styleSlug}-${Date.now()}.${ext}`)
+    await downloadUrlAsFile(url, `carglow-${styleSlug}-${Date.now()}.${ext}`)
   }
 
   // Deliberately does NOT require `file` — the button always stays clickable so a click with
@@ -356,16 +356,16 @@ export default function EditorClient() {
   const canRetouch  = !!selected && selected.mode === 'image' && retouchStatus !== 'loading'
 
   return (
-    <div className="min-h-screen bg-cream-50 text-midnight">
+    <div className="min-h-screen bg-offwhite text-charcoal">
       {/* Topbar */}
-      <header className="sticky top-0 z-10 flex items-center justify-between h-16 sm:h-20 px-3 sm:px-5 border-b border-sage-100 bg-white/95 backdrop-blur-xl">
-        <Link href="/app" className="flex items-center gap-2 text-midnight/45 hover:text-midnight text-sm transition-colors shrink-0">
+      <header className="sticky top-0 z-10 flex items-center justify-between h-16 sm:h-20 px-3 sm:px-5 border-b border-accent-100 bg-white/95 backdrop-blur-xl">
+        <Link href="/app" className="flex items-center gap-2 text-charcoal/45 hover:text-charcoal text-sm transition-colors shrink-0">
           <ArrowLeft className="w-4 h-4" />
           <span className="hidden sm:inline">Tableau de bord</span>
         </Link>
         <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo%20verdia%20without%20background.png" alt="Verdia" className="h-8 sm:h-14 w-auto object-contain" />
+          <img src="/logo-carglow.png" alt="CarGlow" className="h-8 sm:h-14 w-auto object-contain" />
         </Link>
         {/* Turns into a standing "recharge" prompt at 0 rather than a passive "0 crédits" —
             this is a permanent, always-visible reminder regardless of where the zero-credit
@@ -376,7 +376,7 @@ export default function EditorClient() {
             'shrink-0 flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs sm:text-sm font-semibold transition-colors',
             credits === 0
               ? 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100 animate-pulse'
-              : 'bg-sage-50 border-sage-200 text-sage-700 hover:bg-sage-100',
+              : 'bg-accent-50 border-accent-200 text-accent-700 hover:bg-accent-100',
           )}
         >
           {credits === null ? '…' : credits === 0 ? "S'abonner" : `${credits.toLocaleString()} crédit${credits === 1 ? '' : 's'}`}
@@ -397,15 +397,15 @@ export default function EditorClient() {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className={cn(
                   'w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 transition-colors',
-                  step.done ? 'bg-sage-500 text-white' : 'bg-sage-100 text-sage-500 border border-sage-200',
+                  step.done ? 'bg-accent-500 text-white' : 'bg-accent-100 text-accent-500 border border-accent-200',
                 )}>
                   {step.done ? <Check className="w-3.5 h-3.5" strokeWidth={2.5} /> : step.n}
                 </span>
-                <span className={cn('text-xs font-medium transition-colors', step.done ? 'text-midnight/70' : 'text-midnight/40')}>
+                <span className={cn('text-xs font-medium transition-colors', step.done ? 'text-charcoal/70' : 'text-charcoal/40')}>
                   {step.label}
                 </span>
               </div>
-              {i < 2 && <div className={cn('w-6 sm:w-12 h-px transition-colors', step.done ? 'bg-sage-400' : 'bg-sage-200')} />}
+              {i < 2 && <div className={cn('w-6 sm:w-12 h-px transition-colors', step.done ? 'bg-accent-400' : 'bg-accent-200')} />}
             </li>
           ))}
         </ol>
@@ -423,10 +423,10 @@ export default function EditorClient() {
             className={cn(
               'order-1 lg:order-none relative rounded-3xl border-2 border-dashed transition-all',
               isDragging
-                ? 'border-sage-500 bg-sage-100 scale-[1.01]'
+                ? 'border-accent-500 bg-accent-100 scale-[1.01]'
                 : file
-                  ? 'border-sage-200'
-                  : 'border-sage-200 bg-sage-50/40 hover:border-sage-400 hover:bg-sage-50 cursor-pointer',
+                  ? 'border-accent-200'
+                  : 'border-accent-200 bg-accent-50/40 hover:border-accent-400 hover:bg-accent-50 cursor-pointer',
             )}
             onDrop={onDrop}
             onDragOver={e => e.preventDefault()}
@@ -436,17 +436,17 @@ export default function EditorClient() {
           >
             {!file ? (
               <div className="flex flex-col items-center justify-center gap-4 py-20 px-8">
-                <div className="w-16 h-16 rounded-2xl bg-sage-100 border border-sage-200 flex items-center justify-center">
-                  <Upload className="w-7 h-7 text-sage-400" />
+                <div className="w-16 h-16 rounded-2xl bg-accent-100 border border-accent-200 flex items-center justify-center">
+                  <Upload className="w-7 h-7 text-accent-400" />
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-midnight/55 mb-1">
-                    {isDragging ? 'Lâchez votre photo ici' : 'Déposez votre photo de jardin'}
+                  <p className="font-semibold text-charcoal/55 mb-1">
+                    {isDragging ? 'Lâchez votre photo ici' : 'Déposez votre photo de véhicule'}
                   </p>
-                  <p className="text-sm text-midnight/35">JPG, PNG, HEIC · jusqu&apos;à 20 Mo</p>
+                  <p className="text-sm text-charcoal/35">JPG, PNG, HEIC · jusqu&apos;à 20 Mo</p>
                 </div>
                 <button
-                  className="px-5 py-2.5 rounded-xl bg-white border border-sage-200 text-sm font-medium text-midnight/55 hover:text-midnight hover:border-sage-400 transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-white border border-accent-200 text-sm font-medium text-charcoal/55 hover:text-charcoal hover:border-accent-400 transition-all"
                   onClick={e => { e.stopPropagation(); fileInputRef.current?.click() }}
                 >
                   Choisir un fichier
@@ -461,11 +461,11 @@ export default function EditorClient() {
                   className="w-full object-contain"
                   style={{ maxHeight: 520 }}
                 />
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/85 backdrop-blur-sm text-xs font-semibold text-midnight/65 border border-sage-200">
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/85 backdrop-blur-sm text-xs font-semibold text-charcoal/65 border border-accent-200">
                   Photo originale
                 </div>
                 <button
-                  className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/85 backdrop-blur-sm text-xs text-midnight/60 hover:text-midnight border border-sage-200 transition-colors"
+                  className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/85 backdrop-blur-sm text-xs text-charcoal/60 hover:text-charcoal border border-accent-200 transition-colors"
                   onClick={e => { e.stopPropagation(); fileInputRef.current?.click() }}
                 >
                   <RotateCcw className="w-3 h-3" /> Changer
@@ -493,17 +493,17 @@ export default function EditorClient() {
 
           {/* Result */}
           {selected && (
-            <div className="order-2 lg:order-none rounded-3xl border border-sage-200 bg-white overflow-hidden shadow-sm">
-              <div className="flex items-center justify-between px-5 py-3.5 border-b border-sage-100">
+            <div className="order-2 lg:order-none rounded-3xl border border-accent-200 bg-white overflow-hidden shadow-sm">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-accent-100">
                 <div className="flex items-center gap-2">
                   {selected.mode === 'video'
-                    ? <Video className="w-4 h-4 text-sage-500" />
-                    : <Sparkles className="w-4 h-4 text-sage-500" />}
-                  <span className="font-semibold text-sm text-sage-700">
+                    ? <Video className="w-4 h-4 text-accent-500" />
+                    : <Sparkles className="w-4 h-4 text-accent-500" />}
+                  <span className="font-semibold text-sm text-accent-700">
                     {selected.kind === 'retouch' ? 'Retouche appliquée' : selected.mode === 'video' ? 'Vidéo générée' : 'Rendu généré'}
                   </span>
                   {selected.processingMs && (
-                    <span className="text-xs text-midnight/30 ml-1">
+                    <span className="text-xs text-charcoal/30 ml-1">
                       {(selected.processingMs / 1000).toFixed(1)}s
                     </span>
                   )}
@@ -513,10 +513,10 @@ export default function EditorClient() {
                     <button
                       onClick={() => {
                         setShowMarketingKit(true)
-                        localStorage.setItem('verdia-marketing-kit-seen', '1')
+                        localStorage.setItem('carglow-marketing-kit-seen', '1')
                         setMarketingKitSeen(true)
                       }}
-                      className="relative flex items-center gap-1.5 px-4 py-2 rounded-xl border border-sage-200 text-sage-700 hover:bg-sage-50 text-xs font-semibold transition-all"
+                      className="relative flex items-center gap-1.5 px-4 py-2 rounded-xl border border-accent-200 text-accent-700 hover:bg-accent-50 text-xs font-semibold transition-all"
                     >
                       {/* Fades away for good once clicked once — a badge that never goes away
                           stops meaning "new" and just becomes decoration nobody trusts. */}
@@ -529,7 +529,7 @@ export default function EditorClient() {
                   )}
                   <button
                     onClick={handleDownload}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sage-500 hover:bg-sage-600 text-white text-xs font-semibold transition-all"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white text-xs font-semibold transition-all"
                   >
                     <Download className="w-3.5 h-3.5" />
                     Télécharger
@@ -538,7 +538,7 @@ export default function EditorClient() {
               </div>
 
               {/* Quick actions — horizontal scroll strip on mobile, vertical rail from sm+ */}
-              <div className="flex sm:hidden gap-2 overflow-x-auto px-3 py-2.5 border-b border-sage-100">
+              <div className="flex sm:hidden gap-2 overflow-x-auto px-3 py-2.5 border-b border-accent-100">
                 {[
                   { label: 'Style',    icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
                   { label: 'Prompt',   icon: PenLine,    onClick: () => focusAndScroll(characteristicsRef),     disabled: false },
@@ -552,8 +552,8 @@ export default function EditorClient() {
                     className={cn(
                       'flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-medium whitespace-nowrap shrink-0 border transition-colors',
                       action.disabled
-                        ? 'text-midnight/20 border-sage-100 cursor-not-allowed'
-                        : 'text-midnight/60 border-sage-200 hover:text-sage-700 hover:bg-sage-50',
+                        ? 'text-charcoal/20 border-accent-100 cursor-not-allowed'
+                        : 'text-charcoal/60 border-accent-200 hover:text-accent-700 hover:bg-accent-50',
                     )}
                   >
                     <action.icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />
@@ -564,7 +564,7 @@ export default function EditorClient() {
 
               <div className="flex">
                 {/* Quick actions rail (desktop) */}
-                <div className="hidden sm:flex flex-col shrink-0 w-36 border-r border-sage-100 py-2">
+                <div className="hidden sm:flex flex-col shrink-0 w-36 border-r border-accent-100 py-2">
                   {[
                     { label: 'Changer le style',  icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
                     { label: 'Modifier le prompt', icon: PenLine,   onClick: () => focusAndScroll(characteristicsRef),     disabled: false },
@@ -576,8 +576,8 @@ export default function EditorClient() {
                       onClick={action.onClick}
                       disabled={action.disabled}
                       className={cn(
-                        'flex items-center gap-2 px-4 py-3 text-left text-[13px] font-medium border-b border-sage-50 last:border-b-0 transition-colors',
-                        action.disabled ? 'text-midnight/20 cursor-not-allowed' : 'text-midnight/60 hover:text-sage-700 hover:bg-sage-50',
+                        'flex items-center gap-2 px-4 py-3 text-left text-[13px] font-medium border-b border-accent-50 last:border-b-0 transition-colors',
+                        action.disabled ? 'text-charcoal/20 cursor-not-allowed' : 'text-charcoal/60 hover:text-accent-700 hover:bg-accent-50',
                       )}
                     >
                       <action.icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />
@@ -588,7 +588,7 @@ export default function EditorClient() {
 
                 {/* Main result + version thumbnails */}
                 <div className="flex-1 flex flex-col sm:flex-row min-w-0">
-                  <div className="flex-1 min-w-0 bg-cream-50 flex items-center justify-center">
+                  <div className="flex-1 min-w-0 bg-offwhite flex items-center justify-center">
                     {selected.mode === 'video' ? (
                       <video
                         key={selected.id}
@@ -604,7 +604,7 @@ export default function EditorClient() {
                       <img
                         key={selected.id}
                         src={selected.url}
-                        alt="Jardin généré"
+                        alt="Véhicule généré"
                         className="w-full object-contain"
                         style={{ maxHeight: 520 }}
                       />
@@ -612,14 +612,14 @@ export default function EditorClient() {
                   </div>
 
                   {versions.length > 1 && (
-                    <div className="w-full sm:w-24 shrink-0 border-t sm:border-t-0 sm:border-l border-sage-100 overflow-x-auto sm:overflow-x-visible sm:overflow-y-auto py-2 sm:py-3 px-2 flex flex-row sm:flex-col gap-2" style={{ maxHeight: 520 }}>
+                    <div className="w-full sm:w-24 shrink-0 border-t sm:border-t-0 sm:border-l border-accent-100 overflow-x-auto sm:overflow-x-visible sm:overflow-y-auto py-2 sm:py-3 px-2 flex flex-row sm:flex-col gap-2" style={{ maxHeight: 520 }}>
                       {versions.map((v, i) => (
                         <button
                           key={v.id}
                           onClick={() => setSelectedIdx(i)}
                           className={cn(
                             'w-20 sm:w-auto shrink-0 rounded-xl overflow-hidden border-2 transition-all text-left',
-                            i === selectedIdx ? 'border-sage-500 ring-2 ring-sage-200' : 'border-transparent hover:border-sage-200',
+                            i === selectedIdx ? 'border-accent-500 ring-2 ring-accent-200' : 'border-transparent hover:border-accent-200',
                           )}
                         >
                           {v.mode === 'video' ? (
@@ -634,7 +634,7 @@ export default function EditorClient() {
                               <Image src={v.url} alt="" fill sizes="96px" className="object-cover" />
                             </div>
                           )}
-                          <p className="text-[10px] text-center text-midnight/45 py-1 truncate px-1">Version {i + 1}</p>
+                          <p className="text-[10px] text-center text-charcoal/45 py-1 truncate px-1">Version {i + 1}</p>
                         </button>
                       ))}
                     </div>
@@ -644,14 +644,14 @@ export default function EditorClient() {
 
               {/* Retouch bar */}
               {selected.mode === 'image' && (
-                <div className="border-t border-sage-100 px-4 pt-3 pb-0 flex items-center justify-between">
-                  <span className="text-[11px] text-midnight/35">
+                <div className="border-t border-accent-100 px-4 pt-3 pb-0 flex items-center justify-between">
+                  <span className="text-[11px] text-charcoal/35">
                     Retouche — Coûte {featureCosts.imageRetouch ?? 1} crédit{(featureCosts.imageRetouch ?? 1) === 1 ? '' : 's'}
                   </span>
                 </div>
               )}
               {selected.mode === 'image' && (
-                <div className="px-4 py-3 flex items-center gap-2 bg-cream-50/60">
+                <div className="px-4 py-3 flex items-center gap-2 bg-charcoal/60">
                   <input
                     ref={retouchInputRef}
                     type="text"
@@ -659,7 +659,7 @@ export default function EditorClient() {
                     onChange={e => setRetouchText(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && canRetouch && retouchText.trim()) handleRetouch() }}
                     placeholder="Ex : agrandir la terrasse en bois et ajouter un éclairage extérieur…"
-                    className="flex-1 min-w-0 bg-white border border-sage-200 rounded-xl px-4 py-2.5 text-sm text-midnight placeholder:text-midnight/30 focus:outline-none focus:border-sage-400 focus:ring-2 focus:ring-sage-100 transition-all"
+                    className="flex-1 min-w-0 bg-white border border-accent-200 rounded-xl px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition-all"
                   />
                   <button
                     onClick={handleRetouch}
@@ -668,7 +668,7 @@ export default function EditorClient() {
                       'flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0',
                       canRetouch && retouchText.trim()
                         ? 'bg-glow-500 hover:bg-glow-400 text-white cursor-pointer'
-                        : 'bg-sage-100 text-sage-300 cursor-not-allowed',
+                        : 'bg-accent-100 text-accent-300 cursor-not-allowed',
                     )}
                   >
                     {retouchStatus === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -685,12 +685,12 @@ export default function EditorClient() {
           )}
 
           {/* Characteristics */}
-          <div className="order-8 lg:order-none rounded-2xl border border-sage-100 bg-white overflow-hidden shadow-sm">
-            <div className="px-5 py-4 border-b border-sage-100 flex items-center gap-2">
-              <PenLine className="w-4 h-4 text-sage-500" strokeWidth={1.75} />
+          <div className="order-8 lg:order-none rounded-2xl border border-accent-100 bg-white overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-accent-100 flex items-center gap-2">
+              <PenLine className="w-4 h-4 text-accent-500" strokeWidth={1.75} />
               <div>
-                <h2 className="font-display font-semibold text-[15px] text-midnight">Caractéristiques</h2>
-                <p className="text-xs text-midnight/40 mt-0.5">Précisez votre projet — optionnel</p>
+                <h2 className="font-display font-semibold text-[15px] text-charcoal">Caractéristiques</h2>
+                <p className="text-xs text-charcoal/40 mt-0.5">Précisez votre projet — optionnel</p>
               </div>
             </div>
             <div className="p-4">
@@ -700,31 +700,31 @@ export default function EditorClient() {
                 onChange={e => setCharacteristics(e.target.value)}
                 placeholder="Ex : ajouter une pergola en bois naturel, conserver les rosiers en facade, prévoir un espace pour les enfants, fontaine en pierre, budget intermédiaire, éviter les espèces invasives…"
                 rows={4}
-                className="w-full bg-cream-50 border border-sage-200 rounded-xl px-4 py-3 text-sm text-midnight placeholder:text-midnight/30 focus:outline-none focus:border-sage-400 focus:ring-2 focus:ring-sage-100 resize-none transition-all"
+                className="w-full bg-offwhite border border-accent-200 rounded-xl px-4 py-3 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 resize-none transition-all"
               />
-              <p className="text-xs text-midnight/30 mt-2">
+              <p className="text-xs text-charcoal/30 mt-2">
                 Ces précisions seront transmises à l&apos;IA pour personnaliser le rendu.
               </p>
             </div>
           </div>
 
           {/* Tips */}
-          <div className="order-9 lg:order-none rounded-2xl border border-sage-100 bg-cream-50 p-5">
-            <p className="text-[11px] font-semibold text-midnight/35 uppercase tracking-widest mb-3">
+          <div className="order-9 lg:order-none rounded-2xl border border-accent-100 bg-offwhite p-5">
+            <p className="text-[11px] font-semibold text-charcoal/35 uppercase tracking-widest mb-3">
               Conseils photo
             </p>
-            <ul className="flex flex-col gap-2.5 text-xs text-midnight/50 leading-relaxed">
+            <ul className="flex flex-col gap-2.5 text-xs text-charcoal/50 leading-relaxed">
               <li className="flex items-start gap-2">
                 <span>📸</span>
-                <span>Photographiez depuis un angle montrant l&apos;ensemble du jardin</span>
+                <span>Photographiez le véhicule de 3/4 avant, avec la carrosserie entière visible</span>
               </li>
               <li className="flex items-start gap-2">
                 <span>☀️</span>
                 <span>La lumière naturelle du jour donne les meilleurs résultats</span>
               </li>
               <li className="flex items-start gap-2">
-                <span>🏠</span>
-                <span>Incluez murs, clôtures et terrasse pour un rendu plus réaliste</span>
+                <span>🚗</span>
+                <span>Évitez les reflets et ombres portées trop marquées sur la carrosserie</span>
               </li>
             </ul>
           </div>
@@ -743,16 +743,16 @@ export default function EditorClient() {
         <div className="contents lg:flex lg:flex-col lg:gap-4">
 
           {/* Mode switch */}
-          <div className="order-3 lg:order-none rounded-2xl border border-sage-200 bg-white p-1.5 flex gap-1 shadow-sm">
+          <div className="order-3 lg:order-none rounded-2xl border border-accent-200 bg-white p-1.5 flex gap-1 shadow-sm">
             <button
               onClick={() => { setMode('image'); setGen({ status: 'idle' }) }}
               aria-pressed={mode === 'image'}
               className={cn(
                 'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
                 mode === 'image'
-                  ? 'bg-sage-500 text-white shadow-sm'
-                  : 'text-midnight/45 hover:text-midnight hover:bg-sage-50',
+                  ? 'bg-accent-500 text-white shadow-sm'
+                  : 'text-charcoal/45 hover:text-charcoal hover:bg-accent-50',
               )}
             >
               <ImageIcon className="w-4 h-4" strokeWidth={1.75} />
@@ -760,7 +760,7 @@ export default function EditorClient() {
               {featureCosts.imageGeneration != null && (
                 <span className={cn(
                   'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                  mode === 'image' ? 'bg-white/20 text-white' : 'bg-sage-100 text-sage-600',
+                  mode === 'image' ? 'bg-white/20 text-white' : 'bg-accent-100 text-accent-600',
                 )}>
                   {featureCosts.imageGeneration} crédit{featureCosts.imageGeneration === 1 ? '' : 's'}
                 </span>
@@ -771,17 +771,17 @@ export default function EditorClient() {
               aria-pressed={mode === 'video'}
               className={cn(
                 'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
                 mode === 'video'
-                  ? 'bg-sage-500 text-white shadow-sm'
-                  : 'text-midnight/45 hover:text-midnight hover:bg-sage-50',
+                  ? 'bg-accent-500 text-white shadow-sm'
+                  : 'text-charcoal/45 hover:text-charcoal hover:bg-accent-50',
               )}
             >
               <Video className="w-4 h-4" strokeWidth={1.75} />
               Vidéo
               <span className={cn(
                 'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                mode === 'video' ? 'bg-white/20 text-white' : 'bg-sage-100 text-sage-600',
+                mode === 'video' ? 'bg-white/20 text-white' : 'bg-accent-100 text-accent-600',
               )}>
                 {featureCosts.videoGeneration != null ? `${featureCosts.videoGeneration} crédits` : 'IA'}
               </span>
@@ -789,40 +789,40 @@ export default function EditorClient() {
           </div>
 
           {mode === 'video' && (
-            <div className="order-4 lg:order-none rounded-xl border border-sage-200 bg-sage-50 px-4 py-3 text-[13px] text-sage-700 leading-relaxed">
-              <strong>🎬 Vidéo animée</strong> — Votre jardin transformé en vidéo 5 secondes. Parfait pour présenter vos projets ou partager sur les réseaux sociaux.
+            <div className="order-4 lg:order-none rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-[13px] text-accent-700 leading-relaxed">
+              <strong>🎬 Vidéo animée</strong> — Votre véhicule mis en scène dans une vidéo de 5 secondes. Parfait pour vos annonces ou pour partager sur les réseaux sociaux.
             </div>
           )}
 
           {/* Style picker */}
-          <div ref={styleSectionRef} className="order-5 lg:order-none rounded-2xl border border-sage-100 bg-white overflow-hidden shadow-sm">
-            <div className="px-5 py-4 border-b border-sage-100">
-              <h2 className="font-display font-semibold text-[15px] text-midnight">Style de jardin</h2>
-              <p className="text-xs text-midnight/40 mt-0.5">Choisissez l&apos;ambiance de votre rendu</p>
+          <div ref={styleSectionRef} className="order-5 lg:order-none rounded-2xl border border-accent-100 bg-white overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-accent-100">
+              <h2 className="font-display font-semibold text-[15px] text-charcoal">Style d&apos;arrière-plan</h2>
+              <p className="text-xs text-charcoal/40 mt-0.5">Choisissez l&apos;ambiance de votre rendu</p>
             </div>
             <div className="p-3 flex flex-col gap-1">
-              {GARDEN_STYLES.map(style => (
+              {CAR_STYLES.map(style => (
                 <button
                   key={style.slug}
                   onClick={() => setStyleSlug(style.slug)}
                   aria-pressed={styleSlug === style.slug}
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
                     styleSlug === style.slug
-                      ? 'bg-sage-50 border border-sage-300'
-                      : 'border border-transparent hover:bg-cream-100 hover:border-sage-100',
+                      ? 'bg-accent-50 border border-accent-300'
+                      : 'border border-transparent hover:bg-charcoal/[0.06] hover:border-accent-100',
                   )}
                 >
                   <Image src={style.image} alt="" width={44} height={44} className="w-11 h-11 rounded-lg object-cover shrink-0" />
                   <div>
                     <p className={cn(
                       'text-sm font-semibold',
-                      styleSlug === style.slug ? 'text-sage-700' : 'text-midnight/75',
+                      styleSlug === style.slug ? 'text-accent-700' : 'text-charcoal/75',
                     )}>
                       {style.name}
                     </p>
-                    <p className="text-xs text-midnight/40">{style.desc}</p>
+                    <p className="text-xs text-charcoal/40">{style.desc}</p>
                   </div>
                 </button>
               ))}
@@ -835,10 +835,10 @@ export default function EditorClient() {
             disabled={!canGenerate}
             className={cn(
               'order-6 lg:order-none w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-semibold text-sm transition-all',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
               canGenerate
-                ? 'bg-sage-500 hover:bg-sage-600 text-white shadow-sm hover:shadow-md cursor-pointer'
-                : 'bg-sage-100 text-sage-300 cursor-not-allowed border border-sage-200',
+                ? 'bg-accent-500 hover:bg-accent-600 text-white shadow-sm hover:shadow-md cursor-pointer'
+                : 'bg-accent-100 text-accent-300 cursor-not-allowed border border-accent-200',
             )}
           >
             {gen.status === 'loading' ? (
@@ -859,17 +859,17 @@ export default function EditorClient() {
           </button>
 
           {gen.status === 'loading' && (
-            <p className="order-7 lg:order-none text-xs text-center text-midnight/35 leading-relaxed">
+            <p className="order-7 lg:order-none text-xs text-center text-charcoal/35 leading-relaxed">
               {mode === 'video'
                 ? <>L&apos;IA génère votre vidéo.<br />Comptez 60 à 120 secondes.</>
-                : <>L&apos;IA analyse et transforme votre jardin.<br />Comptez 30 à 60 secondes.</>
+                : <>L&apos;IA analyse et transforme l&apos;arrière-plan de votre véhicule.<br />Comptez 30 à 60 secondes.</>
               }
             </p>
           )}
 
           {!file && gen.status !== 'loading' && (
-            <p className="order-7 lg:order-none text-xs text-center text-midnight/30">
-              Téléchargez d&apos;abord une photo de votre jardin
+            <p className="order-7 lg:order-none text-xs text-center text-charcoal/30">
+              Téléchargez d&apos;abord une photo de votre véhicule
             </p>
           )}
         </div>
@@ -907,14 +907,14 @@ export default function EditorClient() {
 function GeneratingModal({ mode }: { mode: Mode }) {
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-midnight/40 backdrop-blur-sm" />
+      <div className="fixed inset-0 z-40 bg-charcoal/40 backdrop-blur-sm" />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
         <div className="bg-white rounded-2xl w-full max-w-sm p-7 pointer-events-auto shadow-card text-center">
-          <Loader2 className="w-9 h-9 mx-auto text-sage-500 animate-spin mb-4" />
-          <h3 className="font-display font-semibold text-lg text-midnight mb-2">
+          <Loader2 className="w-9 h-9 mx-auto text-accent-500 animate-spin mb-4" />
+          <h3 className="font-display font-semibold text-lg text-charcoal mb-2">
             {mode === 'video' ? 'Génération de la vidéo en cours' : 'Génération du rendu en cours'}
           </h3>
-          <p className="text-sm text-midnight/50">
+          <p className="text-sm text-charcoal/50">
             Merci de patienter, ne fermez pas cette page.
             <br />
             {mode === 'video' ? 'Comptez 60 à 120 secondes.' : 'Comptez 30 à 60 secondes.'}
@@ -1000,12 +1000,12 @@ function InsufficientCreditsModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-midnight/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-charcoal/30 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
         <div className="bg-white border border-rose-100 rounded-2xl w-full max-w-sm p-6 pointer-events-auto shadow-card text-center relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 p-1 rounded hover:bg-sage-50 text-midnight/40"
+            className="absolute top-3 right-3 p-1 rounded hover:bg-accent-50 text-charcoal/40"
             aria-label="Fermer"
           >
             <X className="w-4 h-4" strokeWidth={1.75} />
@@ -1013,14 +1013,14 @@ function InsufficientCreditsModal({
 
           {feedbackStatus === 'done' ? (
             <>
-              <div className="w-12 h-12 mx-auto rounded-full bg-sage-50 border border-sage-200 flex items-center justify-center mb-4">
-                <Check className="w-6 h-6 text-sage-600" strokeWidth={2} />
+              <div className="w-12 h-12 mx-auto rounded-full bg-accent-50 border border-accent-200 flex items-center justify-center mb-4">
+                <Check className="w-6 h-6 text-accent-600" strokeWidth={2} />
               </div>
-              <h3 className="font-display font-semibold text-lg text-midnight mb-2">Merci pour votre avis !</h3>
-              <p className="text-sm text-midnight/50 mb-6">1 crédit gratuit vient d&apos;être ajouté à votre compte.</p>
+              <h3 className="font-display font-semibold text-lg text-charcoal mb-2">Merci pour votre avis !</h3>
+              <p className="text-sm text-charcoal/50 mb-6">1 crédit gratuit vient d&apos;être ajouté à votre compte.</p>
               <button
                 onClick={onClose}
-                className="w-full rounded-xl bg-sage-500 hover:bg-sage-600 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
+                className="w-full rounded-xl bg-accent-500 hover:bg-accent-600 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
               >
                 Continuer
               </button>
@@ -1030,10 +1030,10 @@ function InsufficientCreditsModal({
               <div className="w-12 h-12 mx-auto rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center mb-4">
                 <AlertTriangle className="w-6 h-6 text-rose-500" strokeWidth={1.75} />
               </div>
-              <h3 className="font-display font-semibold text-lg text-midnight mb-2">
+              <h3 className="font-display font-semibold text-lg text-charcoal mb-2">
                 {isFullyOut ? 'Vous avez utilisé tous vos crédits' : 'Crédits insuffisants pour cette action'}
               </h3>
-              <p className="text-sm text-midnight/50 mb-6">
+              <p className="text-sm text-charcoal/50 mb-6">
                 {isFullyOut
                   ? 'Abonnez-vous pour continuer à générer des rendus et convaincre vos prochains clients.'
                   : <>Il vous faut {required} crédit{required === 1 ? '' : 's'} pour cette action, il vous en reste {available}.</>}
@@ -1043,24 +1043,24 @@ function InsufficientCreditsModal({
                 <div className="flex flex-col gap-2">
                   <Link
                     href="/app/billing?upgrade=1"
-                    className="rounded-xl bg-sage-500 hover:bg-sage-600 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
+                    className="rounded-xl bg-accent-500 hover:bg-accent-600 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
                   >
                     Passer à l&apos;abonnement Essentiel
                   </Link>
                   {isFullyOut && workspaceId && !feedbackCreditGranted && (
                     <button
                       onClick={openFeedback}
-                      className="text-sm text-sage-600 hover:text-sage-700 font-medium py-1"
+                      className="text-sm text-accent-600 hover:text-accent-700 font-medium py-1"
                     >
                       Ou laissez un avis honnête pour 1 crédit gratuit
                     </button>
                   )}
                   {autoRedirect ? (
-                    <button onClick={() => setAutoRedirect(false)} className="text-sm text-midnight/40 hover:text-midnight/60 py-1">
+                    <button onClick={() => setAutoRedirect(false)} className="text-sm text-charcoal/40 hover:text-charcoal/60 py-1">
                       Rester ici <span className="tabular-nums">· redirection dans {secondsLeft}s</span>
                     </button>
                   ) : (
-                    <button onClick={onClose} className="text-sm text-midnight/40 hover:text-midnight/60 py-1">
+                    <button onClick={onClose} className="text-sm text-charcoal/40 hover:text-charcoal/60 py-1">
                       Fermer
                     </button>
                   )}
@@ -1077,7 +1077,7 @@ function InsufficientCreditsModal({
                         className="p-0.5"
                       >
                         <Star
-                          className={cn('w-6 h-6 transition-colors', rating != null && n <= rating ? 'fill-amber-400 text-amber-400' : 'text-midnight/20')}
+                          className={cn('w-6 h-6 transition-colors', rating != null && n <= rating ? 'fill-amber-400 text-amber-400' : 'text-charcoal/20')}
                         />
                       </button>
                     ))}
@@ -1086,21 +1086,21 @@ function InsufficientCreditsModal({
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     rows={3}
-                    placeholder="Qu'est-ce qui vous plaît, ou vous freine, avec Verdia ?"
-                    className="w-full rounded-lg border border-sage-200 px-3 py-2 text-sm focus:outline-none focus:border-sage-400 resize-none"
+                    placeholder="Qu'est-ce qui vous plaît, ou vous freine, avec CarGlow ?"
+                    className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400 resize-none"
                   />
-                  <p className="text-[11px] text-midnight/35">
+                  <p className="text-[11px] text-charcoal/35">
                     {message.trim().length}/{MIN_FEEDBACK_LENGTH} caractères minimum
                   </p>
                   {feedbackError && <p className="text-xs text-rose-500">{feedbackError}</p>}
                   <button
                     onClick={submitFeedback}
                     disabled={feedbackStatus === 'sending' || message.trim().length < MIN_FEEDBACK_LENGTH}
-                    className="rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2.5 text-sm font-semibold transition-colors"
+                    className="rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2.5 text-sm font-semibold transition-colors"
                   >
                     {feedbackStatus === 'sending' ? 'Envoi…' : 'Envoyer et recevoir mon crédit'}
                   </button>
-                  <button onClick={() => setFeedbackOpen(false)} className="text-sm text-midnight/40 hover:text-midnight/60 py-1">
+                  <button onClick={() => setFeedbackOpen(false)} className="text-sm text-charcoal/40 hover:text-charcoal/60 py-1">
                     Annuler
                   </button>
                 </div>

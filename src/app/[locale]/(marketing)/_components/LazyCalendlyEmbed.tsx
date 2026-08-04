@@ -24,11 +24,11 @@ export function LazyCalendlyEmbed() {
           width="100%"
           height="100%"
           style={{ border: 'none' }}
-          title="Réserver une démo Verdia"
+          title="Réserver une démo CarGlow"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-cream-50">
-          <div className="w-6 h-6 border-2 border-sage-300 border-t-sage-600 rounded-full animate-spin" />
+        <div className="w-full h-full flex items-center justify-center bg-offwhite">
+          <div className="w-6 h-6 border-2 border-accent-300 border-t-accent-600 rounded-full animate-spin" />
         </div>
       )}
     </div>

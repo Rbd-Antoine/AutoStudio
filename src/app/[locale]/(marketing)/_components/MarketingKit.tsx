@@ -5,34 +5,25 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { TrackedLink } from './TrackedLink'
-import { gardenImagePath, videoPaths } from '@/lib/showcase-data'
+import { carImagePath, videoPaths, SHOWCASE_CARS } from '@/lib/showcase-data'
 
-// jardin-03 and jardin-04 are tied at 2 distinct video aspect ratios each (see Phase 0 report)
-// — no single garden's real assets cover all three (9:16 / 1:1 / 16:9). Picked jardin-04: its
-// square (1:1) card reads as a starker contrast against the two 9:16 cards than jardin-03's
-// 16:9 would at a glance. Only 3 format cards below, not 4 — there is no real "Paysage" video
-// for this garden, and duplicating a ratio or borrowing another garden's clip would misrepresent
-// "one photo, several formats" as the actual premise of this row.
-const KIT_GARDEN_ID = 'jardin-04'
-const KIT_FORMATS: { videoName: string; label: string; aspectClass: string }[] = [
-  { videoName: 'jardin-04-reel',  label: 'Reel · 9:16',  aspectClass: 'w-[172px] aspect-[9/16]' },
-  { videoName: 'jardin-04-story', label: 'Story · 9:16', aspectClass: 'w-[172px] aspect-[9/16]' },
-  { videoName: 'jardin-04-carre', label: 'Carré · 1:1',  aspectClass: 'w-[306px] aspect-square' },
+// One generated photo, shown cropped into the three formats a dealer actually needs to post
+// (feed, story/reel, square) — same image, no separate render per ratio needed.
+const KIT_CAR_ID = 'voiture-01'
+const KIT_FORMATS: { label: string; aspectClass: string }[] = [
+  { label: 'Reel · 9:16',  aspectClass: 'w-[172px] aspect-[9/16]' },
+  { label: 'Story · 9:16', aspectClass: 'w-[172px] aspect-[9/16]' },
+  { label: 'Carré · 1:1',  aspectClass: 'w-[306px] aspect-square' },
 ]
 
-// Absorbed from the now-retired VideoShowcaseSection.tsx (Phase 4 fusion), then expanded with
-// more of the real garden clips Benoit provided (only jardin-04's 3 formats were shown, in
-// KIT_FORMATS above — this row covers jardin-01/02/03 instead, 2 clips each, so the whole
-// section actually uses all 4 gardens rather than just one). Real showcase-data.ts videos, not
-// the earlier placeholder examples hosted separately on Vercel Blob.
-const REAL_EXAMPLES: { videoName: string; gardenLabel: string; label: string; aspectClass: string }[] = [
-  { videoName: 'jardin-01-dynamique-1', gardenLabel: 'Jardin 1', label: 'Paysage · 16:9', aspectClass: 'w-[280px] aspect-video' },
-  { videoName: 'jardin-01-dynamique-2', gardenLabel: 'Jardin 1', label: 'Paysage · 16:9', aspectClass: 'w-[280px] aspect-video' },
-  { videoName: 'jardin-02-dynamique',   gardenLabel: 'Jardin 2', label: 'Reel · 9:16',    aspectClass: 'w-[172px] aspect-[9/16]' },
-  { videoName: 'jardin-02-reel-1',      gardenLabel: 'Jardin 2', label: 'Reel · 9:16',    aspectClass: 'w-[172px] aspect-[9/16]' },
-  { videoName: 'jardin-03-story-1',     gardenLabel: 'Jardin 3', label: 'Story · 9:16',   aspectClass: 'w-[172px] aspect-[9/16]' },
-  { videoName: 'jardin-03-paysage',     gardenLabel: 'Jardin 3', label: 'Paysage · 16:9', aspectClass: 'w-[280px] aspect-video' },
-]
+// Real before/after examples across the sample vehicles, shown as static image cards rather
+// than one video per format — keeps this row honest about what's actually generated (see
+// showcase-data.ts SHOWCASE_CARS) instead of implying a video exists for every one.
+const REAL_EXAMPLES: { carId: string; label: string; aspectClass: string }[] = SHOWCASE_CARS.map(car => ({
+  carId: car.id,
+  label: car.styleLabel,
+  aspectClass: 'w-[280px] aspect-video',
+}))
 
 // Not shared with AiContentSection.tsx's own copy of this same hook shape — Phase 3's brief
 // only listed this file, so the de-duplication flagged in the Phase 1 report is deferred
@@ -60,81 +51,16 @@ function useRevealOnScroll<T extends HTMLElement>() {
 // user scrolls (and, on mobile, as the snap-carousel moves between cards). Every card on this
 // page — both rows — goes through this same hook, so both are muted/no-audio-control alike;
 // there is no per-card sound toggle anywhere in this section.
-function useAutoplayInView(threshold = 0.5) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [reducedMotion, setReducedMotion] = useState(false)
-  const [manuallyPlaying, setManuallyPlaying] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReducedMotion(mq.matches)
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-
-  useEffect(() => {
-    if (reducedMotion) return
-    const container = containerRef.current
-    const video = videoRef.current
-    if (!container || !video) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {})
-        else video.pause()
-      },
-      { threshold },
-    )
-    observer.observe(container)
-    return () => observer.disconnect()
-  }, [reducedMotion, threshold])
-
-  return { containerRef, videoRef, reducedMotion, manuallyPlaying, setManuallyPlaying }
-}
-
-function FormatCard({ videoSrc, poster, label, aspectClass }: { videoSrc: string; poster: string; label: string; aspectClass: string }) {
-  const { containerRef, videoRef, reducedMotion, manuallyPlaying, setManuallyPlaying } = useAutoplayInView()
-  const showPosterOnly = reducedMotion && !manuallyPlaying
-
+function FormatCard({ imageSrc, label, aspectClass }: { imageSrc: string; label: string; aspectClass: string }) {
   return (
     <div
-      ref={containerRef}
       className={cn(
-        'relative shrink-0 rounded-2xl overflow-hidden border border-midnight/[0.08] shadow-card bg-midnight snap-center',
+        'relative shrink-0 rounded-2xl overflow-hidden border border-charcoal/[0.08] shadow-card bg-offwhite snap-center',
         aspectClass,
       )}
     >
-      {showPosterOnly ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={poster} alt={label} className="absolute inset-0 w-full h-full object-cover" />
-      ) : (
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          loop
-          preload="none"
-          poster={poster}
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      )}
-
-      {reducedMotion && !manuallyPlaying && (
-        <button
-          onClick={() => setManuallyPlaying(true)}
-          aria-label={`Lire la vidéo ${label}`}
-          className="absolute inset-0 flex items-center justify-center bg-midnight/20 hover:bg-midnight/30 transition-colors"
-        >
-          <span className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
-            <span className="w-0 h-0 border-y-[8px] border-y-transparent border-l-[13px] border-l-midnight ml-1" />
-          </span>
-        </button>
-      )}
-
-      <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-midnight/50 backdrop-blur-sm text-[11px] font-semibold text-white border border-white/15">
+      <Image src={imageSrc} alt={label} fill sizes="320px" className="object-cover" />
+      <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-charcoal/50 backdrop-blur-sm text-[11px] font-semibold text-white border border-white/15">
         {label}
       </div>
     </div>
@@ -145,7 +71,7 @@ export function MarketingKit() {
   const { ref: sectionRef, visible } = useRevealOnScroll<HTMLDivElement>()
 
   return (
-    <section id="kit-marketing" className="section-pad bg-cream-50">
+    <section id="kit-marketing" className="section-pad bg-offwhite">
       <div
         ref={sectionRef}
         className={cn(
@@ -154,14 +80,14 @@ export function MarketingKit() {
         )}
       >
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-50 border border-sage-200 text-sage-600 text-xs font-bold uppercase tracking-wider mb-5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-50 border border-accent-200 text-accent-600 text-xs font-bold uppercase tracking-wider mb-5">
             Nouveau
           </div>
-          <h2 className="font-display font-bold text-midnight mb-5" style={{ fontSize: 'clamp(1.9rem,3.8vw,2.9rem)', lineHeight: 1.12 }}>
+          <h2 className="font-display font-bold text-charcoal mb-5" style={{ fontSize: 'clamp(1.9rem,3.8vw,2.9rem)', lineHeight: 1.12 }}>
             Le kit marketing, <span className="text-gradient">généré en un clic</span>
           </h2>
-          <p className="text-midnight/50 text-[15px] leading-relaxed">
-            À partir de la même photo, Verdia produit la vidéo avant/après déjà déclinée aux
+          <p className="text-charcoal/50 text-[15px] leading-relaxed">
+            À partir de la même photo, CarGlow produit le visuel avant/après déjà décliné aux
             formats des réseaux — vous n&apos;avez rien à recadrer ni remonter.
           </p>
         </div>
@@ -171,71 +97,64 @@ export function MarketingKit() {
         <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-6">
           {/* 1. Starting photo — small, static */}
           <div className="md:w-[140px] shrink-0 mx-auto md:mx-0">
-            <div className="relative w-[140px] aspect-[4/5] rounded-2xl overflow-hidden border border-midnight/[0.08] shadow-card">
+            <div className="relative w-[140px] aspect-[4/3] rounded-2xl overflow-hidden border border-charcoal/[0.08] shadow-card">
               <Image
-                src={gardenImagePath(KIT_GARDEN_ID, 'before')}
-                alt="Photo de départ du jardin"
+                src={carImagePath(KIT_CAR_ID, 'before')}
+                alt="Photo de départ du véhicule"
                 fill
                 sizes="140px"
                 className="object-cover"
               />
             </div>
-            <p className="text-center text-xs text-midnight/40 mt-2">Votre photo de départ</p>
+            <p className="text-center text-xs text-charcoal/40 mt-2">Votre photo de départ</p>
           </div>
 
           {/* 2. Discreet connector — real measured delay, not invented */}
           <div className="flex md:flex-col items-center justify-center gap-2 text-center shrink-0 md:w-[100px]">
-            <ArrowRight className="w-5 h-5 text-sage-400 shrink-0 md:rotate-0" />
-            <p className="text-xs text-midnight/40 leading-snug">
+            <ArrowRight className="w-5 h-5 text-accent-400 shrink-0 md:rotate-0" />
+            <p className="text-xs text-charcoal/40 leading-snug">
               Généré par l&apos;IA<br />en environ une minute
             </p>
           </div>
 
-          {/* 3. The kit — real ratios, side by side */}
+          {/* 3. The kit — same photo, cropped to the formats dealers actually post */}
           <div className="flex-1 min-w-0">
             <div className="flex gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-2 md:pb-0 justify-start md:justify-center items-end">
-              {KIT_FORMATS.map(f => {
-                const { mp4, poster } = videoPaths(f.videoName)
-                return <FormatCard key={f.videoName} videoSrc={mp4} poster={poster} label={f.label} aspectClass={f.aspectClass} />
-              })}
+              {KIT_FORMATS.map(f => (
+                <FormatCard key={f.label} imageSrc={carImagePath(KIT_CAR_ID, 'after')} label={f.label} aspectClass={f.aspectClass} />
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Row 2: absorbed from VideoShowcaseSection.tsx — real examples across different
-            gardens/styles, showing the range rather than the single-photo mechanism above.
-            Same card component, same silent autoplay-in-view behaviour, no sound control. */}
+        {/* Row 2: real before/after examples across the sample vehicles, showing the range of
+            styles rather than the single-photo mechanism above. */}
         <div className="mt-14 lg:mt-16">
           <div className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-50 border border-sage-200 text-sage-600 text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-50 border border-accent-200 text-accent-600 text-xs font-bold uppercase tracking-wider">
               Exemples réels
             </div>
           </div>
-          {/* Always a horizontal scroll strip, even on desktop — 6 cards of mixed real
-              ratios don't reliably fit one visible row the way row 1's 3 cards do. */}
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 justify-start items-end">
-            {REAL_EXAMPLES.map(ex => {
-              const { mp4, poster } = videoPaths(ex.videoName)
-              return (
-                <div key={ex.videoName} className="flex flex-col gap-2 shrink-0">
-                  <FormatCard videoSrc={mp4} poster={poster} label={ex.label} aspectClass={ex.aspectClass} />
-                  <p className="text-center text-xs text-midnight/40">{ex.gardenLabel}</p>
-                </div>
-              )
-            })}
+            {REAL_EXAMPLES.map(ex => (
+              <div key={ex.carId} className="flex flex-col gap-2 shrink-0">
+                <FormatCard imageSrc={carImagePath(ex.carId, 'after')} label={ex.label} aspectClass={ex.aspectClass} />
+                <p className="text-center text-xs text-charcoal/40">{ex.label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="mt-14 lg:mt-16 text-center max-w-xl mx-auto">
-          <h3 className="font-display font-bold text-midnight mb-6" style={{ fontSize: 'clamp(1.4rem,2.6vw,2rem)' }}>
+          <h3 className="font-display font-bold text-charcoal mb-6" style={{ fontSize: 'clamp(1.4rem,2.6vw,2rem)' }}>
             Photographiez une fois, publiez partout.
           </h3>
-          <p className="text-midnight/45 text-sm leading-relaxed mb-8">
+          <p className="text-charcoal/45 text-sm leading-relaxed mb-8">
             Kit entièrement personnalisable : votre logo, votre couleur de marque, votre texte
             de fin et votre musique.
           </p>
           <TrackedLink href="/signup" ctaId="marketing_kit_section" label="Essayer le kit marketing" location="marketing_kit_section"
-            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-sage-500 hover:bg-sage-600 text-white font-bold text-base shadow-sage-sm hover:shadow-sage-md transition-all">
+            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-accent-500 hover:bg-accent-600 text-white font-bold text-base shadow-accent-sm hover:shadow-accent-md transition-all">
             Essayer le kit marketing
             <ArrowRight className="w-5 h-5" />
           </TrackedLink>

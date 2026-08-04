@@ -61,12 +61,12 @@ async function getPlans(): Promise<MarketingPlan[]> {
 export async function PricingSection() {
   const plans = await getPlans()
   return (
-    <section id="tarifs" className="section-pad bg-cream-50">
+    <section id="tarifs" className="section-pad bg-offwhite">
       <PricingViewedTracker source="homepage" />
       <div className="page-container">
         <div className="text-center max-w-xl mx-auto mb-10">
           <p className="eyebrow mb-3">Tarifs</p>
-          <h2 className="font-display font-bold text-midnight mb-4" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
+          <h2 className="font-display font-bold text-charcoal mb-4" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
             Commencez gratuitement,<br /><span className="text-gradient">évoluez à votre rythme.</span>
           </h2>
         </div>
@@ -74,37 +74,37 @@ export async function PricingSection() {
           {plans.map(plan => (
             <div key={plan.name} className={cn(
               'relative rounded-3xl p-8 flex flex-col border transition-all',
-              plan.highlight ? 'bg-midnight border-sage-500/30 shadow-sage-md' : 'bg-white border-midnight/[0.07] shadow-card hover:shadow-card-hover',
+              plan.highlight ? 'bg-offwhite border-accent-500/30 shadow-accent-md' : 'bg-white border-charcoal/[0.07] shadow-card hover:shadow-card-hover',
             )}>
               {plan.badge && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-sage-500 text-white text-xs font-bold whitespace-nowrap">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-accent-500 text-white text-xs font-bold whitespace-nowrap">
                   {plan.badge}
                 </span>
               )}
               <div className="mb-5">
-                <h3 className={cn('font-display font-semibold mb-1', plan.highlight ? 'text-offwhite' : 'text-midnight')}>{plan.name}</h3>
-                <p className={cn('text-xs', plan.highlight ? 'text-offwhite/40' : 'text-midnight/40')}>{plan.sub}</p>
+                <h3 className={cn('font-display font-semibold mb-1', plan.highlight ? 'text-charcoal' : 'text-charcoal')}>{plan.name}</h3>
+                <p className={cn('text-xs', plan.highlight ? 'text-charcoal/40' : 'text-charcoal/40')}>{plan.sub}</p>
               </div>
               <div className="flex items-baseline gap-1.5 mb-6 flex-wrap">
                 {plan.originalPrice && (
-                  <span className={cn('text-lg line-through', plan.highlight ? 'text-offwhite/35' : 'text-midnight/30')}>{plan.originalPrice}</span>
+                  <span className={cn('text-lg line-through', plan.highlight ? 'text-charcoal/35' : 'text-charcoal/30')}>{plan.originalPrice}</span>
                 )}
-                <span className={cn('text-4xl font-display font-bold', plan.highlight ? 'text-offwhite' : 'text-midnight')}>{plan.price}</span>
-                {plan.per && <span className={cn('text-sm', plan.highlight ? 'text-offwhite/40' : 'text-midnight/40')}>{plan.per}</span>}
+                <span className={cn('text-4xl font-display font-bold', plan.highlight ? 'text-charcoal' : 'text-charcoal')}>{plan.price}</span>
+                {plan.per && <span className={cn('text-sm', plan.highlight ? 'text-charcoal/40' : 'text-charcoal/40')}>{plan.per}</span>}
                 {plan.originalPrice && (
-                  <span className="text-[11px] font-semibold text-sage-500 w-full mt-0.5">1ère année</span>
+                  <span className="text-[11px] font-semibold text-accent-500 w-full mt-0.5">1ère année</span>
                 )}
               </div>
               <ul className="flex flex-col gap-2.5 mb-8 flex-1">
                 {plan.features.map(f => (
-                  <li key={f} className={cn('flex items-start gap-2.5 text-sm', plan.highlight ? 'text-offwhite/65' : 'text-midnight/60')}>
-                    <Check className={cn('w-4 h-4 mt-0.5 shrink-0', plan.highlight ? 'text-sage-400' : 'text-sage-500')} />{f}
+                  <li key={f} className={cn('flex items-start gap-2.5 text-sm', plan.highlight ? 'text-charcoal/65' : 'text-charcoal/60')}>
+                    <Check className={cn('w-4 h-4 mt-0.5 shrink-0', plan.highlight ? 'text-accent-400' : 'text-accent-500')} />{f}
                   </li>
                 ))}
               </ul>
               <TrackedLink href={plan.href} ctaId={`pricing_homepage_${plan.id.toLowerCase()}`} label={plan.cta} location="pricing_homepage" className={cn(
                 'text-center py-3 rounded-2xl text-sm font-semibold transition-all',
-                plan.highlight ? 'bg-sage-500 hover:bg-sage-600 text-white shadow-sage-sm' : 'border border-midnight/[0.12] hover:border-sage-400 text-midnight/70 hover:text-sage-600',
+                plan.highlight ? 'bg-accent-500 hover:bg-accent-600 text-white shadow-accent-sm' : 'border border-charcoal/[0.12] hover:border-accent-400 text-charcoal/70 hover:text-accent-600',
               )}>{plan.cta}</TrackedLink>
             </div>
           ))}

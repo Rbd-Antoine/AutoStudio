@@ -25,24 +25,24 @@ export default function OnboardingBanner({ photoCount }: Props) {
   if (dismissed || pct >= 100) return null
 
   return (
-    <div className="rounded-2xl border border-sage-200 bg-gradient-to-br from-sage-50 to-white overflow-hidden">
+    <div className="rounded-2xl border border-accent-200 bg-gradient-to-br from-accent-50 to-white overflow-hidden">
       <header className="flex items-start justify-between p-5 pb-3">
         <div>
-          <div className="text-[11px] font-semibold tracking-widest uppercase text-sage-600 mb-1">Pour bien démarrer</div>
-          <h3 className="font-display font-semibold text-[15px] text-midnight">Finalisez votre configuration</h3>
+          <div className="text-[11px] font-semibold tracking-widest uppercase text-accent-600 mb-1">Pour bien démarrer</div>
+          <h3 className="font-display font-semibold text-[15px] text-charcoal">Finalisez votre configuration</h3>
         </div>
-        <button onClick={() => setDismissed(true)} className="text-midnight/35 hover:text-midnight p-1" aria-label="Masquer">
+        <button onClick={() => setDismissed(true)} className="text-charcoal/35 hover:text-charcoal p-1" aria-label="Masquer">
           <X className="w-3.5 h-3.5" />
         </button>
       </header>
 
       <div className="px-5 pb-3">
         <div className="flex items-center justify-between text-[11px] mb-1.5">
-          <span className="text-midnight/50">{completed} sur {steps.length} terminé{completed > 1 ? 's' : ''}</span>
-          <span className="text-sage-600 font-semibold tabular-nums">{Math.round(pct)}%</span>
+          <span className="text-charcoal/50">{completed} sur {steps.length} terminé{completed > 1 ? 's' : ''}</span>
+          <span className="text-accent-600 font-semibold tabular-nums">{Math.round(pct)}%</span>
         </div>
-        <div className="h-1 rounded-full bg-sage-100 overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-sage-500 to-sage-400 transition-all" style={{ width: `${pct}%` }} />
+        <div className="h-1 rounded-full bg-accent-100 overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
@@ -52,20 +52,20 @@ export default function OnboardingBanner({ photoCount }: Props) {
             <>
               <span className={cn(
                 'w-4 h-4 shrink-0 rounded-full flex items-center justify-center border',
-                step.done ? 'border-sage-500 bg-sage-500 text-white' : 'border-midnight/[0.18]',
+                step.done ? 'border-accent-500 bg-accent-500 text-white' : 'border-charcoal/[0.18]',
               )}>
                 {step.done && <Check className="w-2.5 h-2.5" strokeWidth={3} />}
               </span>
-              <span className={cn('flex-1', step.done ? 'text-midnight/40 line-through decoration-midnight/20' : 'text-midnight/80')}>
+              <span className={cn('flex-1', step.done ? 'text-charcoal/40 line-through decoration-charcoal/20' : 'text-charcoal/80')}>
                 {step.label}
               </span>
-              {!step.done && step.href && <ChevronRight className="w-3.5 h-3.5 text-midnight/30" />}
+              {!step.done && step.href && <ChevronRight className="w-3.5 h-3.5 text-charcoal/30" />}
             </>
           )
           return (
             <li key={step.id}>
               {step.href && !step.done ? (
-                <Link href={step.href} className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] transition-colors hover:bg-sage-50">
+                <Link href={step.href} className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] transition-colors hover:bg-accent-50">
                   {content}
                 </Link>
               ) : (

@@ -13,13 +13,13 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://verdia-app.com'),
+  metadataBase: new URL('https://carglow-app.com'),
   title: {
-    default: 'Verdia — Visualisez votre jardin de rêve en secondes',
-    template: '%s | Verdia',
+    default: 'CarGlow — Des photos de voitures dignes d\'un showroom, en secondes',
+    template: '%s | CarGlow',
   },
   description:
-    'Verdia transforme la photo de votre jardin actuel en rendu photo ou vidéo de votre futur aménagement paysager, propulsé par l\'IA.',
+    'CarGlow transforme les photos de votre stock véhicules avec des arrière-plans professionnels générés par IA, le masquage automatique de plaque et votre watermark de concession.',
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   // Meta Business domain verification — rendered server-side via Next's Metadata API,
   // so it's present in the initial HTML <head> rather than injected by client JS
@@ -41,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="preconnect" href="https://connect.facebook.net" />
         <link rel="preconnect" href="https://calendly.com" />
       </head>
-      <body className="bg-cream text-midnight antialiased">
+      <body className="bg-offwhite text-charcoal antialiased">
         <Providers>{children}</Providers>
         <SpeedInsights />
       </body>

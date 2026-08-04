@@ -18,20 +18,20 @@ export async function POST(req: Request) {
   }
 
   const { error } = await getResend().emails.send({
-    from:    'Verdia <noreply@verdia-app.com>',
-    to:      'verdia.rendus@gmail.com',
+    from:    'CarGlow <noreply@carglow-app.com>',
+    to:      'carglow.rendus@gmail.com',
     replyTo: email,
-    subject: `${prenom} ${nom} via Verdia${sujet ? ` — ${sujet}` : ''}`,
+    subject: `${prenom} ${nom} via CarGlow${sujet ? ` — ${sujet}` : ''}`,
     text:    `De : ${prenom} ${nom} <${email}>\nSujet : ${sujet}\n\n${message}`,
     html:    `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-        <h2 style="color:#0d1f11">Nouveau message via verdia.app</h2>
+        <h2 style="color:#14161A">Nouveau message via carglow.app</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
           <tr><td style="padding:6px 0;color:#666;width:100px">De</td><td style="padding:6px 0;font-weight:600">${prenom} ${nom}</td></tr>
           <tr><td style="padding:6px 0;color:#666">Email</td><td style="padding:6px 0"><a href="mailto:${email}">${email}</a></td></tr>
           <tr><td style="padding:6px 0;color:#666">Sujet</td><td style="padding:6px 0">${sujet || '—'}</td></tr>
         </table>
-        <div style="background:#f5faf6;border-radius:12px;padding:16px;white-space:pre-wrap;color:#0d1f11">${message}</div>
+        <div style="background:#f5faf6;border-radius:12px;padding:16px;white-space:pre-wrap;color:#14161A">${message}</div>
       </div>
     `,
   })

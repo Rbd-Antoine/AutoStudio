@@ -13,7 +13,7 @@ export function TestimonialAvatar({ name, className }: { name: string; className
 
   return (
     <div className={cn(
-      'rounded-full bg-sage-100 text-sage-700 font-display font-semibold flex items-center justify-center text-sm',
+      'rounded-full bg-accent-100 text-accent-700 font-display font-semibold flex items-center justify-center text-sm',
       className,
     )}>
       {initials}

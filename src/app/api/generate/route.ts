@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
-import { GARDEN_STYLES } from '@/lib/gardenPrompts'
+import { CAR_STYLES } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
@@ -88,12 +88,12 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const style = GARDEN_STYLES[styleSlug] ?? GARDEN_STYLES['gazon-fleurs']
+  const style = CAR_STYLES[styleSlug] ?? CAR_STYLES['studio-blanc']
 
   const photo = await db.photo.create({
     data: {
       workspaceId,
-      originalUrl: 'jardin-direct-upload',
+      originalUrl: 'car-direct-upload',
       status: 'PROCESSING',
       styleUsed: styleSlug,
       toolsUsed: ['gemini_image_generation'],

@@ -7,7 +7,7 @@ export function GuideSignupButton({ className, full }: { className?: string; ful
     <Link
       href="/signup"
       className={cn(
-        'inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-sage-500 hover:bg-sage-600 text-white font-semibold text-sm shadow-sage-sm hover:shadow-sage-md transition-all',
+        'inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm shadow-accent-sm hover:shadow-accent-md transition-all',
         full && 'w-full',
         className,
       )}

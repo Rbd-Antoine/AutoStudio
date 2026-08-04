@@ -3,14 +3,14 @@ import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayou
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
-  description: "Mentions légales de l'éditeur du site Verdia.",
+  description: "Mentions légales de l'éditeur du site CarGlow.",
 }
 
 export default function MentionsLegalesPage() {
   return (
     <LegalPageLayout eyebrow="Informations légales" title="Mentions légales" updated="17 juillet 2026">
       <LegalSection title="Éditeur">
-        <p>Entreprise individuelle Verdia</p>
+        <p>Entreprise individuelle CarGlow</p>
       </LegalSection>
 
       <LegalSection title="Adresse">

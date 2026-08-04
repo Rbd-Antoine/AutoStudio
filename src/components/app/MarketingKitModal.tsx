@@ -18,7 +18,7 @@ const FORMATS: { id: Format; label: string }[] = [
 ]
 
 const CTA_PRESETS = [
-  'Transformez votre jardin.',
+  'Prêt pour la route.',
   'Demandez votre devis.',
   'Contactez-nous.',
   'Votre extérieur mérite mieux.',
@@ -113,7 +113,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
   }
 
   const download = () => {
-    if (videoUrl) downloadUrlAsFile(videoUrl, `verdia-marketing-${format}-${Date.now()}.mp4`)
+    if (videoUrl) downloadUrlAsFile(videoUrl, `carglow-marketing-${format}-${Date.now()}.mp4`)
   }
 
   const generateCaption = async () => {
@@ -145,15 +145,15 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-midnight/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-charcoal/30 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-        <div className="bg-white border border-sage-100 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto pointer-events-auto shadow-card relative">
-          <div className="sticky top-0 bg-white border-b border-sage-100 px-6 py-4 flex items-center justify-between z-10">
+        <div className="bg-white border border-accent-100 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto pointer-events-auto shadow-card relative">
+          <div className="sticky top-0 bg-white border-b border-accent-100 px-6 py-4 flex items-center justify-between z-10">
             <div className="flex items-center gap-2">
-              <Clapperboard className="w-5 h-5 text-sage-500" strokeWidth={1.75} />
-              <h3 className="font-display font-semibold text-lg text-midnight">Kit marketing</h3>
+              <Clapperboard className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
+              <h3 className="font-display font-semibold text-lg text-charcoal">Kit marketing</h3>
             </div>
-            <button onClick={onClose} className="p-1 rounded hover:bg-sage-50 text-midnight/40" aria-label="Fermer">
+            <button onClick={onClose} className="p-1 rounded hover:bg-accent-50 text-charcoal/40" aria-label="Fermer">
               <X className="w-4 h-4" strokeWidth={1.75} />
             </button>
           </div>
@@ -161,30 +161,30 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
           <div className="p-6 flex flex-col gap-5">
             {status === 'done' && videoUrl ? (
               <>
-                <video src={videoUrl} controls autoPlay loop className="w-full rounded-xl border border-sage-100" />
+                <video src={videoUrl} controls autoPlay loop className="w-full rounded-xl border border-accent-100" />
                 <button
                   onClick={download}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-sage-500 hover:bg-sage-600 text-white px-4 py-3 text-sm font-semibold transition-colors"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white px-4 py-3 text-sm font-semibold transition-colors"
                 >
                   <Download className="w-4 h-4" strokeWidth={2} /> Télécharger la vidéo
                 </button>
 
-                <div className="rounded-xl border border-sage-100 p-4">
+                <div className="rounded-xl border border-accent-100 p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide">Texte pour la publication</label>
+                    <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide">Texte pour la publication</label>
                     {caption && (
-                      <button onClick={copyCaption} className="text-xs text-sage-600 hover:text-sage-700 font-medium flex items-center gap-1">
+                      <button onClick={copyCaption} className="text-xs text-accent-600 hover:text-accent-700 font-medium flex items-center gap-1">
                         {copied ? <><Check className="w-3.5 h-3.5" /> Copié</> : <><Copy className="w-3.5 h-3.5" /> Copier</>}
                       </button>
                     )}
                   </div>
                   {caption ? (
-                    <p className="text-sm text-midnight/70 whitespace-pre-wrap leading-relaxed">{caption}</p>
+                    <p className="text-sm text-charcoal/70 whitespace-pre-wrap leading-relaxed">{caption}</p>
                   ) : (
                     <button
                       onClick={generateCaption}
                       disabled={captionStatus === 'loading'}
-                      className="flex items-center gap-2 text-sm text-sage-600 hover:text-sage-700 font-medium disabled:opacity-60"
+                      className="flex items-center gap-2 text-sm text-accent-600 hover:text-accent-700 font-medium disabled:opacity-60"
                     >
                       {captionStatus === 'loading'
                         ? <><Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} /> Génération…</>
@@ -197,7 +197,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
 
                 <button
                   onClick={() => { setStatus('idle'); setVideoUrl(null); setCaption(null) }}
-                  className="text-sm text-midnight/40 hover:text-midnight/60 py-1"
+                  className="text-sm text-charcoal/40 hover:text-charcoal/60 py-1"
                 >
                   Générer un autre format
                 </button>
@@ -205,7 +205,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
             ) : (
               <>
                 <div>
-                  <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide mb-2 block">Format</label>
+                  <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2 block">Format</label>
                   <div className="grid grid-cols-2 gap-2">
                     {FORMATS.map(f => (
                       <button
@@ -214,8 +214,8 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                         className={cn(
                           'rounded-xl border px-3 py-2.5 text-sm font-medium text-left transition-all',
                           format === f.id
-                            ? 'border-sage-400 bg-sage-50 text-sage-700'
-                            : 'border-sage-100 text-midnight/60 hover:border-sage-300',
+                            ? 'border-accent-400 bg-accent-50 text-accent-700'
+                            : 'border-accent-100 text-charcoal/60 hover:border-accent-300',
                         )}
                       >
                         {f.label}
@@ -225,64 +225,64 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                 </div>
 
                 {hasVideoAfter && (
-                  <label className="flex items-start gap-3 rounded-xl border border-sage-100 px-3.5 py-3 cursor-pointer hover:border-sage-300 transition-colors">
+                  <label className="flex items-start gap-3 rounded-xl border border-accent-100 px-3.5 py-3 cursor-pointer hover:border-accent-300 transition-colors">
                     <input
                       type="checkbox"
                       checked={useVideoAfter}
                       onChange={e => setUseVideoAfter(e.target.checked)}
-                      className="mt-0.5 w-4 h-4 rounded border-sage-300 text-sage-500 focus:ring-sage-400"
+                      className="mt-0.5 w-4 h-4 rounded border-accent-300 text-accent-500 focus:ring-accent-400"
                     />
                     <span>
-                      <span className="block text-sm font-medium text-midnight">Utiliser ma vidéo générée comme &quot;Après&quot;</span>
-                      <span className="block text-xs text-midnight/45 mt-0.5">Au lieu de la photo statique, la partie « Après » utilisera votre vidéo animée.</span>
+                      <span className="block text-sm font-medium text-charcoal">Utiliser ma vidéo générée comme &quot;Après&quot;</span>
+                      <span className="block text-xs text-charcoal/45 mt-0.5">Au lieu de la photo statique, la partie « Après » utilisera votre vidéo animée.</span>
                     </span>
                   </label>
                 )}
 
                 <div>
-                  <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide mb-2 block">Couleur d&apos;accent</label>
+                  <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2 block">Couleur d&apos;accent</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
                       value={accentColor}
                       onChange={e => setAccentColor(e.target.value)}
-                      className="w-10 h-10 rounded-lg border border-sage-100 cursor-pointer bg-transparent p-0"
+                      className="w-10 h-10 rounded-lg border border-accent-100 cursor-pointer bg-transparent p-0"
                     />
                     <input
                       type="text"
                       value={accentColor}
                       onChange={e => setAccentColor(e.target.value)}
-                      className="flex-1 rounded-lg border border-sage-100 px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:border-sage-400"
+                      className="flex-1 rounded-lg border border-accent-100 px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:border-accent-400"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide mb-2 block">Texte de fin</label>
+                  <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2 block">Texte de fin</label>
                   <input
                     type="text"
                     value={endText}
                     onChange={e => setEndText(e.target.value)}
-                    placeholder="Transformez votre jardin."
-                    className="w-full rounded-lg border border-sage-100 px-3 py-2 text-sm focus:outline-none focus:border-sage-400"
+                    placeholder="Prêt pour la route."
+                    className="w-full rounded-lg border border-accent-100 px-3 py-2 text-sm focus:outline-none focus:border-accent-400"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide mb-2 block">Appel à l&apos;action</label>
+                  <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2 block">Appel à l&apos;action</label>
                   <input
                     type="text"
                     value={ctaText}
                     onChange={e => setCtaText(e.target.value)}
                     placeholder="Demandez votre devis."
-                    className="w-full rounded-lg border border-sage-100 px-3 py-2 text-sm mb-2 focus:outline-none focus:border-sage-400"
+                    className="w-full rounded-lg border border-accent-100 px-3 py-2 text-sm mb-2 focus:outline-none focus:border-accent-400"
                   />
                   <div className="flex flex-wrap gap-1.5">
                     {CTA_PRESETS.map(preset => (
                       <button
                         key={preset}
                         onClick={() => setCtaText(preset)}
-                        className="text-xs px-2.5 py-1 rounded-full border border-sage-100 text-midnight/50 hover:border-sage-300 hover:text-midnight transition-colors"
+                        className="text-xs px-2.5 py-1 rounded-full border border-accent-100 text-charcoal/50 hover:border-accent-300 hover:text-charcoal transition-colors"
                       >
                         {preset}
                       </button>
@@ -291,15 +291,15 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-midnight/50 uppercase tracking-wide mb-2 block">Musique de fond</label>
+                  <label className="text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2 block">Musique de fond</label>
                   <div className="flex flex-col gap-1.5">
                     <button
                       onClick={() => setMusicId(null)}
                       className={cn(
                         'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-left transition-all',
                         musicId === null
-                          ? 'border-sage-400 bg-sage-50 text-sage-700 font-medium'
-                          : 'border-sage-100 text-midnight/60 hover:border-sage-300',
+                          ? 'border-accent-400 bg-accent-50 text-accent-700 font-medium'
+                          : 'border-accent-100 text-charcoal/60 hover:border-accent-300',
                       )}
                     >
                       Aucune musique
@@ -312,13 +312,13 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                         className={cn(
                           'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-left transition-all disabled:opacity-40 disabled:cursor-not-allowed',
                           musicId === preset.id
-                            ? 'border-sage-400 bg-sage-50 text-sage-700 font-medium'
-                            : 'border-sage-100 text-midnight/60 hover:border-sage-300',
+                            ? 'border-accent-400 bg-accent-50 text-accent-700 font-medium'
+                            : 'border-accent-100 text-charcoal/60 hover:border-accent-300',
                         )}
                       >
                         <Music className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />
                         {preset.label}
-                        {!preset.url && <span className="text-[11px] text-midnight/30 ml-auto">bientôt</span>}
+                        {!preset.url && <span className="text-[11px] text-charcoal/30 ml-auto">bientôt</span>}
                       </button>
                     ))}
                   </div>
@@ -343,7 +343,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                 <button
                   onClick={generate}
                   disabled={status === 'loading'}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-3 text-sm font-semibold transition-colors"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-3 text-sm font-semibold transition-colors"
                 >
                   {status === 'loading'
                     ? <><Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} /> Génération en cours… (~30-60s)</>

@@ -12,21 +12,21 @@ const FEATURES = [
   {
     icon: ArrowLeftRight,
     title: 'Avant / Après instantané',
-    desc: "Transformez une simple photo en une visualisation réaliste du futur jardin.",
+    desc: "Transformez une simple photo smartphone en un visuel digne d'un showroom.",
   },
   {
     icon: Handshake,
-    title: 'Convainquez plus facilement',
-    desc: 'Les clients se projettent immédiatement grâce à des rendus photoréalistes.',
+    title: 'Plus de clics sur vos annonces',
+    desc: 'Les acheteurs cliquent davantage sur des photos professionnelles et cohérentes.',
   },
   {
     icon: Share2,
     title: 'Contenu pour les réseaux sociaux',
-    desc: 'Générez facilement des publications attractives pour attirer de nouveaux clients.',
+    desc: 'Générez facilement des publications attractives pour mettre en avant votre stock.',
   },
   {
     icon: Link2,
-    title: '100 % intégré à Verdia',
+    title: '100 % intégré à CarGlow',
     desc: "Passez d'une photo à un rendu IA sans changer d'outil.",
   },
 ]
@@ -66,16 +66,16 @@ export function AiContentSection() {
         <div className="grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
           {/* Left: copy + feature cards */}
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-50 border border-sage-200 text-sage-600 text-xs font-bold uppercase tracking-wider mb-5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-50 border border-accent-200 text-accent-600 text-xs font-bold uppercase tracking-wider mb-5">
               ✨ Nouveau
             </div>
 
-            <h2 className="font-display font-bold text-midnight mb-5" style={{ fontSize: 'clamp(1.9rem,3.8vw,2.9rem)', lineHeight: 1.12 }}>
+            <h2 className="font-display font-bold text-charcoal mb-5" style={{ fontSize: 'clamp(1.9rem,3.8vw,2.9rem)', lineHeight: 1.12 }}>
               Impressionnez vos clients{' '}
               <span className="text-gradient">avant même le début des travaux</span>
             </h2>
 
-            <p className="text-midnight/50 text-[15px] leading-relaxed mb-10 max-w-xl">
+            <p className="text-charcoal/50 text-[15px] leading-relaxed mb-10 max-w-xl">
               Créez des rendus IA avant / après en quelques secondes pour aider vos clients à
               se projeter et transformez-les en contenus prêts à publier sur Instagram, Facebook
               ou LinkedIn.
@@ -87,18 +87,18 @@ export function AiContentSection() {
                   key={f.title}
                   className={cn(
                     'group card-light rounded-2xl p-5 transition-all duration-500 ease-out',
-                    'hover:border-sage-300 hover:shadow-card-hover hover:-translate-y-1',
+                    'hover:border-accent-300 hover:shadow-card-hover hover:-translate-y-1',
                     visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
                   )}
                   style={{ transitionDelay: visible ? `${i * 90}ms` : '0ms' }}
                 >
-                  <div className="w-11 h-11 rounded-xl bg-sage-50 border border-sage-200/60 flex items-center justify-center mb-4 transition-colors group-hover:bg-sage-100">
-                    <f.icon className="w-5 h-5 text-sage-500" strokeWidth={1.75} />
+                  <div className="w-11 h-11 rounded-xl bg-accent-50 border border-accent-200/60 flex items-center justify-center mb-4 transition-colors group-hover:bg-accent-100">
+                    <f.icon className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-display font-semibold text-midnight text-[15px] mb-1.5">
+                  <h3 className="font-display font-semibold text-charcoal text-[15px] mb-1.5">
                     {f.title}
                   </h3>
-                  <p className="text-midnight/50 text-[13.5px] leading-relaxed">
+                  <p className="text-charcoal/50 text-[13.5px] leading-relaxed">
                     {f.desc}
                   </p>
                 </div>
@@ -115,8 +115,8 @@ export function AiContentSection() {
             style={{ transitionDelay: visible ? '150ms' : '0ms' }}
           >
             <BeforeAfterSlider
-              before="/marketing/garden-before.jpg"
-              after="/marketing/garden-after.jpg"
+              before="/marketing/car-before.jpg"
+              after="/marketing/car-after.jpg"
               className="aspect-[4/5] lg:aspect-[3/4]"
             />
           </div>
@@ -126,11 +126,11 @@ export function AiContentSection() {
       {/* Centered CTA */}
       <div className="page-container mt-16 lg:mt-20">
         <div className="max-w-2xl mx-auto text-center">
-          <h3 className="font-display font-bold text-midnight mb-6" style={{ fontSize: 'clamp(1.5rem,2.8vw,2.1rem)' }}>
-            Votre prochain chantier commence par une image.
+          <h3 className="font-display font-bold text-charcoal mb-6" style={{ fontSize: 'clamp(1.5rem,2.8vw,2.1rem)' }}>
+            Votre prochaine vente commence par une photo.
           </h3>
           <TrackedLink href="/signup" ctaId="ai_content_section" label="Créer mon premier rendu" location="ai_content_section"
-            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-sage-500 hover:bg-sage-600 text-white font-bold text-base shadow-sage-sm hover:shadow-sage-md transition-all">
+            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-accent-500 hover:bg-accent-600 text-white font-bold text-base shadow-accent-sm hover:shadow-accent-md transition-all">
             Créer mon premier rendu
             <ArrowRight className="w-5 h-5" />
           </TrackedLink>

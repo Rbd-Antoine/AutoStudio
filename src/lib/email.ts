@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 
-const FROM    = 'Verdia <noreply@verdia-app.com>'
-const REPLY_TO = 'verdia.rendus@gmail.com'
+const FROM    = 'CarGlow <noreply@carglow-app.com>'
+const REPLY_TO = 'carglow.rendus@gmail.com'
 
 let _resend: Resend | null = null
 function getResend(): Resend {
@@ -39,21 +39,21 @@ function layout(content: string): string {
 <!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f3faf0;font-family:system-ui,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3faf0;padding:40px 16px">
+<body style="margin:0;padding:0;background:#F7F8FA;font-family:system-ui,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F8FA;padding:40px 16px">
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
         <!-- Logo -->
         <tr><td style="padding-bottom:24px;text-align:center">
-          <span style="font-size:22px;font-weight:700;color:#1e7035;letter-spacing:-0.5px">Verdia</span>
+          <span style="font-size:22px;font-weight:700;color:#14161A;letter-spacing:-0.5px">CarGlow</span>
         </td></tr>
         <!-- Card -->
-        <tr><td style="background:#ffffff;border-radius:16px;padding:40px 36px;border:1px solid rgba(13,31,17,0.07)">
+        <tr><td style="background:#ffffff;border-radius:16px;padding:40px 36px;border:1px solid rgba(20,22,26,0.07)">
           ${content}
         </td></tr>
         <!-- Footer -->
         <tr><td style="padding-top:24px;text-align:center;font-size:12px;color:#888">
-          Verdia · <a href="https://verdia-app.com" style="color:#35a070;text-decoration:none">verdia-app.com</a>
+          CarGlow · <a href="https://carglow-app.com" style="color:#2D7FF9;text-decoration:none">carglow-app.com</a>
         </td></tr>
       </table>
     </td></tr>
@@ -63,14 +63,14 @@ function layout(content: string): string {
 }
 
 const btn = (href: string, label: string) => `
-  <a href="${href}" style="display:inline-block;margin-top:8px;padding:14px 28px;background:#35a070;color:#ffffff;font-size:15px;font-weight:600;border-radius:10px;text-decoration:none">${label}</a>
+  <a href="${href}" style="display:inline-block;margin-top:8px;padding:14px 28px;background:#2D7FF9;color:#ffffff;font-size:15px;font-weight:600;border-radius:10px;text-decoration:none">${label}</a>
 `
 
 const h1 = (text: string) =>
-  `<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#0d1f11;letter-spacing:-0.3px">${text}</h1>`
+  `<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#14161A;letter-spacing:-0.3px">${text}</h1>`
 
 const p = (text: string) =>
-  `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:rgba(13,31,17,0.72)">${text}</p>`
+  `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:rgba(20,22,26,0.72)">${text}</p>`
 
 // ── 1. Email du "moment magique" ──────────────────────────────────────────────
 // Déclenché par le tout premier rendu réussi (voir /api/generate), pas par
@@ -82,17 +82,17 @@ export async function sendWelcomeEmail(to: string, name: string, imageUrl?: stri
 
   await sendEmail({
     to,
-    subject: 'Votre premier rendu est prêt 🌿',
-    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu Verdia — la transformation de votre jardin en quelques secondes.\n\nVoir mon espace → https://verdia-app.com/app\n\nL'équipe Verdia`,
+    subject: 'Votre premier rendu est prêt ✨',
+    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu CarGlow — votre véhicule avec un nouvel arrière-plan en quelques secondes.\n\nVoir mon espace → https://carglow-app.com/app\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1(`Bravo, ${displayName} — voici votre premier rendu 👋`)}
-      ${imageUrl ? `<div style="text-align:center;margin:0 0 20px"><img src="${imageUrl}" alt="Votre rendu" style="max-width:100%;border-radius:12px;border:1px solid rgba(13,31,17,0.08)"></div>` : ''}
-      ${p('Votre jardin transformé, généré en quelques secondes. Essayez un autre style, ou passez à la vidéo pour un rendu encore plus convaincant auprès de vos clients.')}
+      ${imageUrl ? `<div style="text-align:center;margin:0 0 20px"><img src="${imageUrl}" alt="Votre rendu" style="max-width:100%;border-radius:12px;border:1px solid rgba(20,22,26,0.08)"></div>` : ''}
+      ${p('Votre véhicule avec un nouvel arrière-plan, généré en quelques secondes. Essayez un autre style, ou passez à la vidéo pour un rendu encore plus percutant sur vos annonces.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/editor', 'Créer un nouveau rendu →')}
+        ${btn('https://carglow-app.com/app/editor', 'Créer un nouveau rendu →')}
       </div>
       ${p('Si vous avez des questions, répondez simplement à cet email.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -112,28 +112,28 @@ export async function sendInvoiceEmail(to: string, invoice: InvoiceData) {
 
   await sendEmail({
     to,
-    subject: `Votre reçu Verdia — ${invoiceNumber}`,
-    text: `Bonjour,\n\nVoici votre reçu pour votre achat du ${date}.\n\nDescription : ${description}\nMontant : ${amountEur}\nNuméro : ${invoiceNumber}\n\n${receiptUrl ? `Télécharger la facture : ${receiptUrl}\n\n` : ''}Merci de votre confiance.\n\nL'équipe Verdia`,
+    subject: `Votre reçu CarGlow — ${invoiceNumber}`,
+    text: `Bonjour,\n\nVoici votre reçu pour votre achat du ${date}.\n\nDescription : ${description}\nMontant : ${amountEur}\nNuméro : ${invoiceNumber}\n\n${receiptUrl ? `Télécharger la facture : ${receiptUrl}\n\n` : ''}Merci de votre confiance.\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Votre reçu de paiement')}
       ${p(`Merci pour votre achat du <strong>${date}</strong>. Voici le récapitulatif :`)}
       <table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0;border-collapse:collapse">
         <tr style="border-bottom:1px solid #eee">
           <td style="padding:10px 0;font-size:14px;color:#888">Numéro</td>
-          <td style="padding:10px 0;font-size:14px;color:#0d1f11;text-align:right">${invoiceNumber}</td>
+          <td style="padding:10px 0;font-size:14px;color:#14161A;text-align:right">${invoiceNumber}</td>
         </tr>
         <tr style="border-bottom:1px solid #eee">
           <td style="padding:10px 0;font-size:14px;color:#888">Description</td>
-          <td style="padding:10px 0;font-size:14px;color:#0d1f11;text-align:right">${description}</td>
+          <td style="padding:10px 0;font-size:14px;color:#14161A;text-align:right">${description}</td>
         </tr>
         <tr>
-          <td style="padding:10px 0;font-size:16px;font-weight:700;color:#0d1f11">Total</td>
-          <td style="padding:10px 0;font-size:16px;font-weight:700;color:#1e7035;text-align:right">${amountEur}</td>
+          <td style="padding:10px 0;font-size:16px;font-weight:700;color:#14161A">Total</td>
+          <td style="padding:10px 0;font-size:16px;font-weight:700;color:#14161A;text-align:right">${amountEur}</td>
         </tr>
       </table>
       ${receiptUrl ? `<div style="text-align:center;margin:24px 0">${btn(receiptUrl, 'Télécharger la facture →')}</div>` : ''}
       ${p('Pour toute question sur votre facture, répondez à cet email.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -143,16 +143,16 @@ export async function sendInvoiceEmail(to: string, invoice: InvoiceData) {
 export async function sendVerificationEmail(to: string, verifyLink: string) {
   await sendEmail({
     to,
-    subject: 'Vérifiez votre adresse email — Verdia',
-    text: `Bonjour,\n\nCliquez sur ce lien pour confirmer votre adresse email (valable 24h) :\n${verifyLink}\n\nSi vous n'avez pas créé de compte Verdia, ignorez cet email.\n\nL'équipe Verdia`,
+    subject: 'Vérifiez votre adresse email — CarGlow',
+    text: `Bonjour,\n\nCliquez sur ce lien pour confirmer votre adresse email (valable 24h) :\n${verifyLink}\n\nSi vous n'avez pas créé de compte CarGlow, ignorez cet email.\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Confirmez votre adresse email')}
-      ${p('Merci de vous être inscrit sur Verdia ! Cliquez sur le bouton ci-dessous pour activer votre compte.')}
+      ${p('Merci de vous être inscrit sur CarGlow ! Cliquez sur le bouton ci-dessous pour activer votre compte.')}
       ${p('Ce lien est valable <strong>24 heures</strong>.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(verifyLink, 'Confirmer mon adresse email →')}
       </div>
-      ${p('Si vous n\'avez pas créé de compte Verdia, ignorez simplement cet email.')}
+      ${p('Si vous n\'avez pas créé de compte CarGlow, ignorez simplement cet email.')}
       <p style="margin:24px 0 0;font-size:13px;color:#aaa">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>${verifyLink}</p>
     `),
   })
@@ -163,11 +163,11 @@ export async function sendVerificationEmail(to: string, verifyLink: string) {
 export async function sendPasswordResetEmail(to: string, resetLink: string) {
   await sendEmail({
     to,
-    subject: 'Réinitialiser votre mot de passe Verdia',
-    text: `Bonjour,\n\nVous avez demandé à réinitialiser votre mot de passe.\n\nCliquez sur ce lien (valable 1 heure) :\n${resetLink}\n\nSi vous n'avez pas fait cette demande, ignorez cet email.\n\nL'équipe Verdia`,
+    subject: 'Réinitialiser votre mot de passe CarGlow',
+    text: `Bonjour,\n\nVous avez demandé à réinitialiser votre mot de passe.\n\nCliquez sur ce lien (valable 1 heure) :\n${resetLink}\n\nSi vous n'avez pas fait cette demande, ignorez cet email.\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Réinitialisation du mot de passe')}
-      ${p('Vous avez demandé à réinitialiser le mot de passe de votre compte Verdia.')}
+      ${p('Vous avez demandé à réinitialiser le mot de passe de votre compte CarGlow.')}
       ${p('Cliquez sur le bouton ci-dessous. Ce lien est valable <strong>1 heure</strong>.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(resetLink, 'Réinitialiser mon mot de passe →')}
@@ -190,15 +190,15 @@ export async function sendCreditsResetEmail(to: string, opts: { credits: number;
   await sendEmail({
     to,
     subject: `Vos ${credits} crédits du mois sont disponibles`,
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → https://verdia-app.com/app/editor\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1(`${credits} crédits vous attendent`)}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos crédits gratuits du mois viennent d'être renouvelés.`)}
       ${p('Profitez-en pour générer un nouveau rendu ou essayer un style que vous n\'avez pas encore testé.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/editor', 'Générer un rendu →')}
+        ${btn('https://carglow-app.com/app/editor', 'Générer un rendu →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -212,16 +212,16 @@ export async function sendReactivationEmail(to: string, opts: { name?: string })
 
   await sendEmail({
     to,
-    subject: 'Votre jardin de rêve vous attend toujours',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur Verdia. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → https://verdia-app.com/app/editor\n\nL'équipe Verdia`,
+    subject: 'Votre stock mérite de meilleures photos',
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur CarGlow. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('On ne vous a pas revu récemment')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, ça fait un moment que vous n'avez pas généré de rendu sur Verdia.`)}
-      ${p('Si vous avez un nouveau chantier ou un client à convaincre, vos crédits du mois sont peut-être encore disponibles.')}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, ça fait un moment que vous n'avez pas généré de rendu sur CarGlow.`)}
+      ${p('Si vous avez de nouveaux véhicules à mettre en ligne, vos crédits du mois sont peut-être encore disponibles.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/editor', 'Générer un rendu →')}
+        ${btn('https://carglow-app.com/app/editor', 'Générer un rendu →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -235,16 +235,16 @@ export async function sendReviewRequestEmail(to: string, opts: { name?: string }
 
   await sendEmail({
     to,
-    subject: 'Un avis sur Verdia ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez Verdia depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres paysagistes.\n\nDonner mon avis (2 minutes) → https://verdia-app.com/app/review\n\nL'équipe Verdia`,
+    subject: 'Un avis sur CarGlow ?',
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez CarGlow depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → https://carglow-app.com/app/review\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Votre avis compte')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous utilisez Verdia depuis quelques rendus déjà.`)}
-      ${p('Un avis de votre part — deux minutes, avec possibilité d\'affichage public — aiderait d\'autres paysagistes à découvrir l\'outil.')}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous utilisez CarGlow depuis quelques rendus déjà.`)}
+      ${p('Un avis de votre part — deux minutes, avec possibilité d\'affichage public — aiderait d\'autres concessions à découvrir l\'outil.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/review', 'Donner mon avis →')}
+        ${btn('https://carglow-app.com/app/review', 'Donner mon avis →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -259,15 +259,15 @@ export async function sendFeatureDiscoveryEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Et si vous transformiez ce rendu en vidéo ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → https://verdia-app.com/app/editor\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Deux rendus déjà — allons plus loin')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous commencez à prendre en main Verdia.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous commencez à prendre en main CarGlow.`)}
       ${p('Saviez-vous que vous pouvez aussi générer une vidéo avant/après, ou transformer un rendu en contenu prêt à publier sur Instagram et Facebook ?')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/editor', 'Essayer maintenant →')}
+        ${btn('https://carglow-app.com/app/editor', 'Essayer maintenant →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -283,15 +283,15 @@ export async function sendCreditsExhaustedEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Vous avez utilisé tous vos crédits',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe que Verdia vous est utile. Un rendu coûte environ 1,50€ avec un abonnement, contre 500 à 2000€ pour une maquette 3D classique.\n\nVoir l'abonnement Essentiel → https://verdia-app.com/app/billing?upgrade=1\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe que CarGlow vous est utile. Un rendu coûte environ 1,50€ avec un abonnement, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → https://carglow-app.com/app/billing?upgrade=1\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Vous avez utilisé tous vos crédits')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous avez épuisé vos crédits gratuits de ce mois — c'est plutôt bon signe, ça veut dire que Verdia vous sert vraiment.`)}
-      ${p('Avec un abonnement, chaque rendu revient à environ 1,50€ — contre 500 à 2 000€ pour une maquette 3D classique.')}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous avez épuisé vos crédits gratuits de ce mois — c'est plutôt bon signe, ça veut dire que CarGlow vous sert vraiment.`)}
+      ${p('Avec un abonnement, chaque rendu revient à environ 1,50€ — contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/billing?upgrade=1', "Voir l'abonnement Essentiel →")}
+        ${btn('https://carglow-app.com/app/billing?upgrade=1', "Voir l'abonnement Essentiel →")}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -304,15 +304,15 @@ export async function sendCreditsExhaustedFollowupEmail(to: string, opts: { name
   await sendEmail({
     to,
     subject: 'Votre travail est toujours là',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace Verdia. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → https://verdia-app.com/app/billing\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace CarGlow. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → https://carglow-app.com/app/billing\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Votre travail est toujours là')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos rendus précédents sont toujours disponibles dans votre espace.`)}
       ${p('Dès que vous êtes prêt à continuer, un abonnement débloque de nouveaux crédits immédiatement.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/billing', 'Voir les plans →')}
+        ${btn('https://carglow-app.com/app/billing', 'Voir les plans →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -327,15 +327,15 @@ export async function sendActivationNudgeEmail(to: string, opts: { name?: string
   await sendEmail({
     to,
     subject: 'Une photo suffit pour commencer',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur Verdia mais n'avez pas encore essayé — une seule photo de jardin suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → https://verdia-app.com/app/editor\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Une photo suffit pour commencer')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous vous êtes inscrit sur Verdia mais n'avez pas encore essayé.`)}
-      ${p('Une seule photo de jardin suffit pour voir un rendu transformé en 60 secondes — sans engagement, gratuitement.')}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé.`)}
+      ${p('Une seule photo de véhicule suffit pour voir un rendu transformé en 60 secondes — sans engagement, gratuitement.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/app/editor', 'Essayer maintenant →')}
+        ${btn('https://carglow-app.com/app/editor', 'Essayer maintenant →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }
@@ -350,15 +350,15 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
   await sendEmail({
     to,
     subject: 'Un exemple en 10 secondes, sans importer de photo',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé Verdia ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → https://verdia-app.com/#galerie\n\nL'équipe Verdia`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé CarGlow ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → https://carglow-app.com/#galerie\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Voyez un exemple, sans rien importer')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, si le temps vous a manqué jusqu'ici, voici un raccourci : quelques exemples de transformations réelles, sans avoir besoin d'importer votre propre photo.`)}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://verdia-app.com/#galerie', 'Voir des exemples →')}
+        ${btn('https://carglow-app.com/#galerie', 'Voir des exemples →')}
       </div>
-      ${p('Et si vous préférez essayer directement avec votre propre jardin, ça reste à un clic.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe Verdia</p>
+      ${p('Et si vous préférez essayer directement avec votre propre véhicule, ça reste à un clic.')}
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
   })
 }

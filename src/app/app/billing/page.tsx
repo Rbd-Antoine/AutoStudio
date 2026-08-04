@@ -38,7 +38,7 @@ interface PricingData {
 // bare credit numbers alone don't sell it. Kept local rather than importing the marketing
 // site's PLAN_META to keep the app section's copy independent of the marketing pages'.
 const PLAN_PITCH: Record<string, string> = {
-  ESSENTIAL: 'Le choix des paysagistes indépendants qui présentent des projets chaque semaine.',
+  ESSENTIAL: 'Le choix des concessions indépendantes qui publient des annonces chaque semaine.',
   PRO:       'Pour les équipes qui produisent des rendus au quotidien, sans compter.',
   BUSINESS:  'Volume et support dédié pour les groupes multi-sites.',
 }
@@ -230,19 +230,19 @@ export default function BillingPage() {
     : null
 
   return (
-    <div className="pb-24 lg:pb-12 bg-cream-50 min-h-screen">
+    <div className="pb-24 lg:pb-12 bg-offwhite min-h-screen">
       {/* Header */}
-      <section className="border-b border-sage-100 bg-gradient-to-b from-sage-50 to-transparent">
+      <section className="border-b border-accent-100 bg-gradient-to-b from-accent-50 to-transparent">
         <div className="px-6 lg:px-10 py-8 lg:py-10 max-w-[1480px]">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-sage-600/80 mb-2">
+              <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-600/80 mb-2">
                 Abonnement &amp; facturation
               </div>
-              <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-midnight">
+              <h1 className="font-display font-bold tracking-tight text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-charcoal">
                 Plan {currentPlanMeta?.label ?? plan}
               </h1>
-              <p className="text-midnight/45 mt-2 text-[15px]">
+              <p className="text-charcoal/45 mt-2 text-[15px]">
                 {workspace ? `${totalCredits.toLocaleString()} crédits disponibles` : 'Chargement…'}
               </p>
             </div>
@@ -250,7 +250,7 @@ export default function BillingPage() {
               <button
                 onClick={openPortal}
                 disabled={portalLoading || !workspace}
-                className="rounded-xl bg-sage-500 hover:bg-sage-600 disabled:opacity-50 text-white px-5 py-2.5 font-semibold text-sm transition-colors"
+                className="rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white px-5 py-2.5 font-semibold text-sm transition-colors"
               >
                 {portalLoading ? 'Ouverture…' : 'Gérer mon plan'}
               </button>
@@ -263,16 +263,16 @@ export default function BillingPage() {
         <div className="grid lg:grid-cols-2 gap-4 max-w-2xl">
 
           {/* Plan card */}
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm p-6">
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm p-6">
             <div className="flex items-start justify-between mb-5">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 mb-1">Plan actuel</div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 mb-1">Plan actuel</div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display font-bold text-2xl text-midnight">
+                  <span className="font-display font-bold text-2xl text-charcoal">
                     {currentPlanMeta?.label ?? plan}
                   </span>
                   {!!currentPlanMeta?.price && (
-                    <span className="text-midnight/40 text-sm">€{currentPlanMeta.price}/mois</span>
+                    <span className="text-charcoal/40 text-sm">€{currentPlanMeta.price}/mois</span>
                   )}
                 </div>
               </div>
@@ -282,23 +282,23 @@ export default function BillingPage() {
             </div>
 
             <ul className="space-y-2 mb-5">
-              <li className="flex items-center gap-2 text-sm text-midnight/65">
-                <Check className="w-3.5 h-3.5 text-sage-500 flex-shrink-0" strokeWidth={2.5} />
+              <li className="flex items-center gap-2 text-sm text-charcoal/65">
+                <Check className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" strokeWidth={2.5} />
                 {(currentPlanMeta?.credits ?? 0).toLocaleString()} crédit{(currentPlanMeta?.credits ?? 0) === 1 ? '' : 's'} / mois
               </li>
               {renewalDateLabel && (
-                <li className="flex items-center gap-2 text-sm text-midnight/65">
-                  <Clock className="w-3.5 h-3.5 text-sage-500 flex-shrink-0" strokeWidth={2} />
+                <li className="flex items-center gap-2 text-sm text-charcoal/65">
+                  <Clock className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" strokeWidth={2} />
                   Renouvellement le {renewalDateLabel}
                 </li>
               )}
             </ul>
 
-            <div className="pt-4 border-t border-sage-100">
+            <div className="pt-4 border-t border-accent-100">
               <button
                 onClick={openPortal}
                 disabled={portalLoading || !workspace}
-                className="text-sage-600 hover:text-sage-700 disabled:opacity-50 inline-flex items-center gap-1 text-sm font-medium"
+                className="text-accent-600 hover:text-accent-700 disabled:opacity-50 inline-flex items-center gap-1 text-sm font-medium"
               >
                 Gérer mon plan
                 <ExternalLink className="w-3 h-3" strokeWidth={1.75} />
@@ -307,15 +307,15 @@ export default function BillingPage() {
           </div>
 
           {/* Credits card */}
-          <div className="rounded-2xl border border-sage-100 bg-white shadow-sm p-6">
+          <div className="rounded-2xl border border-accent-100 bg-white shadow-sm p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-midnight/40 mb-1">Crédits mensuels</div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 mb-1">Crédits mensuels</div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display font-bold text-2xl tabular-nums text-midnight">
+                  <span className="font-display font-bold text-2xl tabular-nums text-charcoal">
                     {monthlyCredits.toLocaleString()}
                   </span>
-                  <span className="text-midnight/40 text-sm tabular-nums">
+                  <span className="text-charcoal/40 text-sm tabular-nums">
                     / {monthlyAllotment.toLocaleString()}
                   </span>
                 </div>
@@ -323,7 +323,7 @@ export default function BillingPage() {
               <button
                 onClick={() => setShowTopUp(true)}
                 disabled={!workspace}
-                className="rounded-lg bg-sage-500 hover:bg-sage-600 disabled:opacity-50 text-white px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                className="rounded-lg bg-accent-500 hover:bg-accent-600 disabled:opacity-50 text-white px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors"
               >
                 <Plus className="w-3 h-3" strokeWidth={2.5} />
                 Recharger
@@ -331,21 +331,21 @@ export default function BillingPage() {
             </div>
 
             <div className="space-y-1.5 mb-4">
-              <div className="h-2 bg-sage-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-accent-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-sage-500 to-sage-400 rounded-full transition-all"
+                  className="h-full bg-gradient-to-r from-accent-500 to-accent-400 rounded-full transition-all"
                   style={{ width: `${Math.min(pct, 100)}%` }}
                 />
               </div>
-              <div className="flex justify-between text-xs text-midnight/45">
-                <span><span className="tabular-nums text-midnight/70">{Math.round(pct)}%</span> restants</span>
+              <div className="flex justify-between text-xs text-charcoal/45">
+                <span><span className="tabular-nums text-charcoal/70">{Math.round(pct)}%</span> restants</span>
                 <span>Expirent en fin de cycle</span>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-sage-100 flex items-center justify-between">
-              <div className="text-xs text-midnight/45">Crédits achetés (n&apos;expirent jamais)</div>
-              <div className="font-display font-bold text-midnight tabular-nums">{bonusCredits.toLocaleString()}</div>
+            <div className="pt-3 border-t border-accent-100 flex items-center justify-between">
+              <div className="text-xs text-charcoal/45">Crédits achetés (n&apos;expirent jamais)</div>
+              <div className="font-display font-bold text-charcoal tabular-nums">{bonusCredits.toLocaleString()}</div>
             </div>
           </div>
 
@@ -355,14 +355,14 @@ export default function BillingPage() {
         {pricing && (
           <div ref={plansRef}>
             {cameFromUpgrade && (
-              <div className="rounded-2xl border border-sage-200 bg-sage-50 px-5 py-4 mb-4 flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-sage-600 shrink-0 mt-0.5" strokeWidth={1.75} />
-                <p className="text-sm text-sage-800">
+              <div className="rounded-2xl border border-accent-200 bg-accent-50 px-5 py-4 mb-4 flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-accent-600 shrink-0 mt-0.5" strokeWidth={1.75} />
+                <p className="text-sm text-accent-800">
                   Vous avez utilisé tous vos crédits ce mois-ci — abonnez-vous pour continuer à générer des rendus.
                 </p>
               </div>
             )}
-            <h2 className="font-display font-bold text-lg text-midnight mb-3">Changer de plan</h2>
+            <h2 className="font-display font-bold text-lg text-charcoal mb-3">Changer de plan</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">
               {pricing.plans.map((p) => {
                 const isCurrent = p.id === plan
@@ -376,46 +376,46 @@ export default function BillingPage() {
                     key={p.id}
                     className={cn(
                       'relative rounded-2xl border p-5 flex flex-col transition-all',
-                      isCurrent ? 'border-sage-400 bg-sage-50'
-                        : isFeatured ? 'border-sage-300 bg-white shadow-card ring-1 ring-sage-200'
-                        : 'border-sage-100 bg-white',
+                      isCurrent ? 'border-accent-400 bg-accent-50'
+                        : isFeatured ? 'border-accent-300 bg-white shadow-card ring-1 ring-accent-200'
+                        : 'border-accent-100 bg-white',
                     )}
                   >
                     {isFeatured && !isCurrent && (
                       <span className={cn(
                         'absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-white text-[11px] font-bold whitespace-nowrap flex items-center gap-1',
-                        isPromo ? 'bg-rose-500' : 'bg-sage-500',
+                        isPromo ? 'bg-rose-500' : 'bg-accent-500',
                       )}>
                         {isPromo ? <Sparkles className="w-3 h-3" /> : null}
                         {isPromo ? pricing.promo!.label : 'Recommandé'}
                       </span>
                     )}
-                    <div className="font-display font-bold text-midnight mb-1">{p.label}</div>
+                    <div className="font-display font-bold text-charcoal mb-1">{p.label}</div>
                     <div className="flex items-baseline gap-1.5 mb-1 flex-wrap">
                       {isPromo && (
-                        <span className="text-sm line-through text-midnight/30">€{pricing.promo!.originalPrice}</span>
+                        <span className="text-sm line-through text-charcoal/30">€{pricing.promo!.originalPrice}</span>
                       )}
-                      <span className="text-2xl font-display font-bold text-midnight">
+                      <span className="text-2xl font-display font-bold text-charcoal">
                         {isPromo ? `€${pricing.promo!.discountedPrice}` : p.price > 0 ? `€${p.price}` : 'Gratuit'}
                       </span>
-                      {p.price > 0 && <span className="text-xs text-midnight/40 font-normal">/mois</span>}
+                      {p.price > 0 && <span className="text-xs text-charcoal/40 font-normal">/mois</span>}
                     </div>
                     {isPromo && <div className="text-[11px] font-semibold text-rose-500 mb-1">1ère année</div>}
-                    <div className="text-xs text-midnight/50 mb-3">
+                    <div className="text-xs text-charcoal/50 mb-3">
                       {p.credits.toLocaleString()} crédit{p.credits === 1 ? '' : 's'} / mois
                     </div>
                     {PLAN_PITCH[p.id] && (
-                      <p className="text-xs text-midnight/45 leading-relaxed mb-4">{PLAN_PITCH[p.id]}</p>
+                      <p className="text-xs text-charcoal/45 leading-relaxed mb-4">{PLAN_PITCH[p.id]}</p>
                     )}
                     <div className="mt-auto">
                       {isCurrent ? (
-                        <span className="block text-center text-xs font-semibold uppercase tracking-wide text-sage-600 py-2">
+                        <span className="block text-center text-xs font-semibold uppercase tracking-wide text-accent-600 py-2">
                           Plan actuel
                         </span>
                       ) : p.id === 'FREE' ? (
                         <button
                           onClick={openPortal}
-                          className="w-full rounded-lg border border-sage-200 hover:bg-cream-50 text-midnight/70 text-sm font-semibold py-2 transition-colors"
+                          className="w-full rounded-lg border border-accent-200 hover:bg-charcoal/[0.04] text-charcoal/70 text-sm font-semibold py-2 transition-colors"
                         >
                           Rétrograder
                         </button>
@@ -426,8 +426,8 @@ export default function BillingPage() {
                           className={cn(
                             'w-full rounded-lg disabled:opacity-50 text-sm font-semibold py-2.5 flex items-center justify-center gap-1.5 transition-all',
                             isFeatured
-                              ? 'bg-sage-500 hover:bg-sage-600 text-white shadow-sage-sm hover:shadow-sage-md'
-                              : 'border border-midnight/[0.12] hover:border-sage-400 text-midnight/70 hover:text-sage-600',
+                              ? 'bg-accent-500 hover:bg-accent-600 text-white shadow-accent-sm hover:shadow-accent-md'
+                              : 'border border-charcoal/[0.12] hover:border-accent-400 text-charcoal/70 hover:text-accent-600',
                           )}
                         >
                           {checkoutLoading === p.id ? 'Redirection…' : <>Passer à {p.label} <ArrowUpRight className="w-3.5 h-3.5" /></>}
@@ -443,7 +443,7 @@ export default function BillingPage() {
                 {checkoutError}
               </p>
             )}
-            <p className="flex items-center justify-center gap-1.5 text-xs text-midnight/35 mt-4">
+            <p className="flex items-center justify-center gap-1.5 text-xs text-charcoal/35 mt-4">
               <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.75} />
               Paiement sécurisé par Stripe · Résiliable à tout moment, sans engagement
             </p>
@@ -453,23 +453,23 @@ export default function BillingPage() {
         {/* Credit history */}
         {history.length > 0 && (
           <div>
-            <h2 className="font-display font-bold text-lg text-midnight mb-3">Historique des crédits</h2>
-            <div className="rounded-2xl border border-sage-100 bg-white shadow-sm overflow-x-auto">
+            <h2 className="font-display font-bold text-lg text-charcoal mb-3">Historique des crédits</h2>
+            <div className="rounded-2xl border border-accent-100 bg-white shadow-sm overflow-x-auto">
               <table className="w-full min-w-[420px] text-sm">
                 <tbody>
                   {history.map((tx) => (
-                    <tr key={tx.id} className="border-b border-sage-50 last:border-0">
-                      <td className="px-4 py-3 text-midnight/60">
+                    <tr key={tx.id} className="border-b border-accent-50 last:border-0">
+                      <td className="px-4 py-3 text-charcoal/60">
                         {new Date(tx.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
-                      <td className="px-4 py-3 text-midnight/70">
+                      <td className="px-4 py-3 text-charcoal/70">
                         {REASON_LABEL[tx.reason] ?? tx.reason}
-                        {tx.featureKey && <span className="text-midnight/40"> · {tx.featureKey}</span>}
+                        {tx.featureKey && <span className="text-charcoal/40"> · {tx.featureKey}</span>}
                       </td>
-                      <td className={cn('px-4 py-3 text-right font-semibold tabular-nums', tx.delta >= 0 ? 'text-emerald-600' : 'text-midnight/70')}>
+                      <td className={cn('px-4 py-3 text-right font-semibold tabular-nums', tx.delta >= 0 ? 'text-emerald-600' : 'text-charcoal/70')}>
                         {tx.delta >= 0 ? '+' : ''}{tx.delta}
                       </td>
-                      <td className="px-4 py-3 text-right text-midnight/40 tabular-nums">{tx.balanceAfter}</td>
+                      <td className="px-4 py-3 text-right text-charcoal/40 tabular-nums">{tx.balanceAfter}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -509,17 +509,17 @@ function TopUpModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-midnight/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-charcoal/30 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-        <div className="bg-white border border-sage-100 rounded-2xl w-full max-w-xl p-6 pointer-events-auto shadow-card">
+        <div className="bg-white border border-accent-100 rounded-2xl w-full max-w-xl p-6 pointer-events-auto shadow-card">
           <div className="flex items-start justify-between mb-5">
             <div>
-              <h3 className="font-display font-semibold text-lg text-midnight">Recharger des crédits</h3>
-              <p className="text-sm text-midnight/45 mt-0.5">
+              <h3 className="font-display font-semibold text-lg text-charcoal">Recharger des crédits</h3>
+              <p className="text-sm text-charcoal/45 mt-0.5">
                 Les achats ponctuels n&apos;expirent jamais.
               </p>
             </div>
-            <button onClick={onClose} className="p-1 rounded hover:bg-sage-50 text-midnight/40">
+            <button onClick={onClose} className="p-1 rounded hover:bg-accent-50 text-charcoal/40">
               <X className="w-4 h-4" strokeWidth={1.75} />
             </button>
           </div>
@@ -532,23 +532,23 @@ function TopUpModal({
                 className={cn(
                   'relative rounded-xl border p-4 text-left transition-colors',
                   selected === p.id
-                    ? 'border-sage-400 bg-sage-50'
-                    : 'border-sage-100 bg-white hover:bg-cream-50',
+                    ? 'border-accent-400 bg-accent-50'
+                    : 'border-accent-100 bg-white hover:bg-charcoal/[0.04]',
                 )}
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Zap className="w-4 h-4 text-sage-500" strokeWidth={2} />
-                  <span className="font-display font-bold text-lg tabular-nums text-midnight">{p.credits.toLocaleString()}</span>
+                  <Zap className="w-4 h-4 text-accent-500" strokeWidth={2} />
+                  <span className="font-display font-bold text-lg tabular-nums text-charcoal">{p.credits.toLocaleString()}</span>
                 </div>
-                <span className="tabular-nums font-semibold text-midnight">€{p.price}</span>
+                <span className="tabular-nums font-semibold text-charcoal">€{p.price}</span>
               </button>
             ))}
           </div>
 
-          <div className="mt-5 rounded-xl border border-sage-100 bg-cream-50 p-4 space-y-2 text-sm">
-            <div className="flex justify-between text-midnight/60"><span>Crédits</span><span className="tabular-nums text-midnight">{pack.credits.toLocaleString()}</span></div>
-            <div className="flex justify-between text-midnight/60"><span>Prix</span><span className="tabular-nums text-midnight">€{pack.price}</span></div>
-            <div className="flex justify-between text-midnight/60"><span>Prix / crédit</span><span className="tabular-nums text-midnight">€{perCredit.toFixed(2)}</span></div>
+          <div className="mt-5 rounded-xl border border-accent-100 bg-offwhite p-4 space-y-2 text-sm">
+            <div className="flex justify-between text-charcoal/60"><span>Crédits</span><span className="tabular-nums text-charcoal">{pack.credits.toLocaleString()}</span></div>
+            <div className="flex justify-between text-charcoal/60"><span>Prix</span><span className="tabular-nums text-charcoal">€{pack.price}</span></div>
+            <div className="flex justify-between text-charcoal/60"><span>Prix / crédit</span><span className="tabular-nums text-charcoal">€{perCredit.toFixed(2)}</span></div>
           </div>
 
           {error && (
@@ -558,18 +558,18 @@ function TopUpModal({
           )}
 
           <div className="flex items-center justify-between gap-2 mt-5">
-            <p className="hidden sm:flex items-center gap-1.5 text-xs text-midnight/35">
+            <p className="hidden sm:flex items-center gap-1.5 text-xs text-charcoal/35">
               <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.75} />
               Paiement sécurisé par Stripe
             </p>
             <div className="flex gap-2 ml-auto">
-              <button onClick={onClose} className="rounded-lg border border-sage-200 bg-white hover:bg-cream-50 px-3.5 py-2 text-sm text-midnight/60">
+              <button onClick={onClose} className="rounded-lg border border-accent-200 bg-white hover:bg-charcoal/[0.04] px-3.5 py-2 text-sm text-charcoal/60">
                 Annuler
               </button>
               <button
                 onClick={() => onCheckout({ pack: pack.id })}
                 disabled={loading === pack.id || !workspaceId}
-                className="rounded-lg bg-sage-500 hover:bg-sage-600 disabled:opacity-60 text-white px-4 py-2 text-sm font-semibold flex items-center gap-1.5 transition-colors"
+                className="rounded-lg bg-accent-500 hover:bg-accent-600 disabled:opacity-60 text-white px-4 py-2 text-sm font-semibold flex items-center gap-1.5 transition-colors"
               >
                 <Lock className="w-3.5 h-3.5" strokeWidth={2} />
                 {loading === pack.id ? 'Redirection…' : `Payer €${pack.price}`}

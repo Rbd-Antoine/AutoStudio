@@ -23,7 +23,7 @@ export interface StoredConsent {
 // Bump this if the cookie policy meaningfully changes — a version mismatch is treated
 // exactly like "no consent on file" and the banner re-asks.
 export const CONSENT_VERSION = 'v1'
-export const CONSENT_COOKIE_NAME = 'verdia_consent'
+export const CONSENT_COOKIE_NAME = 'carglow_consent'
 
 // CNIL mandates re-asking at least every 6 months.
 export const CONSENT_MAX_AGE_SECONDS = 60 * 60 * 24 * 30 * 6

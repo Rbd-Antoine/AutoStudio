@@ -28,7 +28,7 @@ export function PricingFaqAccordion({ imageGenerationCost, imageRetouchCost, vid
   ]
 
   return (
-    <div className="flex flex-col divide-y divide-midnight/[0.07]">
+    <div className="flex flex-col divide-y divide-charcoal/[0.07]">
       {PRICING_FAQS.map((faq, i) => (
         <div key={i} className="py-5">
           <button
@@ -37,13 +37,13 @@ export function PricingFaqAccordion({ imageGenerationCost, imageRetouchCost, vid
             aria-controls={`pricing-faq-panel-${i}`}
             className="w-full flex items-start justify-between gap-4 text-left"
           >
-            <span className={cn('font-medium text-sm transition-colors', openFaq === i ? 'text-sage-600' : 'text-midnight/75')}>
+            <span className={cn('font-medium text-sm transition-colors', openFaq === i ? 'text-accent-600' : 'text-charcoal/75')}>
               {faq.q}
             </span>
-            {openFaq === i ? <ChevronUp className="w-4 h-4 text-sage-500 mt-0.5 shrink-0" /> : <ChevronDown className="w-4 h-4 text-midnight/30 mt-0.5 shrink-0" />}
+            {openFaq === i ? <ChevronUp className="w-4 h-4 text-accent-500 mt-0.5 shrink-0" /> : <ChevronDown className="w-4 h-4 text-charcoal/30 mt-0.5 shrink-0" />}
           </button>
           {openFaq === i && (
-            <p id={`pricing-faq-panel-${i}`} className="mt-3 text-sm text-midnight/50 leading-relaxed">
+            <p id={`pricing-faq-panel-${i}`} className="mt-3 text-sm text-charcoal/50 leading-relaxed">
               {faq.a}
             </p>
           )}

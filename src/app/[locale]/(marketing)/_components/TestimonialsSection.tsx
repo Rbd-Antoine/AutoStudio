@@ -24,7 +24,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: PublicTest
       <div className="page-container max-w-3xl">
         <div className="text-center mb-10">
           <p className="eyebrow mb-3">Témoignages</p>
-          <h2 className="font-display font-bold text-midnight" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
+          <h2 className="font-display font-bold text-charcoal" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
             Ils ont <span className="text-gradient">convaincu</span> leurs clients.
           </h2>
         </div>
@@ -35,15 +35,15 @@ export function TestimonialsSection({ testimonials }: { testimonials: PublicTest
           onMouseLeave={() => setPaused(false)}
         >
           <div className="flex justify-center gap-1 mb-6">
-            {Array.from({ length: t.stars }).map((_, i) => <Star key={i} className="w-4 h-4 text-sage-500 fill-sage-500" />)}
+            {Array.from({ length: t.stars }).map((_, i) => <Star key={i} className="w-4 h-4 text-accent-500 fill-accent-500" />)}
           </div>
-          <p className="text-lg md:text-xl text-midnight/70 leading-relaxed mb-8 max-w-xl mx-auto">&ldquo;{t.quote}&rdquo;</p>
+          <p className="text-lg md:text-xl text-charcoal/70 leading-relaxed mb-8 max-w-xl mx-auto">&ldquo;{t.quote}&rdquo;</p>
           <div className="flex items-center justify-center gap-3">
             <TestimonialAvatar name={t.name} className="w-10 h-10 shrink-0" />
             <div className="text-left">
-              <p className="text-sm font-semibold text-midnight">{t.name}</p>
+              <p className="text-sm font-semibold text-charcoal">{t.name}</p>
               {(t.role || t.location) && (
-                <p className="text-xs text-midnight/45">{[t.role, t.location].filter(Boolean).join(' · ')}</p>
+                <p className="text-xs text-charcoal/45">{[t.role, t.location].filter(Boolean).join(' · ')}</p>
               )}
             </div>
           </div>
@@ -51,17 +51,17 @@ export function TestimonialsSection({ testimonials }: { testimonials: PublicTest
 
         <div className="flex items-center justify-center gap-3 mt-6">
           <button onClick={() => setCurrent(c => (c - 1 + testimonials.length) % testimonials.length)}
-            className="w-8 h-8 rounded-full border border-midnight/[0.10] flex items-center justify-center text-midnight/35 hover:text-midnight transition-all">
+            className="w-8 h-8 rounded-full border border-charcoal/[0.10] flex items-center justify-center text-charcoal/35 hover:text-charcoal transition-all">
             <ChevronLeft className="w-4 h-4" />
           </button>
           <div className="flex gap-1.5">
             {testimonials.map((_, i) => (
               <button key={i} onClick={() => setCurrent(i)}
-                className={cn('h-1.5 rounded-full transition-all', i === current ? 'bg-sage-500 w-5' : 'bg-midnight/15 w-1.5')} />
+                className={cn('h-1.5 rounded-full transition-all', i === current ? 'bg-accent-500 w-5' : 'bg-charcoal/15 w-1.5')} />
             ))}
           </div>
           <button onClick={() => setCurrent(c => (c + 1) % testimonials.length)}
-            className="w-8 h-8 rounded-full border border-midnight/[0.10] flex items-center justify-center text-midnight/35 hover:text-midnight transition-all">
+            className="w-8 h-8 rounded-full border border-charcoal/[0.10] flex items-center justify-center text-charcoal/35 hover:text-charcoal transition-all">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

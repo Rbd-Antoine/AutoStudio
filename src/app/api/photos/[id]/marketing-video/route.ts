@@ -13,7 +13,7 @@ export const maxDuration = 300
 const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'marketingVideo'
 const VALID_FORMATS: MarketingVideoFormat[] = ['reel', 'story', 'landscape', 'square']
-const LEGACY_PLACEHOLDERS = ['jardin-direct-upload', 'jardin-retouche']
+const LEGACY_PLACEHOLDERS = ['jardin-direct-upload', 'jardin-retouche', 'car-direct-upload', 'car-retouche']
 
 function isRealHostedUrl(url: string | null): url is string {
   return !!url && !url.startsWith('data:') && !LEGACY_PLACEHOLDERS.includes(url)

@@ -62,7 +62,7 @@ export function Nav() {
       // Fully opaque — no backdrop-blur, no partial transparency. A fixed header re-blurring
       // or showing through content scrolling underneath it is both a real perf cost on
       // mobile Safari and a correctness risk (content must never show through the header).
-      'fixed top-0 left-0 right-0 z-[100] transition-all duration-300 bg-white border-b border-midnight/[0.07]',
+      'fixed top-0 left-0 right-0 z-[100] transition-all duration-300 bg-offwhite border-b border-charcoal/[0.08]',
       scrolled ? 'shadow-sm py-2' : 'py-3'
     )}>
       {/* Rendered inside the same fixed header that publishes --nav-height (see the
@@ -74,8 +74,8 @@ export function Nav() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
-            src="/logo%20verdia%20without%20background.png"
-            alt="Verdia"
+            src="/logo-carglow.png"
+            alt="CarGlow"
             width={500}
             height={500}
             className="h-10 sm:h-16 lg:h-24 w-auto object-contain"
@@ -95,7 +95,7 @@ export function Nav() {
           ].map(item => (
             <li key={item.href}>
               <Link href={item.href}
-                className="px-3 py-2 text-sm font-medium text-midnight/60 hover:text-midnight rounded-lg hover:bg-midnight/[0.04] transition-all">
+                className="px-3 py-2 text-sm font-medium text-charcoal/60 hover:text-charcoal rounded-lg hover:bg-charcoal/[0.06] transition-all">
                 {item.label}
               </Link>
             </li>
@@ -106,19 +106,19 @@ export function Nav() {
         <div className="hidden lg:flex items-center gap-3">
           {isAuthenticated ? (
             <RouteLink href="/app"
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 rounded-xl shadow-sage-sm transition-all">
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-accent-500 hover:bg-accent-600 rounded-xl shadow-accent-sm transition-all">
               <LayoutDashboard className="w-4 h-4" strokeWidth={2} />
               Mon espace
             </RouteLink>
           ) : (
             <>
               <RouteLink href="/signin"
-                className="px-4 py-2 text-sm font-medium text-midnight/60 hover:text-midnight rounded-xl border border-midnight/[0.12] hover:border-midnight/[0.25] hover:bg-midnight/[0.04] transition-all">
+                className="px-4 py-2 text-sm font-medium text-charcoal/60 hover:text-charcoal rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.06] transition-all">
                 Connexion
               </RouteLink>
               <RouteLink href="/signup"
                 onClick={() => trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_desktop', label: 'Essai gratuit', location: 'nav' })}
-                className="px-4 py-2 text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 rounded-xl shadow-sage-sm transition-all">
+                className="px-4 py-2 text-sm font-semibold text-white bg-accent-500 hover:bg-accent-600 rounded-xl shadow-accent-sm transition-all">
                 Essai gratuit
               </RouteLink>
             </>
@@ -127,7 +127,7 @@ export function Nav() {
 
         {/* Mobile toggle */}
         <button
-          className="lg:hidden p-3 -mr-3 rounded-lg text-midnight/60 hover:text-midnight hover:bg-midnight/[0.04]"
+          className="lg:hidden p-3 -mr-3 rounded-lg text-charcoal/60 hover:text-charcoal hover:bg-charcoal/[0.06]"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -137,7 +137,7 @@ export function Nav() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-midnight/[0.07]">
+        <div className="lg:hidden bg-offwhite border-t border-charcoal/[0.08]">
           <div className="page-container py-6 flex flex-col gap-2">
             {[
               { label: 'Comment ça marche', href: '/#comment-ca-marche' },
@@ -148,26 +148,26 @@ export function Nav() {
               { label: 'À propos',          href: '/about' },
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-                className="block px-4 py-3 rounded-xl text-sm font-medium text-midnight/60 hover:text-midnight hover:bg-midnight/[0.04]">
+                className="block px-4 py-3 rounded-xl text-sm font-medium text-charcoal/60 hover:text-charcoal hover:bg-charcoal/[0.06]">
                 {item.label}
               </Link>
             ))}
-            <div className="mt-4 pt-4 border-t border-midnight/[0.07] flex flex-col gap-3">
+            <div className="mt-4 pt-4 border-t border-charcoal/[0.08] flex flex-col gap-3">
               {isAuthenticated ? (
                 <RouteLink href="/app" onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-sage-500 text-sm font-semibold text-white">
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-accent-500 text-sm font-semibold text-white">
                   <LayoutDashboard className="w-4 h-4" strokeWidth={2} />
                   Mon espace
                 </RouteLink>
               ) : (
                 <>
                   <RouteLink href="/signin" onClick={() => setMobileOpen(false)}
-                    className="text-center py-3 rounded-xl border border-midnight/[0.12] text-sm font-medium text-midnight/70">
+                    className="text-center py-3 rounded-xl border border-charcoal/[0.14] text-sm font-medium text-charcoal/70">
                     Connexion
                   </RouteLink>
                   <RouteLink href="/signup"
                     onClick={() => { setMobileOpen(false); trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_mobile', label: 'Essai gratuit', location: 'nav' }) }}
-                    className="text-center py-3 rounded-xl bg-sage-500 text-sm font-semibold text-white">
+                    className="text-center py-3 rounded-xl bg-accent-500 text-sm font-semibold text-white">
                     Essai gratuit
                   </RouteLink>
                 </>

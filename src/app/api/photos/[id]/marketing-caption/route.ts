@@ -3,7 +3,7 @@ import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { generateText } from '@/lib/gemini'
-import { GARDEN_STYLES, buildSocialCaptionPrompt } from '@/lib/gardenPrompts'
+import { CAR_STYLES, buildSocialCaptionPrompt } from '@/lib/carPrompts'
 
 export const maxDuration = 30
 
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const brandKit = await getDefaultBrandKit(photo.workspaceId)
-    const styleName = (photo.styleUsed && GARDEN_STYLES[photo.styleUsed]?.name) || photo.styleUsed || 'jardin'
+    const styleName = (photo.styleUsed && CAR_STYLES[photo.styleUsed]?.name) || photo.styleUsed || 'véhicule'
     const prompt = buildSocialCaptionPrompt(styleName, brandKit.businessName ?? undefined, ctaText)
     const caption = await generateText(apiKey, prompt)
     return NextResponse.json({ caption })

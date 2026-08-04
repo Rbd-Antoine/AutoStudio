@@ -1,4 +1,4 @@
-import { GardenStyle, buildImagePrompt, buildRetouchPrompt } from './gardenPrompts'
+import { CarStyle, buildImagePrompt, buildRetouchPrompt } from './carPrompts'
 
 export interface StyledImage {
   base64: string
@@ -47,7 +47,7 @@ export async function generateStyledImage(
   apiKey: string,
   imageData: string,
   mimeType: string,
-  style: GardenStyle,
+  style: CarStyle,
   characteristics?: string,
 ): Promise<StyledImage> {
   return callGeminiImage(apiKey, buildImagePrompt(style, characteristics), imageData, mimeType)

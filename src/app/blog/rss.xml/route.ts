@@ -28,8 +28,8 @@ export function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Verdia — Blog</title>
-    <description>Conseils terrain pour paysagistes indépendants.</description>
+    <title>CarGlow — Blog</title>
+    <description>Conseils terrain pour concessions automobiles.</description>
     <link>${SITE_URL}/blog</link>${items}
   </channel>
 </rss>`

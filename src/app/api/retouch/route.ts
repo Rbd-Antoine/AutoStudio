@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
   const photo = await db.photo.create({
     data: {
       workspaceId,
-      originalUrl: 'jardin-retouche',
+      originalUrl: 'car-retouche',
       status: 'PROCESSING',
       styleUsed: styleSlug,
       toolsUsed: ['gemini_image_retouch'],

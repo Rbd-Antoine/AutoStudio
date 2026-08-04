@@ -44,33 +44,33 @@ export default function CareersPage() {
       {/* Hero */}
       <section className="max-w-3xl mx-auto text-center mb-20">
         <p className="eyebrow mb-4">Careers</p>
-        <h1 className="text-[clamp(2rem,4vw,3.75rem)] font-display font-bold text-offwhite mb-4 leading-[1.05]">
+        <h1 className="text-[clamp(2rem,4vw,3.75rem)] font-display font-bold text-charcoal mb-4 leading-[1.05]">
           Build the future of <span className="text-gradient">automotive listings.</span>
         </h1>
-        <p className="text-offwhite/55 text-[15px] max-w-xl mx-auto">
+        <p className="text-charcoal/55 text-[15px] max-w-xl mx-auto">
           51 humans across 11 countries. We make AI tools that help dealers sell cars faster.
           We&apos;re hiring across engineering, design, sales, and customer success.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-offwhite/55">
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-charcoal/55">
           <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-sage-400" strokeWidth={1.75} />
-            <span><span className="text-offwhite font-semibold">11</span> countries</span>
+            <Globe className="w-4 h-4 text-accent-400" strokeWidth={1.75} />
+            <span><span className="text-charcoal font-semibold">11</span> countries</span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-sage-400" strokeWidth={1.75} />
-            <span><span className="text-offwhite font-semibold">51</span> teammates</span>
+            <Users className="w-4 h-4 text-accent-400" strokeWidth={1.75} />
+            <span><span className="text-charcoal font-semibold">51</span> teammates</span>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-sage-400" strokeWidth={1.75} />
-            <span>Series B · <span className="text-offwhite font-semibold">€42M</span> raised</span>
+            <TrendingUp className="w-4 h-4 text-accent-400" strokeWidth={1.75} />
+            <span>Series B · <span className="text-charcoal font-semibold">€42M</span> raised</span>
           </div>
         </div>
       </section>
 
       {/* Values */}
       <section className="max-w-5xl mx-auto mb-20">
-        <h2 className="text-[11px] font-semibold tracking-[0.16em] uppercase text-sage-400/90 mb-6 text-center">
+        <h2 className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-400/90 mb-6 text-center">
           How we work
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -78,11 +78,11 @@ export default function CareersPage() {
             const Icon = v.icon
             return (
               <div key={v.title} className="rounded-2xl border border-white/[0.06] bg-white/[0.015] card-noise p-5">
-                <div className="w-9 h-9 rounded-lg bg-sage-500/15 border border-sage-500/25 flex items-center justify-center mb-3">
-                  <Icon className="w-4 h-4 text-sage-300" strokeWidth={1.75} />
+                <div className="w-9 h-9 rounded-lg bg-accent-500/15 border border-accent-500/25 flex items-center justify-center mb-3">
+                  <Icon className="w-4 h-4 text-accent-300" strokeWidth={1.75} />
                 </div>
                 <h3 className="font-display font-semibold">{v.title}</h3>
-                <p className="text-sm text-offwhite/55 mt-1.5">{v.desc}</p>
+                <p className="text-sm text-charcoal/55 mt-1.5">{v.desc}</p>
               </div>
             )
           })}
@@ -92,9 +92,9 @@ export default function CareersPage() {
       {/* Open roles */}
       <section className="max-w-4xl mx-auto mb-20">
         <div className="flex items-end justify-between mb-6">
-          <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-offwhite">Open roles</h2>
-          <div className="text-sm text-offwhite/55">
-            <span className="text-offwhite font-semibold tabular-nums">{ROLES.length}</span> positions
+          <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-charcoal">Open roles</h2>
+          <div className="text-sm text-charcoal/55">
+            <span className="text-charcoal font-semibold tabular-nums">{ROLES.length}</span> positions
           </div>
         </div>
 
@@ -107,38 +107,38 @@ export default function CareersPage() {
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-sage-300 bg-sage-500/15 border border-sage-500/30 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-accent-300 bg-accent-500/15 border border-accent-500/30 px-1.5 py-0.5 rounded">
                     {r.team}
                   </span>
-                  <span className="text-[11px] text-offwhite/45">{r.type}</span>
+                  <span className="text-[11px] text-charcoal/45">{r.type}</span>
                 </div>
-                <h3 className="font-medium text-offwhite group-hover:text-sage-300 transition-colors">{r.title}</h3>
-                <div className="flex items-center gap-1.5 text-xs text-offwhite/55 mt-1">
+                <h3 className="font-medium text-charcoal group-hover:text-accent-300 transition-colors">{r.title}</h3>
+                <div className="flex items-center gap-1.5 text-xs text-charcoal/55 mt-1">
                   <MapPin className="w-3 h-3" strokeWidth={1.75} />
                   {r.location}
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-offwhite/35 group-hover:text-sage-400 group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={1.75} />
+              <ArrowRight className="w-4 h-4 text-charcoal/35 group-hover:text-accent-400 group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={1.75} />
             </a>
           ))}
         </div>
 
-        <p className="text-center text-sm text-offwhite/45 mt-6">
-          Don&apos;t see your role? <Link href="/contact" className="text-sage-400 hover:text-sage-300">Pitch us anyway</Link> — we hire great people opportunistically.
+        <p className="text-center text-sm text-charcoal/45 mt-6">
+          Don&apos;t see your role? <Link href="/contact" className="text-accent-400 hover:text-accent-300">Pitch us anyway</Link> — we hire great people opportunistically.
         </p>
       </section>
 
       {/* Perks */}
       <section className="max-w-4xl mx-auto">
-        <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-offwhite mb-6 text-center">
+        <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-display font-bold text-charcoal mb-6 text-center">
           The fine print
         </h2>
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] card-noise p-6 lg:p-8">
           <div className="grid sm:grid-cols-2 gap-3">
             {PERKS.map((p) => (
-              <div key={p} className="flex items-start gap-2.5 text-sm text-offwhite/80">
-                <div className="w-4 h-4 rounded-full bg-sage-500/20 border border-sage-500/40 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <div className="w-1 h-1 rounded-full bg-sage-400" />
+              <div key={p} className="flex items-start gap-2.5 text-sm text-charcoal/80">
+                <div className="w-4 h-4 rounded-full bg-accent-500/20 border border-accent-500/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-1 h-1 rounded-full bg-accent-400" />
                 </div>
                 <span>{p}</span>
               </div>

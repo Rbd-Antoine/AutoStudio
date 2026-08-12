@@ -1,11 +1,16 @@
-import { CarStyle, buildImagePrompt, buildRetouchPrompt } from './carPrompts'
+import { CarStyle, buildImagePrompt, buildRetouchPrompt, buildBackgroundSwapPrompt } from './carPrompts'
 
 export interface StyledImage {
   base64: string
   mimeType: string
 }
 
-async function callGeminiImage(apiKey: string, prompt: string, imageData: string, mimeType: string): Promise<StyledImage> {
+interface ImageInput {
+  mimeType: string
+  data: string
+}
+
+async function callGeminiImage(apiKey: string, prompt: string, images: ImageInput[]): Promise<StyledImage> {
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`,
     {
@@ -15,7 +20,7 @@ async function callGeminiImage(apiKey: string, prompt: string, imageData: string
         contents: [{
           parts: [
             { text: prompt },
-            { inline_data: { mime_type: mimeType, data: imageData } },
+            ...images.map(img => ({ inline_data: { mime_type: img.mimeType, data: img.data } })),
           ],
         }],
         generationConfig: { responseModalities: ['IMAGE', 'TEXT'] },
@@ -50,7 +55,7 @@ export async function generateStyledImage(
   style: CarStyle,
   characteristics?: string,
 ): Promise<StyledImage> {
-  return callGeminiImage(apiKey, buildImagePrompt(style, characteristics), imageData, mimeType)
+  return callGeminiImage(apiKey, buildImagePrompt(style, characteristics), [{ mimeType, data: imageData }])
 }
 
 export async function retouchImage(
@@ -59,7 +64,23 @@ export async function retouchImage(
   mimeType: string,
   instruction: string,
 ): Promise<StyledImage> {
-  return callGeminiImage(apiKey, buildRetouchPrompt(instruction), imageData, mimeType)
+  return callGeminiImage(apiKey, buildRetouchPrompt(instruction), [{ mimeType, data: imageData }])
+}
+
+// Sends the car photo alongside an actual reference background photo (rather than a text
+// description) so the model matches that specific scene instead of a generic style category.
+export async function swapBackground(
+  apiKey: string,
+  carImageData: string,
+  carMimeType: string,
+  backgroundImageData: string,
+  backgroundMimeType: string,
+  characteristics?: string,
+): Promise<StyledImage> {
+  return callGeminiImage(apiKey, buildBackgroundSwapPrompt(characteristics), [
+    { mimeType: carMimeType, data: carImageData },
+    { mimeType: backgroundMimeType, data: backgroundImageData },
+  ])
 }
 
 // Plain text completion (no image in/out) — used for the Marketing Kit's social-post caption.

@@ -1,23 +1,20 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   Upload, Loader2, Download, ArrowLeft, Sparkles,
-  RotateCcw, Video, Image as ImageIcon, PenLine,
-  Wand2, RefreshCw, Palette, Send, AlertTriangle, X, Clapperboard, Check, Star,
+  PenLine, Wand2, RefreshCw, Palette, Send, AlertTriangle, X, Clapperboard, Check, Star, Plus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { CAR_STYLES } from '@/lib/carStyles'
+import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
 import { downloadUrlAsFile } from '@/lib/download-file'
 import { MarketingKitModal } from '@/components/app/MarketingKitModal'
 import { VerifyEmailModal } from '@/components/app/VerifyEmailModal'
 
-type Mode = 'image' | 'video'
-
+const MAX_PHOTOS = 5
 const MAX_FILE_SIZE = 20 * 1024 * 1024 // matches the "jusqu'à 20 Mo" copy on the dropzone
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
 const ACCEPTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif']
@@ -40,9 +37,7 @@ function validateImageFile(f: File): string | null {
 
 interface GenState {
   status: 'idle' | 'loading' | 'done' | 'error'
-  resultUrl?: string
   error?: string
-  processingMs?: number
 }
 
 interface CreditError {
@@ -53,7 +48,6 @@ interface CreditError {
 interface Version {
   id: string
   url: string
-  mode: Mode
   kind: 'generate' | 'retouch'
   processingMs?: number
 }
@@ -71,8 +65,8 @@ function readFileAsDataUrl(file: File | Blob): Promise<string> {
 // serverless function request bodies at 4.5 Mo, and a phone photo sent at full resolution
 // blows well past that once base64-encoded, which inflates size by ~33%). Downscaling here
 // means the 20 Mo the dropzone advertises is honest — the actual upload the AI receives stays
-// small regardless of the source photo's resolution, since a style-transfer render doesn't
-// benefit from more than ~2000px on the long edge anyway.
+// small regardless of the source photo's resolution, since a background swap doesn't benefit
+// from more than ~2000px on the long edge anyway.
 const MAX_UPLOAD_DIMENSION = 2000
 const UPLOAD_JPEG_QUALITY = 0.85
 
@@ -122,14 +116,12 @@ function focusAndScroll(ref: React.RefObject<HTMLElement | null>) {
 }
 
 export default function EditorClient() {
-  const { data: session } = useSession()
-
-  const [mode, setMode]                      = useState<Mode>('image')
-  const [file, setFile]                      = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl]          = useState<string | null>(null)
-  const [styleSlug, setStyleSlug]            = useState('studio-blanc')
+  const [files, setFiles]                    = useState<File[]>([])
+  const [previews, setPreviews]              = useState<string[]>([])
+  const [backgroundSlug, setBackgroundSlug]  = useState<typeof CAR_BACKGROUNDS[number]['slug']>(CAR_BACKGROUNDS[0].slug)
   const [characteristics, setCharacteristics] = useState('')
   const [gen, setGen]                        = useState<GenState>({ status: 'idle' })
+  const [partialError, setPartialError]      = useState<string | null>(null)
   const [uploadError, setUploadError]        = useState<string | null>(null)
   const [isDragging, setIsDragging]          = useState(false)
   const dragCounter                          = useRef(0)
@@ -151,6 +143,7 @@ export default function EditorClient() {
   const characteristicsRef = useRef<HTMLTextAreaElement>(null)
   const retouchInputRef    = useRef<HTMLInputElement>(null)
 
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null)
   const [credits, setCredits]         = useState<number | null>(null)
   const [feedbackCreditGranted, setFeedbackCreditGranted] = useState(false)
   const [featureCosts, setFeatureCosts] = useState<Record<string, number>>({})
@@ -172,6 +165,7 @@ export default function EditorClient() {
       .then(d => {
         setCredits((d.monthlyCredits ?? 0) + (d.bonusCredits ?? 0))
         setFeedbackCreditGranted(!!d.feedbackCreditGranted)
+        if (d.workspaceId) setWorkspaceId(d.workspaceId)
       })
       .catch(() => {})
   }, [])
@@ -181,36 +175,43 @@ export default function EditorClient() {
 
   const selected = selectedIdx !== null ? versions[selectedIdx] : null
 
-  const pushVersion = useCallback((v: Version) => {
-    setVersions(prev => {
-      const next = [...prev, v]
-      setSelectedIdx(next.length - 1)
-      return next
+  const addFiles = useCallback((incoming: File[]) => {
+    setFiles(prev => {
+      const room = MAX_PHOTOS - prev.length
+      if (room <= 0) {
+        setUploadError(`Vous pouvez importer jusqu'à ${MAX_PHOTOS} photos.`)
+        return prev
+      }
+      const accepted: File[] = []
+      for (const f of incoming) {
+        if (accepted.length >= room) break
+        const error = validateImageFile(f)
+        if (error) { setUploadError(error); continue }
+        accepted.push(f)
+      }
+      if (accepted.length === 0) return prev
+      setUploadError(null)
+      setPreviews(p => [...p, ...accepted.map(f => URL.createObjectURL(f))])
+      setGen({ status: 'idle' })
+      return [...prev, ...accepted]
     })
   }, [])
 
-  const loadFile = useCallback((f: File) => {
-    const error = validateImageFile(f)
-    if (error) {
-      setUploadError(error)
-      return
-    }
-    setUploadError(null)
-    if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setFile(f)
-    setPreviewUrl(URL.createObjectURL(f))
-    setGen({ status: 'idle' })
-    setVersions([])
-    setSelectedIdx(null)
-  }, [previewUrl])
+  const removeFile = useCallback((idx: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== idx))
+    setPreviews(prev => {
+      URL.revokeObjectURL(prev[idx])
+      return prev.filter((_, i) => i !== idx)
+    })
+  }, [])
 
   const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     dragCounter.current = 0
     setIsDragging(false)
-    const f = e.dataTransfer.files[0]
-    if (f) loadFile(f)
-  }, [loadFile])
+    const dropped = Array.from(e.dataTransfer.files)
+    if (dropped.length) addFiles(dropped)
+  }, [addFiles])
 
   // Counter-based (not a single boolean) because dragging over a child element fires
   // dragleave on the parent before dragenter on the child — a naive enter/leave toggle would
@@ -231,28 +232,27 @@ export default function EditorClient() {
   }, [])
 
   const handleGenerate = useCallback(async () => {
-    if (!file) {
-      setGen({ status: 'error', error: 'Ajoutez une photo de votre véhicule avant de générer.' })
+    if (files.length === 0) {
+      setGen({ status: 'error', error: 'Ajoutez au moins une photo de votre véhicule avant de générer.' })
       focusAndScroll(uploadSectionRef)
       return
     }
-    if (!session?.user?.workspaceId) {
+    if (!workspaceId) {
       setGen({ status: 'error', error: 'Session non chargée — rechargez la page et réessayez.' })
       return
     }
     setGen({ status: 'loading' })
+    setPartialError(null)
     try {
-      const { base64, mimeType } = await prepareImageForUpload(file)
-      const endpoint = mode === 'video' ? '/api/generate-video' : '/api/generate'
-      const res = await fetch(endpoint, {
+      const prepared = await Promise.all(files.map(prepareImageForUpload))
+      const res = await fetch('/api/background-swap', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          imageData:       base64,
-          mimeType,
-          styleSlug,
+          images: prepared.map(p => ({ base64: p.base64, mimeType: p.mimeType })),
+          backgroundSlug,
           characteristics: characteristics.trim() || undefined,
-          workspaceId:     session.user.workspaceId,
+          workspaceId,
         }),
       })
       const data = await res.json().catch(() => {
@@ -260,34 +260,35 @@ export default function EditorClient() {
         // platform itself rejecting an oversized payload with a plain-text "Request Entity Too
         // Large") — surface something a user can act on instead of the raw parse exception.
         throw new Error(res.status === 413
-          ? 'Cette photo est trop volumineuse. Essayez une version compressée ou une autre photo.'
+          ? 'Ces photos sont trop volumineuses. Essayez des versions compressées ou moins de photos à la fois.'
           : 'Le serveur a renvoyé une réponse inattendue. Réessayez.')
       })
-      if (!res.ok) {
-        if (res.status === 402 || data.error === 'insufficient_credits') {
-          setGen({ status: 'idle' })
-          setCreditError({ available: data.available ?? 0, required: data.required ?? 0 })
-          return
-        }
-        if (data.error === 'email_not_verified') {
-          setGen({ status: 'idle' })
-          setShowVerifyModal(true)
-          return
-        }
-        throw new Error(data.error ?? 'Erreur inconnue')
+      if (!res.ok) throw new Error(data.error ?? 'Erreur inconnue')
+
+      const results = data.results as Array<{ index: number; photoId?: string; enhancedUrl?: string; processingMs?: number; error?: string }>
+      const successes = results.filter(r => r.enhancedUrl)
+      const failures = results.filter(r => r.error)
+
+      if (successes.length === 0) throw new Error(failures[0]?.error ?? 'La génération a échoué.')
+
+      setVersions(prev => {
+        const startIdx = prev.length
+        setSelectedIdx(startIdx)
+        return [...prev, ...successes.map(r => ({ id: r.photoId!, url: r.enhancedUrl!, kind: 'generate' as const, processingMs: r.processingMs }))]
+      })
+      setGen({ status: 'done' })
+      if (failures.length > 0) {
+        setPartialError(`${failures.length} photo${failures.length > 1 ? 's' : ''} sur ${files.length} n'${failures.length > 1 ? 'ont' : 'a'} pas pu être traitée${failures.length > 1 ? 's' : ''}.`)
       }
-      const url = data.enhancedUrl ?? data.videoUrl
-      pushVersion({ id: data.photoId ?? `${Date.now()}`, url, mode, kind: 'generate', processingMs: data.processingMs })
-      setGen({ status: 'done', resultUrl: url, processingMs: data.processingMs })
       refreshCredits()
     } catch (err) {
       setGen({ status: 'error', error: err instanceof Error ? err.message : 'Erreur inconnue' })
     }
-  }, [file, session, styleSlug, characteristics, mode, pushVersion, refreshCredits])
+  }, [files, workspaceId, backgroundSlug, characteristics, refreshCredits])
 
   const handleRetouch = useCallback(async () => {
-    if (!retouchText.trim() || !selected || selected.mode !== 'image') return
-    if (!session?.user?.workspaceId) {
+    if (!retouchText.trim() || !selected) return
+    if (!workspaceId) {
       setRetouchError('Session non chargée — rechargez la page et réessayez.')
       setRetouchStatus('error')
       return
@@ -309,8 +310,8 @@ export default function EditorClient() {
         body: JSON.stringify({
           ...payload,
           instruction: retouchText.trim(),
-          workspaceId: session.user.workspaceId,
-          styleSlug,
+          workspaceId,
+          styleSlug: backgroundSlug,
         }),
       })
       const data = await res.json().catch(() => {
@@ -331,7 +332,11 @@ export default function EditorClient() {
         }
         throw new Error(data.error ?? 'Erreur inconnue')
       }
-      pushVersion({ id: data.photoId, url: data.enhancedUrl, mode: 'image', kind: 'retouch', processingMs: data.processingMs })
+      setVersions(prev => {
+        const next = [...prev, { id: data.photoId, url: data.enhancedUrl, kind: 'retouch' as const, processingMs: data.processingMs }]
+        setSelectedIdx(next.length - 1)
+        return next
+      })
       setRetouchText('')
       setRetouchStatus('idle')
       refreshCredits()
@@ -339,21 +344,20 @@ export default function EditorClient() {
       setRetouchError(err instanceof Error ? err.message : 'Erreur inconnue')
       setRetouchStatus('error')
     }
-  }, [retouchText, selected, session, styleSlug, pushVersion, refreshCredits])
+  }, [retouchText, selected, workspaceId, backgroundSlug, refreshCredits])
 
   const handleDownload = async () => {
-    const url = selected?.url ?? gen.resultUrl
+    const url = selected?.url
     if (!url) return
-    const ext = (selected?.mode ?? mode) === 'video' ? 'mp4' : 'png'
-    await downloadUrlAsFile(url, `carglow-${styleSlug}-${Date.now()}.${ext}`)
+    await downloadUrlAsFile(url, `carglow-${backgroundSlug}-${Date.now()}.png`)
   }
 
-  // Deliberately does NOT require `file` — the button always stays clickable so a click with
+  // Deliberately does NOT require `files` — the button always stays clickable so a click with
   // no photo yet still reaches handleGenerate(), which shows a clear "add a photo" message and
   // scrolls to the upload zone, instead of silently doing nothing (a real bug report: a user
   // clicked a disabled-looking button repeatedly and assumed the site was broken).
   const canGenerate = gen.status !== 'loading'
-  const canRetouch  = !!selected && selected.mode === 'image' && retouchStatus !== 'loading'
+  const canRetouch  = !!selected && retouchStatus !== 'loading'
 
   return (
     <div className="min-h-screen bg-offwhite text-charcoal">
@@ -389,8 +393,8 @@ export default function EditorClient() {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-5 pt-5 sm:pt-6">
         <ol className="flex items-center justify-center gap-2 sm:gap-3">
           {([
-            { n: 1, label: 'Photo', done: !!file },
-            { n: 2, label: 'Style', done: !!file },
+            { n: 1, label: 'Photos', done: files.length > 0 },
+            { n: 2, label: 'Fond', done: files.length > 0 },
             { n: 3, label: 'Résultat', done: versions.length > 0 },
           ] as const).map((step, i) => (
             <li key={step.n} className="flex items-center gap-2 sm:gap-3">
@@ -417,14 +421,14 @@ export default function EditorClient() {
             order flow; becomes a real flex column again from lg+ (see order-* on each child) */}
         <div className="contents lg:flex lg:flex-col lg:gap-6">
 
-          {/* Upload zone */}
+          {/* Upload zone — up to MAX_PHOTOS photos of the same vehicle */}
           <div
             ref={uploadSectionRef}
             className={cn(
               'order-1 lg:order-none relative rounded-3xl border-2 border-dashed transition-all',
               isDragging
                 ? 'border-accent-500 bg-accent-100 scale-[1.01]'
-                : file
+                : files.length > 0
                   ? 'border-accent-200'
                   : 'border-accent-200 bg-accent-50/40 hover:border-accent-400 hover:bg-accent-50 cursor-pointer',
             )}
@@ -432,44 +436,50 @@ export default function EditorClient() {
             onDragOver={e => e.preventDefault()}
             onDragEnter={onDragEnter}
             onDragLeave={onDragLeave}
-            onClick={() => !file && fileInputRef.current?.click()}
+            onClick={() => files.length === 0 && fileInputRef.current?.click()}
           >
-            {!file ? (
+            {files.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-4 py-20 px-8">
                 <div className="w-16 h-16 rounded-2xl bg-accent-100 border border-accent-200 flex items-center justify-center">
                   <Upload className="w-7 h-7 text-accent-400" />
                 </div>
                 <div className="text-center">
                   <p className="font-semibold text-charcoal/55 mb-1">
-                    {isDragging ? 'Lâchez votre photo ici' : 'Déposez votre photo de véhicule'}
+                    {isDragging ? 'Lâchez vos photos ici' : 'Déposez vos photos de véhicule'}
                   </p>
-                  <p className="text-sm text-charcoal/35">JPG, PNG, HEIC · jusqu&apos;à 20 Mo</p>
+                  <p className="text-sm text-charcoal/35">Jusqu&apos;à {MAX_PHOTOS} photos · JPG, PNG, HEIC · jusqu&apos;à 20 Mo chacune</p>
                 </div>
                 <button
                   className="px-5 py-2.5 rounded-xl bg-white border border-accent-200 text-sm font-medium text-charcoal/55 hover:text-charcoal hover:border-accent-400 transition-all"
                   onClick={e => { e.stopPropagation(); fileInputRef.current?.click() }}
                 >
-                  Choisir un fichier
+                  Choisir des fichiers
                 </button>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-3xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={previewUrl!}
-                  alt="Photo originale"
-                  className="w-full object-contain"
-                  style={{ maxHeight: 520 }}
-                />
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/85 backdrop-blur-sm text-xs font-semibold text-charcoal/65 border border-accent-200">
-                  Photo originale
-                </div>
-                <button
-                  className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/85 backdrop-blur-sm text-xs text-charcoal/60 hover:text-charcoal border border-accent-200 transition-colors"
-                  onClick={e => { e.stopPropagation(); fileInputRef.current?.click() }}
-                >
-                  <RotateCcw className="w-3 h-3" /> Changer
-                </button>
+              <div className="p-4 grid grid-cols-3 sm:grid-cols-5 gap-2">
+                {previews.map((src, i) => (
+                  <div key={src} className="relative aspect-square rounded-xl overflow-hidden border border-accent-200 bg-white">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      onClick={e => { e.stopPropagation(); removeFile(i) }}
+                      aria-label="Retirer cette photo"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-charcoal/70 hover:bg-charcoal/90 text-white flex items-center justify-center transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                {files.length < MAX_PHOTOS && (
+                  <button
+                    onClick={e => { e.stopPropagation(); fileInputRef.current?.click() }}
+                    className="aspect-square rounded-xl border-2 border-dashed border-accent-200 hover:border-accent-400 hover:bg-accent-50 flex flex-col items-center justify-center gap-1 text-accent-400 hover:text-accent-500 transition-all"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span className="text-[11px] font-medium">Ajouter</span>
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -477,7 +487,7 @@ export default function EditorClient() {
           {/* Shown right where the scroll-to-upload-zone behaviour above actually lands the
               user, instead of only in the generic error box further down the page which they'd
               have to keep scrolling to find. */}
-          {(uploadError || (!file && gen.status === 'error')) && (
+          {(uploadError || (files.length === 0 && gen.status === 'error')) && (
             <p className="order-1 lg:order-none -mt-3 text-sm text-rose-600 text-center">
               {uploadError ?? gen.error}
             </p>
@@ -486,9 +496,14 @@ export default function EditorClient() {
           <input
             ref={fileInputRef}
             type="file"
+            multiple
             accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
             className="hidden"
-            onChange={e => { const f = e.target.files?.[0]; if (f) loadFile(f) }}
+            onChange={e => {
+              const picked = Array.from(e.target.files ?? [])
+              if (picked.length) addFiles(picked)
+              e.target.value = ''
+            }}
           />
 
           {/* Result */}
@@ -496,11 +511,9 @@ export default function EditorClient() {
             <div className="order-2 lg:order-none rounded-3xl border border-accent-200 bg-white overflow-hidden shadow-sm">
               <div className="flex items-center justify-between px-5 py-3.5 border-b border-accent-100">
                 <div className="flex items-center gap-2">
-                  {selected.mode === 'video'
-                    ? <Video className="w-4 h-4 text-accent-500" />
-                    : <Sparkles className="w-4 h-4 text-accent-500" />}
+                  <Sparkles className="w-4 h-4 text-accent-500" />
                   <span className="font-semibold text-sm text-accent-700">
-                    {selected.kind === 'retouch' ? 'Retouche appliquée' : selected.mode === 'video' ? 'Vidéo générée' : 'Rendu généré'}
+                    {selected.kind === 'retouch' ? 'Retouche appliquée' : 'Rendu généré'}
                   </span>
                   {selected.processingMs && (
                     <span className="text-xs text-charcoal/30 ml-1">
@@ -540,10 +553,10 @@ export default function EditorClient() {
               {/* Quick actions — horizontal scroll strip on mobile, vertical rail from sm+ */}
               <div className="flex sm:hidden gap-2 overflow-x-auto px-3 py-2.5 border-b border-accent-100">
                 {[
-                  { label: 'Style',    icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
-                  { label: 'Prompt',   icon: PenLine,    onClick: () => focusAndScroll(characteristicsRef),     disabled: false },
-                  { label: 'Régénérer', icon: RefreshCw, onClick: () => { if (canGenerate) handleGenerate() },  disabled: !canGenerate },
-                  { label: 'Retoucher', icon: Wand2,     onClick: () => focusAndScroll(retouchInputRef),        disabled: selected.mode !== 'image' },
+                  { label: 'Fond',      icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
+                  { label: 'Prompt',    icon: PenLine,    onClick: () => focusAndScroll(characteristicsRef),     disabled: false },
+                  { label: 'Régénérer', icon: RefreshCw,  onClick: () => { if (canGenerate) handleGenerate() },  disabled: !canGenerate },
+                  { label: 'Retoucher', icon: Wand2,      onClick: () => focusAndScroll(retouchInputRef),        disabled: false },
                 ].map(action => (
                   <button
                     key={action.label}
@@ -566,10 +579,10 @@ export default function EditorClient() {
                 {/* Quick actions rail (desktop) */}
                 <div className="hidden sm:flex flex-col shrink-0 w-36 border-r border-accent-100 py-2">
                   {[
-                    { label: 'Changer le style',  icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
+                    { label: 'Changer le fond',    icon: Palette,    onClick: () => focusAndScroll(styleSectionRef),        disabled: false },
                     { label: 'Modifier le prompt', icon: PenLine,   onClick: () => focusAndScroll(characteristicsRef),     disabled: false },
                     { label: 'Regénérer',          icon: RefreshCw, onClick: () => { if (canGenerate) handleGenerate() },  disabled: !canGenerate },
-                    { label: 'Retoucher',          icon: Wand2,     onClick: () => focusAndScroll(retouchInputRef),        disabled: selected.mode !== 'image' },
+                    { label: 'Retoucher',          icon: Wand2,     onClick: () => focusAndScroll(retouchInputRef),        disabled: false },
                   ].map(action => (
                     <button
                       key={action.label}
@@ -589,26 +602,14 @@ export default function EditorClient() {
                 {/* Main result + version thumbnails */}
                 <div className="flex-1 flex flex-col sm:flex-row min-w-0">
                   <div className="flex-1 min-w-0 bg-offwhite flex items-center justify-center">
-                    {selected.mode === 'video' ? (
-                      <video
-                        key={selected.id}
-                        src={selected.url}
-                        controls
-                        autoPlay
-                        loop
-                        className="w-full"
-                        style={{ maxHeight: 520 }}
-                      />
-                    ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={selected.id}
-                        src={selected.url}
-                        alt="Véhicule généré"
-                        className="w-full object-contain"
-                        style={{ maxHeight: 520 }}
-                      />
-                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      key={selected.id}
+                      src={selected.url}
+                      alt="Véhicule généré"
+                      className="w-full object-contain"
+                      style={{ maxHeight: 520 }}
+                    />
                   </div>
 
                   {versions.length > 1 && (
@@ -622,9 +623,7 @@ export default function EditorClient() {
                             i === selectedIdx ? 'border-accent-500 ring-2 ring-accent-200' : 'border-transparent hover:border-accent-200',
                           )}
                         >
-                          {v.mode === 'video' ? (
-                            <video src={v.url} className="w-full aspect-[4/3] object-cover pointer-events-none" muted />
-                          ) : v.url.startsWith('data:') ? (
+                          {v.url.startsWith('data:') ? (
                             // Older versions still have a base64 data: URI (pre-fal.ai-storage
                             // migration) — next/image can't optimize those.
                             // eslint-disable-next-line @next/next/no-img-element
@@ -643,39 +642,35 @@ export default function EditorClient() {
               </div>
 
               {/* Retouch bar */}
-              {selected.mode === 'image' && (
-                <div className="border-t border-accent-100 px-4 pt-3 pb-0 flex items-center justify-between">
-                  <span className="text-[11px] text-charcoal/35">
-                    Retouche — Coûte {featureCosts.imageRetouch ?? 1} crédit{(featureCosts.imageRetouch ?? 1) === 1 ? '' : 's'}
-                  </span>
-                </div>
-              )}
-              {selected.mode === 'image' && (
-                <div className="px-4 py-3 flex items-center gap-2 bg-charcoal/60">
-                  <input
-                    ref={retouchInputRef}
-                    type="text"
-                    value={retouchText}
-                    onChange={e => setRetouchText(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter' && canRetouch && retouchText.trim()) handleRetouch() }}
-                    placeholder="Ex : agrandir la terrasse en bois et ajouter un éclairage extérieur…"
-                    className="flex-1 min-w-0 bg-white border border-accent-200 rounded-xl px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition-all"
-                  />
-                  <button
-                    onClick={handleRetouch}
-                    disabled={!canRetouch || !retouchText.trim()}
-                    className={cn(
-                      'flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0',
-                      canRetouch && retouchText.trim()
-                        ? 'bg-glow-500 hover:bg-glow-400 text-white cursor-pointer'
-                        : 'bg-accent-100 text-accent-300 cursor-not-allowed',
-                    )}
-                  >
-                    {retouchStatus === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    Appliquer
-                  </button>
-                </div>
-              )}
+              <div className="border-t border-accent-100 px-4 pt-3 pb-0 flex items-center justify-between">
+                <span className="text-[11px] text-charcoal/35">
+                  Retouche — Coûte {featureCosts.imageRetouch ?? 1} crédit{(featureCosts.imageRetouch ?? 1) === 1 ? '' : 's'}
+                </span>
+              </div>
+              <div className="px-4 py-3 flex items-center gap-2 bg-charcoal/60">
+                <input
+                  ref={retouchInputRef}
+                  type="text"
+                  value={retouchText}
+                  onChange={e => setRetouchText(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && canRetouch && retouchText.trim()) handleRetouch() }}
+                  placeholder="Ex : atténuer les reflets sur le pare-brise, éclaircir légèrement la carrosserie…"
+                  className="flex-1 min-w-0 bg-white border border-accent-200 rounded-xl px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition-all"
+                />
+                <button
+                  onClick={handleRetouch}
+                  disabled={!canRetouch || !retouchText.trim()}
+                  className={cn(
+                    'flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0',
+                    canRetouch && retouchText.trim()
+                      ? 'bg-glow-500 hover:bg-glow-400 text-white cursor-pointer'
+                      : 'bg-accent-100 text-accent-300 cursor-not-allowed',
+                  )}
+                >
+                  {retouchStatus === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  Appliquer
+                </button>
+              </div>
               {retouchStatus === 'error' && retouchError && (
                 <div className="px-4 pb-3 -mt-1">
                   <p className="text-xs text-rose-600">{retouchError}</p>
@@ -698,7 +693,7 @@ export default function EditorClient() {
                 ref={characteristicsRef}
                 value={characteristics}
                 onChange={e => setCharacteristics(e.target.value)}
-                placeholder="Ex : ajouter une pergola en bois naturel, conserver les rosiers en facade, prévoir un espace pour les enfants, fontaine en pierre, budget intermédiaire, éviter les espèces invasives…"
+                placeholder="Ex : garder un léger reflet sur la carrosserie, cadrage serré sur l'avant du véhicule…"
                 rows={4}
                 className="w-full bg-offwhite border border-accent-200 rounded-xl px-4 py-3 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-100 resize-none transition-all"
               />
@@ -731,98 +726,51 @@ export default function EditorClient() {
 
           {/* The "no photo yet" case is already shown right next to the upload zone above
               (that's where handleGenerate scrolls to) — only render this one for errors that
-              happen once a file exists, e.g. an API failure, so the message isn't duplicated. */}
-          {gen.status === 'error' && file && (
+              happen once files exist, e.g. an API failure, so the message isn't duplicated. */}
+          {gen.status === 'error' && files.length > 0 && (
             <div className="order-10 lg:order-none rounded-2xl bg-rose-50 border border-rose-200 px-5 py-4 text-sm text-rose-700">
               {gen.error}
             </div>
           )}
-        </div>
-
-        {/* Right: mode + style + generate */}
-        <div className="contents lg:flex lg:flex-col lg:gap-4">
-
-          {/* Mode switch */}
-          <div className="order-3 lg:order-none rounded-2xl border border-accent-200 bg-white p-1.5 flex gap-1 shadow-sm">
-            <button
-              onClick={() => { setMode('image'); setGen({ status: 'idle' }) }}
-              aria-pressed={mode === 'image'}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
-                mode === 'image'
-                  ? 'bg-accent-500 text-white shadow-sm'
-                  : 'text-charcoal/45 hover:text-charcoal hover:bg-accent-50',
-              )}
-            >
-              <ImageIcon className="w-4 h-4" strokeWidth={1.75} />
-              Image
-              {featureCosts.imageGeneration != null && (
-                <span className={cn(
-                  'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                  mode === 'image' ? 'bg-white/20 text-white' : 'bg-accent-100 text-accent-600',
-                )}>
-                  {featureCosts.imageGeneration} crédit{featureCosts.imageGeneration === 1 ? '' : 's'}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => { setMode('video'); setGen({ status: 'idle' }) }}
-              aria-pressed={mode === 'video'}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
-                mode === 'video'
-                  ? 'bg-accent-500 text-white shadow-sm'
-                  : 'text-charcoal/45 hover:text-charcoal hover:bg-accent-50',
-              )}
-            >
-              <Video className="w-4 h-4" strokeWidth={1.75} />
-              Vidéo
-              <span className={cn(
-                'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                mode === 'video' ? 'bg-white/20 text-white' : 'bg-accent-100 text-accent-600',
-              )}>
-                {featureCosts.videoGeneration != null ? `${featureCosts.videoGeneration} crédits` : 'IA'}
-              </span>
-            </button>
-          </div>
-
-          {mode === 'video' && (
-            <div className="order-4 lg:order-none rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-[13px] text-accent-700 leading-relaxed">
-              <strong>🎬 Vidéo animée</strong> — Votre véhicule mis en scène dans une vidéo de 5 secondes. Parfait pour vos annonces ou pour partager sur les réseaux sociaux.
+          {partialError && (
+            <div className="order-10 lg:order-none rounded-2xl bg-amber-50 border border-amber-200 px-5 py-4 text-sm text-amber-700">
+              {partialError}
             </div>
           )}
+        </div>
 
-          {/* Style picker */}
+        {/* Right: background + generate */}
+        <div className="contents lg:flex lg:flex-col lg:gap-4">
+
+          {/* Background picker */}
           <div ref={styleSectionRef} className="order-5 lg:order-none rounded-2xl border border-accent-100 bg-white overflow-hidden shadow-sm">
             <div className="px-5 py-4 border-b border-accent-100">
-              <h2 className="font-display font-semibold text-[15px] text-charcoal">Style d&apos;arrière-plan</h2>
-              <p className="text-xs text-charcoal/40 mt-0.5">Choisissez l&apos;ambiance de votre rendu</p>
+              <h2 className="font-display font-semibold text-[15px] text-charcoal">Fond sélectionné</h2>
+              <p className="text-xs text-charcoal/40 mt-0.5">Choisissez le décor pour vos photos</p>
             </div>
             <div className="p-3 flex flex-col gap-1">
-              {CAR_STYLES.map(style => (
+              {CAR_BACKGROUNDS.map(bg => (
                 <button
-                  key={style.slug}
-                  onClick={() => setStyleSlug(style.slug)}
-                  aria-pressed={styleSlug === style.slug}
+                  key={bg.slug}
+                  onClick={() => setBackgroundSlug(bg.slug)}
+                  aria-pressed={backgroundSlug === bg.slug}
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
-                    styleSlug === style.slug
+                    backgroundSlug === bg.slug
                       ? 'bg-accent-50 border border-accent-300'
                       : 'border border-transparent hover:bg-charcoal/[0.06] hover:border-accent-100',
                   )}
                 >
-                  <Image src={style.image} alt="" width={44} height={44} className="w-11 h-11 rounded-lg object-cover shrink-0" />
+                  <Image src={bg.image} alt="" width={44} height={44} className="w-11 h-11 rounded-lg object-cover shrink-0" />
                   <div>
                     <p className={cn(
                       'text-sm font-semibold',
-                      styleSlug === style.slug ? 'text-accent-700' : 'text-charcoal/75',
+                      backgroundSlug === bg.slug ? 'text-accent-700' : 'text-charcoal/75',
                     )}>
-                      {style.name}
+                      {bg.name}
                     </p>
-                    <p className="text-xs text-charcoal/40">{style.desc}</p>
+                    <p className="text-xs text-charcoal/40">{bg.desc}</p>
                   </div>
                 </button>
               ))}
@@ -844,32 +792,27 @@ export default function EditorClient() {
             {gen.status === 'loading' ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                {mode === 'video' ? 'Génération vidéo…' : 'Génération en cours…'}
+                Génération en cours…
               </>
             ) : (
               <>
-                {mode === 'video' ? <Video className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
-                {mode === 'video' ? 'Générer la vidéo' : 'Générer mon rendu'}
-                {(() => {
-                  const cost = mode === 'video' ? featureCosts.videoGeneration : featureCosts.imageGeneration
-                  return cost != null ? ` · ${cost} crédit${cost === 1 ? '' : 's'}` : ''
-                })()}
+                <Sparkles className="w-4 h-4" />
+                {files.length > 1 ? `Générer mes ${files.length} rendus` : 'Générer mon rendu'}
+                {featureCosts.imageGeneration != null ? ` · ${featureCosts.imageGeneration} crédit${featureCosts.imageGeneration === 1 ? '' : 's'}/photo` : ''}
               </>
             )}
           </button>
 
           {gen.status === 'loading' && (
             <p className="order-7 lg:order-none text-xs text-center text-charcoal/35 leading-relaxed">
-              {mode === 'video'
-                ? <>L&apos;IA génère votre vidéo.<br />Comptez 60 à 120 secondes.</>
-                : <>L&apos;IA analyse et transforme l&apos;arrière-plan de votre véhicule.<br />Comptez 30 à 60 secondes.</>
-              }
+              L&apos;IA remplace l&apos;arrière-plan de vos photos, la voiture reste inchangée.<br />
+              Comptez 30 à 90 secondes selon le nombre de photos.
             </p>
           )}
 
-          {!file && gen.status !== 'loading' && (
+          {files.length === 0 && gen.status !== 'loading' && (
             <p className="order-7 lg:order-none text-xs text-center text-charcoal/30">
-              Téléchargez d&apos;abord une photo de votre véhicule
+              Téléchargez d&apos;abord une ou plusieurs photos de votre véhicule
             </p>
           )}
         </div>
@@ -878,13 +821,13 @@ export default function EditorClient() {
       {/* Blocking popup — the guaranteed-visible warning that a render is in progress and the
           user needs to wait, regardless of whether a previous result already fills the main
           content area (a first-ever generation has nothing else on screen to signal this). */}
-      {gen.status === 'loading' && <GeneratingModal mode={mode} />}
+      {gen.status === 'loading' && <GeneratingModal />}
 
       {creditError && (
         <InsufficientCreditsModal
           available={creditError.available}
           required={creditError.required}
-          workspaceId={session?.user?.workspaceId}
+          workspaceId={workspaceId ?? undefined}
           feedbackCreditGranted={feedbackCreditGranted}
           onClose={() => setCreditError(null)}
           onCreditGranted={refreshCredits}
@@ -894,7 +837,7 @@ export default function EditorClient() {
       {showVerifyModal && <VerifyEmailModal onClose={() => setShowVerifyModal(false)} />}
 
       {showMarketingKit && selected && (
-        <MarketingKitModal photoId={selected.id} onClose={() => setShowMarketingKit(false)} hasVideoAfter={selected.mode === 'video'} />
+        <MarketingKitModal photoId={selected.id} onClose={() => setShowMarketingKit(false)} />
       )}
     </div>
   )
@@ -904,7 +847,7 @@ export default function EditorClient() {
 // there is nothing to cancel here: the fetch keeps running either way, so offering a "close"
 // affordance would just let the user believe they stopped something they didn't. It disappears
 // on its own the moment gen.status leaves 'loading', which is the real signal, not a timer.
-function GeneratingModal({ mode }: { mode: Mode }) {
+function GeneratingModal() {
   return (
     <>
       <div className="fixed inset-0 z-40 bg-charcoal/40 backdrop-blur-sm" />
@@ -912,12 +855,12 @@ function GeneratingModal({ mode }: { mode: Mode }) {
         <div className="bg-white rounded-2xl w-full max-w-sm p-7 pointer-events-auto shadow-card text-center">
           <Loader2 className="w-9 h-9 mx-auto text-accent-500 animate-spin mb-4" />
           <h3 className="font-display font-semibold text-lg text-charcoal mb-2">
-            {mode === 'video' ? 'Génération de la vidéo en cours' : 'Génération du rendu en cours'}
+            Génération du rendu en cours
           </h3>
           <p className="text-sm text-charcoal/50">
             Merci de patienter, ne fermez pas cette page.
             <br />
-            {mode === 'video' ? 'Comptez 60 à 120 secondes.' : 'Comptez 30 à 60 secondes.'}
+            Comptez 30 à 90 secondes.
           </p>
         </div>
       </div>

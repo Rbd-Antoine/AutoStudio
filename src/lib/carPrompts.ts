@@ -88,6 +88,48 @@ CONSTRAINTS (always apply, regardless of style or user input):
 OUTPUT: a single photorealistic image, same resolution/aspect ratio as the input photo.`
 }
 
+export function buildBackgroundSwapPrompt(characteristics?: string) {
+  const userText = characteristics?.trim() || 'Aucune demande particulière.'
+
+  return `You will receive two images. IMAGE 1 is a vehicle photo. IMAGE 2 is a reference
+background/scene photo.
+
+TASK: Replace the background of IMAGE 1 with the exact scene shown in IMAGE 2. This is a
+BACKGROUND REPLACEMENT ONLY — the vehicle itself must remain completely untouched.
+
+SCENE: Keep the exact camera angle, framing, and perspective of IMAGE 1. Segment the
+vehicle precisely and replace only what is behind and around it with the scene from
+IMAGE 2 — the ground plane directly under the car may be adapted to match that scene, but
+the vehicle's position, size, and pose in frame must stay identical.
+
+MOOD: Photorealistic, professional automotive photography — not illustrative, not
+stylized, not cartoon-like. Match the lighting and perspective of IMAGE 2 as closely as
+possible while keeping the result fully believable as an unedited photo.
+
+USER CHARACTERISTICS (optional, provided by the dealer):
+"${userText}"
+→ Incorporate these requests as closely as possible without conflicting with the
+constraints below.
+
+CONSTRAINTS (always apply):
+- Never alter the vehicle itself: body panels, paint color and finish, wheels, glass,
+  badges, lights, and the license plate must be pixel-identical to IMAGE 1 in shape and
+  detail — only relighting/color-grading them to match the new scene's ambient light and
+  reflections is allowed, never structural changes.
+- Do not add, remove, or move any part of the vehicle, and never invent or alter text on
+  badges, plates, or dealership markings.
+- Generate realistic contact shadows and, where the scene calls for it, plausible
+  reflections of the vehicle on the new ground surface — mismatched or missing shadows
+  break the illusion immediately.
+- Never place the vehicle in a physically implausible position (floating, wrong scale
+  relative to the new background, tilted ground plane that doesn't match its wheels).
+- No hallucinated people, other vehicles, or logos in the new background unless already
+  present in IMAGE 1 or IMAGE 2.
+
+OUTPUT: a single photorealistic image, same resolution/aspect ratio as IMAGE 1, showing
+the vehicle from IMAGE 1 placed believably into the scene from IMAGE 2.`
+}
+
 export function buildRetouchPrompt(instruction: string) {
   return `Edit this already-rendered vehicle photo with one specific, targeted change.
 

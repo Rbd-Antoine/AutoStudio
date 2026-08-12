@@ -111,17 +111,11 @@ export function Nav() {
               Mon espace
             </RouteLink>
           ) : (
-            <>
-              <RouteLink href="/signin"
-                className="px-4 py-2 text-sm font-medium text-charcoal/60 hover:text-charcoal rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.06] transition-all">
-                Connexion
-              </RouteLink>
-              <RouteLink href="/signup"
-                onClick={() => trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_desktop', label: 'Essai gratuit', location: 'nav' })}
-                className="px-4 py-2 text-sm font-semibold text-white bg-accent-500 hover:bg-accent-600 rounded-xl shadow-accent-sm transition-all">
-                Essai gratuit
-              </RouteLink>
-            </>
+            <RouteLink href="/signup"
+              onClick={() => trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_desktop', label: 'Essai gratuit', location: 'nav' })}
+              className="px-4 py-2 text-sm font-semibold text-white bg-accent-500 hover:bg-accent-600 rounded-xl shadow-accent-sm transition-all">
+              Essai gratuit
+            </RouteLink>
           )}
         </div>
 
@@ -160,17 +154,11 @@ export function Nav() {
                   Mon espace
                 </RouteLink>
               ) : (
-                <>
-                  <RouteLink href="/signin" onClick={() => setMobileOpen(false)}
-                    className="text-center py-3 rounded-xl border border-charcoal/[0.14] text-sm font-medium text-charcoal/70">
-                    Connexion
-                  </RouteLink>
-                  <RouteLink href="/signup"
-                    onClick={() => { setMobileOpen(false); trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_mobile', label: 'Essai gratuit', location: 'nav' }) }}
-                    className="text-center py-3 rounded-xl bg-accent-500 text-sm font-semibold text-white">
-                    Essai gratuit
-                  </RouteLink>
-                </>
+                <RouteLink href="/signup"
+                  onClick={() => { setMobileOpen(false); trackEvent(ANALYTICS_EVENTS.CTA_CLICKED, { ctaId: 'nav_mobile', label: 'Essai gratuit', location: 'nav' }) }}
+                  className="text-center py-3 rounded-xl bg-accent-500 text-sm font-semibold text-white">
+                  Essai gratuit
+                </RouteLink>
               )}
             </div>
           </div>

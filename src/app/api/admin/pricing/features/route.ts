@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 
 const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
@@ -12,7 +12,7 @@ function requireSuperuser(email: string | null | undefined) {
 // rendering, ...) purely as a { key, label, creditCost, enabled } row — no backend code
 // change is ever needed to make a new feature chargeable.
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!requireSuperuser(session?.user?.email)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

@@ -1,13 +1,14 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ImageIcon, ArrowRight, AlertCircle, CreditCard, Leaf, Clock3 } from 'lucide-react'
-import { auth } from '@/auth'
+import { ImageIcon, ArrowRight, AlertCircle, CreditCard, Sparkles, Clock3 } from 'lucide-react'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isRealHostedUrl } from '@/lib/photo-url'
 import PhotoGrid from '@/components/app/PhotoGrid'
 import OnboardingBanner from '@/app/app/_components/OnboardingBanner'
 
 export default async function DashboardPage() {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) redirect('/signin')
 
   const userId      = session.user.id
@@ -73,7 +74,7 @@ export default async function DashboardPage() {
               href="/app/editor"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm transition-all"
             >
-              <Leaf className="w-4 h-4" /> Générer un rendu
+              <Sparkles className="w-4 h-4" /> Générer un rendu
             </Link>
           </div>
         </div>
@@ -123,8 +124,8 @@ export default async function DashboardPage() {
 
           <PhotoGrid photos={recentPhotos.map(p => ({
             id:           p.id,
-            thumbnailUrl: p.thumbnailUrl ?? p.enhancedUrl ?? p.originalUrl,
-            fullUrl:      p.enhancedUrl ?? p.thumbnailUrl ?? p.originalUrl,
+            thumbnailUrl: p.thumbnailUrl ?? p.enhancedUrl ?? (isRealHostedUrl(p.originalUrl) ? p.originalUrl : null),
+            fullUrl:      p.enhancedUrl ?? p.thumbnailUrl ?? (isRealHostedUrl(p.originalUrl) ? p.originalUrl : null),
             vehicleName:  p.vehicle?.name ?? null,
             styleUsed:    p.styleUsed ?? null,
             status:       p.status,

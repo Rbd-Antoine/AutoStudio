@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getStripe } from '@/lib/stripe'
 
 // Read-only lookup used by the billing page to get the real amount paid for a completed
@@ -7,7 +7,7 @@ import { getStripe } from '@/lib/stripe'
 // purely for tracking display, not a source of truth for credit granting (the Stripe
 // webhook remains the only thing that ever grants credits).
 export async function GET(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

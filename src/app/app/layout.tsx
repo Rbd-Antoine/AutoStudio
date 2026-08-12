@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getWorkspaceSummary } from '@/lib/workspace-summary'
 import AppLayoutClient from '@/components/AppLayoutClient'
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) redirect('/signin')
 
   // Unverified accounts are deliberately allowed into the app shell (dashboard, editor,

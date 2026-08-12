@@ -27,8 +27,9 @@ const authMiddleware = auth(function middleware(req: any) {
     return
   }
 
-  // /app/* requires a session.
-  if (!req.auth?.user) {
+  // /app/* requires a session — except locally, where it's bypassed for now so the editor
+  // can be tested without signing in (see src/lib/dev-auth.ts, used by the /app pages).
+  if (!req.auth?.user && process.env.NODE_ENV === 'production') {
     const signInUrl = new URL('/signin', req.url)
     signInUrl.searchParams.set('callbackUrl', pathname)
     return Response.redirect(signInUrl)

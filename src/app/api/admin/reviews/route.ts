@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 
 const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
@@ -9,7 +9,7 @@ function requireSuperuser(email: string | null | undefined) {
 }
 
 export async function GET() {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!requireSuperuser(session?.user?.email)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

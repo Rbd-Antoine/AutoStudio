@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { getStripe, priceIdForPlan, priceIdForPack, type SubscriptionPlan, type CreditPackId } from '@/lib/stripe'
 import { getPricingConfig, activePromo } from '@/lib/pricing'
@@ -11,7 +11,7 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ['ESSENTIAL', 'PRO', 'BUSINESS']
 const CREDIT_PACKS: CreditPackId[] = ['pack1', 'pack2', 'pack3']
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

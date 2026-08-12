@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { grantCredits } from '@/lib/credits'
 import { trackServerEvent } from '@/lib/analytics/server'
@@ -8,7 +8,7 @@ import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 const MIN_MESSAGE_LENGTH = 15
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }

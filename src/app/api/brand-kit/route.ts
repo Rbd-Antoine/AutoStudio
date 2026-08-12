@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getWorkspaceSummary } from '@/lib/workspace-summary'
 import { saveBrandKit } from '@/lib/brand-kit'
 import { uploadBuffer } from '@/lib/blob-storage'
@@ -8,7 +8,7 @@ const MAX_LOGO_BYTES = 5 * 1024 * 1024
 const ALLOWED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getWorkspaceSummary } from '@/lib/workspace-summary'
 
 export async function GET() {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

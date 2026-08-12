@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { CAR_STYLES } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
@@ -16,7 +16,7 @@ const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'imageGeneration'
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }

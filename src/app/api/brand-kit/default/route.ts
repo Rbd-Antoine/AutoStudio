@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getWorkspaceSummary } from '@/lib/workspace-summary'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 
 export async function GET() {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }

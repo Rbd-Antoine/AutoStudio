@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { buildStoryboardFromPhoto } from '@/lib/marketing-video/build-storyboard'
@@ -7,20 +7,16 @@ import { getVideoProvider } from '@/lib/marketing-video/provider'
 import type { MarketingVideoFormat } from '@/lib/marketing-video/types'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
 import { isEmailVerified } from '@/lib/auth-guards'
+import { isRealHostedUrl } from '@/lib/photo-url'
 
 export const maxDuration = 300
 
 const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'marketingVideo'
 const VALID_FORMATS: MarketingVideoFormat[] = ['reel', 'story', 'landscape', 'square']
-const LEGACY_PLACEHOLDERS = ['jardin-direct-upload', 'jardin-retouche', 'car-direct-upload', 'car-retouche']
-
-function isRealHostedUrl(url: string | null): url is string {
-  return !!url && !url.startsWith('data:') && !LEGACY_PLACEHOLDERS.includes(url)
-}
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const { id } = await params

@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isRealHostedUrl } from '@/lib/photo-url'
 import PhotoGrid from '@/components/app/PhotoGrid'
 
 export default async function LibraryPage() {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) redirect('/signin')
 
   const wsId = session.user.workspaceId ?? await db.workspaceMember
@@ -59,8 +60,8 @@ export default async function LibraryPage() {
 
       <PhotoGrid photos={photos.map(p => ({
         id:           p.id,
-        thumbnailUrl: p.thumbnailUrl ?? p.enhancedUrl ?? p.originalUrl,
-        fullUrl:      p.enhancedUrl ?? p.thumbnailUrl ?? p.originalUrl,
+        thumbnailUrl: p.thumbnailUrl ?? p.enhancedUrl ?? (isRealHostedUrl(p.originalUrl) ? p.originalUrl : null),
+        fullUrl:      p.enhancedUrl ?? p.thumbnailUrl ?? (isRealHostedUrl(p.originalUrl) ? p.originalUrl : null),
         vehicleName:  p.vehicle?.name ?? null,
         styleUsed:    p.styleUsed ?? null,
         status:       p.status,

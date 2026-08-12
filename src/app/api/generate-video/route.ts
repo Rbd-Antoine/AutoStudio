@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { CAR_STYLES, buildVideoPrompt } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
@@ -38,7 +38,7 @@ async function pollOperation(operationName: string, apiKey: string, maxWaitMs = 
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
+  const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }

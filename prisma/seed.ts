@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { PrismaClient } from '../src/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { DEFAULT_AI_FEATURES } from '../src/lib/ai-features'
 
 const adapter = new PrismaPg(process.env.DATABASE_URL!)
 const prisma  = new PrismaClient({ adapter })
@@ -73,6 +74,18 @@ const GLOBAL_STYLES = [
 ]
 
 async function main() {
+  // Pricing singleton + the AI features every charged route looks up. Both are idempotent and
+  // never overwrite values an admin has since edited, so the seed is safe to re-run on prod.
+  await prisma.pricingConfig.upsert({ where: { id: 'global' }, create: { id: 'global' }, update: {} })
+  for (const feature of DEFAULT_AI_FEATURES) {
+    await prisma.aiFeature.upsert({
+      where: { key: feature.key },
+      create: { ...feature, enabled: true },
+      update: {},
+    })
+  }
+  console.log(`✅ Seeded pricing config and ${DEFAULT_AI_FEATURES.length} AI features.`)
+
   console.log('Seeding global styles…')
 
   for (const style of GLOBAL_STYLES) {

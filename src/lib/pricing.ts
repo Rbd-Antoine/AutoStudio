@@ -3,6 +3,7 @@
 // a plan's monthly credit allotment, or a price — read it from here instead.
 import { db } from './db'
 import type { PricingConfig, AiFeature, Plan } from '@/generated/prisma/client'
+import { DEFAULT_AI_FEATURES } from './ai-features'
 
 let cachedConfig: PricingConfig | null = null
 let cachedAt = 0
@@ -27,15 +28,32 @@ export function invalidatePricingCache() {
   cachedConfig = null
 }
 
+// Creates any missing default AiFeature row once per process. Without these rows every charged
+// route fails with "Unknown AI feature", and nothing in a fresh deploy created them before.
+// skipDuplicates leaves rows an admin already edited untouched.
+let defaultFeaturesReady: Promise<void> | null = null
+function ensureDefaultAiFeatures(): Promise<void> {
+  defaultFeaturesReady ??= db.aiFeature
+    .createMany({ data: DEFAULT_AI_FEATURES.map(f => ({ ...f, enabled: true })), skipDuplicates: true })
+    .then(() => undefined)
+    .catch(err => {
+      defaultFeaturesReady = null
+      throw err
+    })
+  return defaultFeaturesReady
+}
+
 export async function getAiFeature(key: string): Promise<AiFeature | null> {
+  await ensureDefaultAiFeatures()
   return db.aiFeature.findUnique({ where: { key } })
 }
 
 export async function listAiFeatures(): Promise<AiFeature[]> {
+  await ensureDefaultAiFeatures()
   return db.aiFeature.findMany({ orderBy: { key: 'asc' } })
 }
 
-// Monthly recurring allotment for a plan, including FREE (1 credit/month by default).
+// Monthly recurring allotment for a plan, including FREE (PricingConfig.freeCredits, 3 by default).
 // Paid plans reset via the Stripe renewal webhook; FREE has no subscription to key off, so
 // it's reset by the /api/cron/reset-free-credits job instead — see that route for the cadence.
 export function monthlyCreditsForPlan(config: PricingConfig, plan: Plan): number {

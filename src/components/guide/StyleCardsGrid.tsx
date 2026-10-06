@@ -2,12 +2,10 @@ import Image from 'next/image'
 import { CAR_STYLES } from '@/lib/carStyles'
 
 const AUDIENCE: Record<string, string> = {
-  'gazon-fleurs':   'Le classique — la majorité des demandes',
-  'mediterraneen':  'Exposition plein sud, envie de vacances, arrosage limité',
-  'contemporain':   'Maison moderne, client qui veut « propre et net »',
-  'naturel':        'Sensibilité écologique, entretien réduit',
-  'zen':            'Petit espace, recherche de calme',
-  'potager':        'Familles, demande en forte croissance',
+  'garage-neon':        'Sportives, véhicules premium, publications sur les réseaux sociaux',
+  'hangar-industriel':  'Utilitaires, SUV et 4x4 — un rendu brut et sérieux',
+  'parking-souterrain': 'Citadines et berlines — sobre, crédible, cohérent sur tout un stock',
+  'piece-vide':         'Annonces façon catalogue : fond clair, le véhicule au centre',
 }
 
 export function StyleCardsGrid() {

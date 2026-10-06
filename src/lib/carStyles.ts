@@ -1,8 +1,19 @@
-export const CAR_STYLES = [
-  { slug: 'studio-blanc',       name: 'Studio Blanc',          emoji: '⚪', desc: 'Fond blanc épuré, style catalogue',        image: '/styles/studio-blanc.jpg' },
-  { slug: 'showroom',           name: 'Showroom',              emoji: '🏢', desc: 'Sol poli et éclairage premium',           image: '/styles/showroom.jpg' },
-  { slug: 'urbain',             name: 'Urbain',                emoji: '🏙️', desc: 'Rue moderne, ambiance lifestyle',         image: '/styles/urbain.jpg' },
-  { slug: 'route-panoramique',  name: 'Route Panoramique',     emoji: '🛣️', desc: 'Décor grand angle, style premium',        image: '/styles/route-panoramique.jpg' },
-  { slug: 'parking-concession', name: 'Devant la Concession',  emoji: '🚩', desc: 'Façade de concession, plein jour',        image: '/styles/parking-concession.jpg' },
-  { slug: 'nuit-neon',          name: 'Ambiance Nocturne',     emoji: '🌃', desc: 'Néons et reflets, effet dramatique',      image: '/styles/nuit-neon.jpg' },
-] as const
+import { CAR_BACKGROUNDS } from './carBackgrounds'
+
+// Marketing view of the backgrounds the editor actually offers (src/lib/carBackgrounds.ts), so
+// the site never advertises a style a customer can't pick. Each image is a real render made
+// with that background by the editor's own background swap.
+const EMOJI: Record<(typeof CAR_BACKGROUNDS)[number]['slug'], string> = {
+  'garage-neon': '💡',
+  'hangar-industriel': '🏭',
+  'parking-souterrain': '🅿️',
+  'piece-vide': '⬜',
+}
+
+export const CAR_STYLES = CAR_BACKGROUNDS.map(bg => ({
+  slug: bg.slug,
+  name: bg.name,
+  emoji: EMOJI[bg.slug],
+  desc: bg.desc,
+  image: `/styles/${bg.slug}.jpg`,
+}))

@@ -1,8 +1,9 @@
 // Typed catalog for the marketing showcase assets under public/showcase/ — components read
 // this file instead of hardcoding paths in JSX.
 
-export type CarStyleSlug =
-  | 'studio-blanc' | 'showroom' | 'urbain' | 'route-panoramique' | 'parking-concession' | 'nuit-neon'
+import type { CarBackground } from './carBackgrounds'
+
+export type CarStyleSlug = CarBackground['slug']
 
 export interface ShowcaseCar {
   id: string
@@ -13,10 +14,10 @@ export interface ShowcaseCar {
 }
 
 export const SHOWCASE_CARS: ShowcaseCar[] = [
-  { id: 'voiture-01', beforeAspect: { width: 4, height: 3 }, style: 'studio-blanc',      styleLabel: 'Studio Blanc' },
-  { id: 'voiture-02', beforeAspect: { width: 4, height: 3 }, style: 'showroom',          styleLabel: 'Showroom' },
-  { id: 'voiture-03', beforeAspect: { width: 4, height: 3 }, style: 'urbain',            styleLabel: 'Urbain' },
-  { id: 'voiture-04', beforeAspect: { width: 4, height: 3 }, style: 'route-panoramique', styleLabel: 'Route Panoramique' },
+  { id: 'voiture-01', beforeAspect: { width: 4, height: 3 }, style: 'garage-neon',        styleLabel: 'Garage néon' },
+  { id: 'voiture-02', beforeAspect: { width: 4, height: 3 }, style: 'hangar-industriel',  styleLabel: 'Hangar industriel' },
+  { id: 'voiture-03', beforeAspect: { width: 4, height: 3 }, style: 'parking-souterrain', styleLabel: 'Parking souterrain' },
+  { id: 'voiture-04', beforeAspect: { width: 4, height: 3 }, style: 'piece-vide',         styleLabel: 'Pièce vide moderne' },
 ]
 
 export function carImagePath(carId: string, variant: 'before' | 'after' | 'thumb'): string {

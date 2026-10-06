@@ -238,12 +238,12 @@ function CalendlySection() {
 
 // ─── SCROLLING GALLERY ────────────────────────────────────────────────────────
 const SCROLL_GALLERY = [
-  { src: '/scroll-car-1.jpeg', label: 'Studio blanc épuré' },
-  { src: '/scroll-car-2.jpeg', label: 'Showroom premium' },
-  { src: '/scroll-car-3.jpeg', label: 'Rue urbaine moderne' },
-  { src: '/scroll-car-4.jpeg', label: 'Route panoramique' },
-  { src: '/scroll-car-5.jpeg', label: 'Devant la concession' },
-  { src: '/scroll-car-6.jpeg', label: 'Ambiance nocturne' },
+  { src: '/scroll-car-1.jpeg', label: 'Garage néon' },
+  { src: '/scroll-car-2.jpeg', label: 'Hangar industriel' },
+  { src: '/scroll-car-3.jpeg', label: 'Parking souterrain' },
+  { src: '/scroll-car-4.jpeg', label: 'Pièce vide moderne' },
+  { src: '/scroll-car-5.jpeg', label: 'Parking souterrain' },
+  { src: '/scroll-car-6.jpeg', label: 'Garage néon' },
 ]
 
 function ScrollingGallerySection() {
@@ -409,7 +409,7 @@ function StylesSection() {
             Chaque véhicule mérite<br /><span className="text-gradient">sa mise en scène.</span>
           </h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {CAR_STYLES.map((s, i) => (
             <div key={s.slug} className={cn('group p-6 rounded-2xl border transition-all cursor-default hover:shadow-card', STYLE_CARD_COLORS[i % STYLE_CARD_COLORS.length])}>
               <div className="relative w-full h-32 rounded-xl overflow-hidden mb-4">
@@ -534,7 +534,7 @@ export default async function HomePage() {
   // Real counts, not invented ones — each section decides for itself whether the number
   // is high enough to be reassuring rather than thin (see MIN_RENDER_COUNT_TO_SHOW and
   // GallerySection's own threshold).
-  const [renderCount, landscaperCount, testimonials] = await Promise.all([
+  const [renderCount, workspaceCount, testimonials] = await Promise.all([
     db.photo.count({ where: { status: { in: ['ENHANCED', 'EXPIRED'] } } }),
     db.workspace.count(),
     getPublicTestimonials(),
@@ -544,7 +544,7 @@ export default async function HomePage() {
     <>
       <LandingViewedTracker />
       <HeroSection renderCount={renderCount} />
-      <GallerySection landscaperCount={landscaperCount} />
+      <GallerySection workspaceCount={workspaceCount} />
       <StatsSection />
       <HowItWorksSection />
       <VideoSection />

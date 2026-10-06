@@ -203,9 +203,9 @@ function StylePhotosStrip() {
 
 // ─── BEFORE/AFTER GALLERY ─────────────────────────────────────────────────────
 // Below this, showing the exact count reads as thin rather than reassuring.
-const MIN_LANDSCAPER_COUNT_TO_SHOW = 10
+const MIN_WORKSPACE_COUNT_TO_SHOW = 10
 
-export function GallerySection({ landscaperCount }: { landscaperCount: number }) {
+export function GallerySection({ workspaceCount }: { workspaceCount: number }) {
   const [active, setActive]       = useState(0)
   const [showVideo, setShowVideo] = useState(false)
   const [paused, setPaused]       = useState(false)
@@ -326,8 +326,8 @@ export function GallerySection({ landscaperCount }: { landscaperCount: number })
               </div>
               <div>
                 <p className="text-sm font-semibold text-charcoal">
-                  {landscaperCount >= MIN_LANDSCAPER_COUNT_TO_SHOW
-                    ? <>{landscaperCount.toLocaleString('fr-FR')}+ concessions l&apos;utilisent déjà</>
+                  {workspaceCount >= MIN_WORKSPACE_COUNT_TO_SHOW
+                    ? <>{workspaceCount.toLocaleString('fr-FR')}+ concessions l&apos;utilisent déjà</>
                     : <>Rejoignez les concessions qui utilisent CarGlow</>}
                 </p>
                 <div className="flex items-center gap-0.5">

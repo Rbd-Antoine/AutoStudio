@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { generateText } from '@/lib/gemini'
 import { CAR_STYLES, buildSocialCaptionPrompt } from '@/lib/carPrompts'
+import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
 
 export const maxDuration = 30
 
@@ -35,7 +36,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const brandKit = await getDefaultBrandKit(photo.workspaceId)
-    const styleName = (photo.styleUsed && CAR_STYLES[photo.styleUsed]?.name) || photo.styleUsed || 'véhicule'
+    // Renders from the editor record the background slug; older ones a CAR_STYLES slug.
+    const styleName = (photo.styleUsed && (CAR_STYLES[photo.styleUsed]?.name
+      ?? CAR_BACKGROUNDS.find(bg => bg.slug === photo.styleUsed)?.name)) || photo.styleUsed || 'véhicule'
     const prompt = buildSocialCaptionPrompt(styleName, brandKit.businessName ?? undefined, ctaText)
     const caption = await generateText(apiKey, prompt)
     return NextResponse.json({ caption })

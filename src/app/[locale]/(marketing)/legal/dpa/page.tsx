@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DpaPage() {
   return (
-    <LegalPageLayout eyebrow="Protection des données" title="Accord de traitement des données (DPA)" updated="28 juillet 2026">
+    <LegalPageLayout eyebrow="Protection des données" title="Accord de traitement des données (DPA)" updated="6 octobre 2026">
       <LegalSection n="1" title="Objet">
         <p>
           Le présent accord précise les conditions dans lesquelles CarGlow traite, pour le compte de ses
@@ -48,7 +48,10 @@ export default function DpaPage() {
         <ul>
           <li>Google Gemini, pour la génération de contenus par intelligence artificielle ;</li>
           <li>Stripe, pour le traitement des paiements ;</li>
-          <li>des prestataires d&apos;hébergement et d&apos;infrastructure nécessaires au fonctionnement de la plateforme.</li>
+          <li>Vercel, pour l&apos;hébergement de la plateforme et le stockage des photographies et rendus ;</li>
+          <li>l&apos;hébergeur de la base de données (PostgreSQL) de la plateforme ;</li>
+          <li>Resend, pour l&apos;envoi des e-mails transactionnels ;</li>
+          <li>Shotstack, pour le montage des vidéos du kit marketing.</li>
         </ul>
         <p>Ces prestataires ne reçoivent que les données strictement nécessaires à l&apos;exécution de leur mission et sont tenus à des obligations de confidentialité et de sécurité équivalentes.</p>
       </LegalSection>

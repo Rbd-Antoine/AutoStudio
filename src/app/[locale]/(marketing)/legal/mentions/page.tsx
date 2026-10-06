@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function MentionsLegalesPage() {
   return (
-    <LegalPageLayout eyebrow="Informations légales" title="Mentions légales" updated="17 juillet 2026">
+    <LegalPageLayout eyebrow="Informations légales" title="Mentions légales" updated="6 octobre 2026">
       <LegalSection title="Éditeur">
         <p>Entreprise individuelle CarGlow</p>
       </LegalSection>
@@ -19,6 +19,15 @@ export default function MentionsLegalesPage() {
           201 Rua Saraiva de Carvalho<br />
           1250-247 Lisbonne<br />
           Portugal
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Hébergement">
+        <p>
+          Vercel Inc.<br />
+          440 N Barranca Ave #4133<br />
+          Covina, CA 91723, États-Unis<br />
+          <a href="https://vercel.com">vercel.com</a>
         </p>
       </LegalSection>
 

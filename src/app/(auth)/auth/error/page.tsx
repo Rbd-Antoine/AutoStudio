@@ -88,7 +88,7 @@ function ErrorContent() {
           Back to sign in
         </Link>
         <Link
-          href="/support"
+          href="/contact"
           className="text-xs text-charcoal/55 hover:text-charcoal py-2 inline-flex items-center justify-center gap-1.5"
         >
           <LifeBuoy className="w-3.5 h-3.5" strokeWidth={1.75} />

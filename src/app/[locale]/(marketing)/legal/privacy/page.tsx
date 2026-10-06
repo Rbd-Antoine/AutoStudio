@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPageLayout eyebrow="Confidentialité" title="Politique de confidentialité" updated="17 juillet 2026">
+    <LegalPageLayout eyebrow="Confidentialité" title="Politique de confidentialité" updated="6 octobre 2026">
       <LegalSection title="Résumé">
         <p>
           En utilisant CarGlow, l&apos;utilisateur accepte que les données strictement nécessaires au
@@ -50,7 +50,11 @@ export default function PrivacyPage() {
         <ul>
           <li>Google Gemini pour la génération de contenus IA ;</li>
           <li>Stripe pour les paiements ;</li>
-          <li>les services d&apos;hébergement et d&apos;infrastructure nécessaires au fonctionnement de la plateforme.</li>
+          <li>Vercel pour l&apos;hébergement du site et le stockage des photographies et rendus ;</li>
+          <li>notre hébergeur de base de données (PostgreSQL) pour les données de compte ;</li>
+          <li>Resend pour l&apos;envoi des e-mails liés au compte ;</li>
+          <li>Shotstack pour le montage des vidéos du kit marketing ;</li>
+          <li>PostHog pour la mesure d&apos;audience et Meta pour la mesure publicitaire, lorsqu&apos;ils sont activés.</li>
         </ul>
       </LegalSection>
 

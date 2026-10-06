@@ -163,9 +163,9 @@ export default function SignUpPage() {
 
         <p className="text-[11px] text-charcoal/40 text-center leading-relaxed">
           En créant un compte, vous acceptez nos{' '}
-          <Link href="/terms" className="text-charcoal/60 underline-offset-2 hover:underline">CGU</Link>
+          <Link href="/legal/terms" className="text-charcoal/60 underline-offset-2 hover:underline">CGU</Link>
           {' '}et notre{' '}
-          <Link href="/privacy" className="text-charcoal/60 underline-offset-2 hover:underline">Politique de confidentialité</Link>.
+          <Link href="/legal/privacy" className="text-charcoal/60 underline-offset-2 hover:underline">Politique de confidentialité</Link>.
         </p>
       </form>
 

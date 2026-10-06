@@ -238,6 +238,8 @@ export default async function PricingPage() {
           imageGenerationCost={costFor('imageGeneration') ?? 1}
           imageRetouchCost={costFor('imageRetouch') ?? 1}
           videoGenerationCost={costFor('videoGeneration') ?? 15}
+          marketingVideoCost={costFor('marketingVideo') ?? 1}
+          freeCredits={plans[0].credits}
         />
       </div>
     </div>

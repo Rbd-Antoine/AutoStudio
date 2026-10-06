@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
-
-function requireSuperuser(email: string | null | undefined) {
-  return !!email && SUPERUSER_EMAILS.includes(email.toLowerCase())
-}
 
 // Everything before this was Benoit and friends testing the signup flow itself, not real
 // prospects — excluded so this view reflects actual usage instead of noise.
@@ -14,7 +10,7 @@ const REAL_SIGNUPS_SINCE = new Date('2026-07-20T00:00:00Z')
 
 export async function GET() {
   const session = await getSessionOrDevBypass()
-  if (!requireSuperuser(session?.user?.email)) {
+  if (!await isSuperuserAccount(session?.user)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

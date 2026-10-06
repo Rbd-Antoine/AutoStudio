@@ -13,7 +13,8 @@ const DAY_MS = 24 * HOUR_MS
 // at most 2 nudges total (day 1, day 3-4) and then nothing further from this cron.
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET
-  if (secret && req.headers.get('authorization') !== `Bearer ${secret}`) {
+  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
+  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 import { CAR_STYLES, buildVideoPrompt } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
 import { uploadBase64WithFallback, uploadBufferWithFallback } from '@/lib/blob-storage'
@@ -11,7 +12,6 @@ import { isEmailVerified } from '@/lib/auth-guards'
 
 export const maxDuration = 300
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'videoGeneration'
 
 async function pollOperation(operationName: string, apiKey: string, maxWaitMs = 240000): Promise<string> {
@@ -56,8 +56,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'imageData et workspaceId sont requis' }, { status: 400 })
   }
 
-  const isSuperuser = !!session.user.email &&
-    SUPERUSER_EMAILS.includes(session.user.email.toLowerCase())
+  const isSuperuser = await isSuperuserAccount(session.user)
 
   const member = await db.workspaceMember.findUnique({
     where: { workspaceId_userId: { workspaceId, userId: session.user.id } },

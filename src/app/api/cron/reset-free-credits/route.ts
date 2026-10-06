@@ -11,7 +11,8 @@ import { sendCreditsResetEmail } from '@/lib/email'
 // set, for workspaces created before this cron existed).
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET
-  if (secret && req.headers.get('authorization') !== `Bearer ${secret}`) {
+  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
+  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 

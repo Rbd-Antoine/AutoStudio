@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 import { retouchImage } from '@/lib/gemini'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
@@ -10,7 +11,6 @@ import { isEmailVerified } from '@/lib/auth-guards'
 
 export const maxDuration = 120
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'imageRetouch'
 
 export async function POST(req: NextRequest) {
@@ -53,8 +53,7 @@ export async function POST(req: NextRequest) {
     reusableOriginalUrl = imageUrl
   }
 
-  const isSuperuser = !!session.user.email &&
-    SUPERUSER_EMAILS.includes(session.user.email.toLowerCase())
+  const isSuperuser = await isSuperuserAccount(session.user)
 
   const member = await db.workspaceMember.findUnique({
     where: { workspaceId_userId: { workspaceId, userId: session.user.id } },

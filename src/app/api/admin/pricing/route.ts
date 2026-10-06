@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 import { getPricingConfig, listAiFeatures, invalidatePricingCache } from '@/lib/pricing'
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
-
-function requireSuperuser(email: string | null | undefined) {
-  return !!email && SUPERUSER_EMAILS.includes(email.toLowerCase())
-}
 
 export async function GET() {
   const session = await getSessionOrDevBypass()
-  if (!requireSuperuser(session?.user?.email)) {
+  if (!await isSuperuserAccount(session?.user)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -32,7 +28,7 @@ const EDITABLE_FIELDS = [
 
 export async function PATCH(req: NextRequest) {
   const session = await getSessionOrDevBypass()
-  if (!requireSuperuser(session?.user?.email)) {
+  if (!await isSuperuserAccount(session?.user)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

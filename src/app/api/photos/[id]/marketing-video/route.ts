@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { buildStoryboardFromPhoto } from '@/lib/marketing-video/build-storyboard'
 import { getVideoProvider } from '@/lib/marketing-video/provider'
@@ -11,7 +12,6 @@ import { isRealHostedUrl } from '@/lib/photo-url'
 
 export const maxDuration = 300
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'marketingVideo'
 const VALID_FORMATS: MarketingVideoFormat[] = ['reel', 'story', 'landscape', 'square']
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const isVideoPhoto = Array.isArray(photo.toolsUsed) && photo.toolsUsed.includes('veo_video_generation')
   const photoVideoUrl = isVideoPhoto && isRealHostedUrl(photo.enhancedUrl) ? photo.enhancedUrl : null
 
-  const isSuperuser = !!session.user.email && SUPERUSER_EMAILS.includes(session.user.email.toLowerCase())
+  const isSuperuser = await isSuperuserAccount(session.user)
 
   let deduction: Awaited<ReturnType<typeof deductCredits>> | null = null
   if (!isSuperuser) {

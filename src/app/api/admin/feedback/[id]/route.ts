@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
-
-function requireSuperuser(email: string | null | undefined) {
-  return !!email && SUPERUSER_EMAILS.includes(email.toLowerCase())
-}
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSessionOrDevBypass()
-  if (!requireSuperuser(session?.user?.email)) {
+  if (!await isSuperuserAccount(session?.user)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

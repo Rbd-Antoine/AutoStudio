@@ -1,19 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
-
-function requireSuperuser(email: string | null | undefined) {
-  return !!email && SUPERUSER_EMAILS.includes(email.toLowerCase())
-}
 
 // Lets a superuser define a brand-new AI feature (Sky replacement, 360 panorama, Night
 // rendering, ...) purely as a { key, label, creditCost, enabled } row — no backend code
 // change is ever needed to make a new feature chargeable.
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
-  if (!requireSuperuser(session?.user?.email)) {
+  if (!await isSuperuserAccount(session?.user)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 

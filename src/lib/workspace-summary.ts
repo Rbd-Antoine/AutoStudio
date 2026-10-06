@@ -1,7 +1,6 @@
 import { db } from '@/lib/db'
 import { getPricingConfig, monthlyCreditsForPlan } from '@/lib/pricing'
-
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
+import { isSuperuserAccount } from '@/lib/superusers'
 
 export interface WorkspaceSummary {
   userId: string
@@ -41,8 +40,7 @@ export async function getWorkspaceSummary(
   if (!member) return null
 
   const { workspace } = member
-  const isSuperuser = !!email && SUPERUSER_EMAILS.includes(email.toLowerCase())
-  const config = await getPricingConfig()
+  const [isSuperuser, config] = await Promise.all([isSuperuserAccount({ id: userId }), getPricingConfig()])
 
   return {
     userId,

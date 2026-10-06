@@ -171,6 +171,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
     },
 
+    // Fires whenever a Google account is attached to a user, including the automatic link onto
+    // an existing password account with the same email (allowDangerousEmailAccountLinking).
+    // Sign-up doesn't verify the address, so an unverified password account may belong to
+    // someone who registered this email before its real owner: Google has now proven
+    // ownership, so the email is marked verified and that password is dropped (the owner keeps
+    // Google sign-in and can set a new password via "mot de passe oublié").
+    async linkAccount({ user }) {
+      if (!user.id) return
+      try {
+        const existing = await db.user.findUnique({ where: { id: user.id }, select: { emailVerified: true } })
+        if (!existing || existing.emailVerified) return
+        await db.user.update({ where: { id: user.id }, data: { emailVerified: new Date(), password: null } })
+      } catch (err) {
+        console.error('[auth] linkAccount verification update failed:', err)
+      }
+    },
+
     async signIn({ user, account }) {
       if (!user?.id) return
       try {

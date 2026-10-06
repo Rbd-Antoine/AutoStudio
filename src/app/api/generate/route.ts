@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { isSuperuserAccount } from '@/lib/superusers'
 import { CAR_STYLES } from '@/lib/carPrompts'
 import { generateStyledImage } from '@/lib/gemini'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
@@ -12,7 +13,6 @@ import { sendReviewRequestEmail, sendWelcomeEmail, sendFeatureDiscoveryEmail } f
 
 export const maxDuration = 120
 
-const SUPERUSER_EMAILS = ['ribeaudb38@gmail.com']
 const FEATURE_KEY = 'imageGeneration'
 
 export async function POST(req: NextRequest) {
@@ -34,8 +34,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'imageData et workspaceId sont requis' }, { status: 400 })
   }
 
-  const isSuperuser = !!session.user.email &&
-    SUPERUSER_EMAILS.includes(session.user.email.toLowerCase())
+  const isSuperuser = await isSuperuserAccount(session.user)
 
   const [member, verified] = await Promise.all([
     db.workspaceMember.findUnique({

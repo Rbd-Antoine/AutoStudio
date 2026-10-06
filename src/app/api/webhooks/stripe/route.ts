@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import Stripe from 'stripe'
 import { db } from '@/lib/db'
 import { getStripe, type SubscriptionPlan, type CreditPackId } from '@/lib/stripe'
@@ -17,15 +17,38 @@ const PLAN_PRICE_ENV: Record<SubscriptionPlan, string> = {
   BUSINESS: 'STRIPE_PRICE_BUSINESS',
 }
 
+// The price decides the plan; checkout's metadata is only a fallback. A plan switched in the
+// Stripe customer portal keeps the metadata written at checkout, so reading it first would
+// leave the workspace on its old plan.
 function planFromSubscription(subscription: Stripe.Subscription): SubscriptionPlan | null {
-  const metaPlan = subscription.metadata?.plan as SubscriptionPlan | undefined
-  if (metaPlan && metaPlan in PLAN_PRICE_ENV) return metaPlan
-
   const priceId = subscription.items.data[0]?.price.id
   for (const plan of Object.keys(PLAN_PRICE_ENV) as SubscriptionPlan[]) {
-    if (process.env[PLAN_PRICE_ENV[plan]] === priceId) return plan
+    if (priceId && process.env[PLAN_PRICE_ENV[plan]] === priceId) return plan
   }
+
+  const metaPlan = subscription.metadata?.plan as SubscriptionPlan | undefined
+  if (metaPlan && metaPlan in PLAN_PRICE_ENV) return metaPlan
   return null
+}
+
+// Stripe API 2025-03-31.basil moved the billing period onto each subscription item and the
+// invoice's subscription under parent.subscription_details. Webhook payloads follow the API
+// version set on the endpoint in the Stripe dashboard (not this SDK's), so both shapes are read.
+function subscriptionPeriodEnd(subscription: Stripe.Subscription): Date | undefined {
+  const legacy = (subscription as unknown as { current_period_end?: number }).current_period_end
+  const perItem = (subscription.items?.data[0] as unknown as { current_period_end?: number } | undefined)?.current_period_end
+  const seconds = legacy ?? perItem
+  return seconds ? new Date(seconds * 1000) : undefined
+}
+
+function invoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
+  const shape = invoice as unknown as {
+    subscription?: string | { id: string } | null
+    parent?: { subscription_details?: { subscription?: string | { id: string } | null } | null } | null
+  }
+  const subscription = shape.subscription ?? shape.parent?.subscription_details?.subscription
+  if (!subscription) return null
+  return typeof subscription === 'string' ? subscription : subscription.id
 }
 
 async function handleSubscriptionUpsert(subscription: Stripe.Subscription, eventType: 'created' | 'updated') {
@@ -34,6 +57,10 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription, event
     console.warn('[webhooks/stripe] subscription has no workspaceId metadata, skipping', subscription.id)
     return
   }
+
+  // A subscription whose first payment hasn't gone through yet (e.g. awaiting 3-D Secure)
+  // doesn't get the plan; the customer.subscription.updated that follows payment grants it.
+  if (subscription.status === 'incomplete' || subscription.status === 'incomplete_expired') return
 
   const plan = planFromSubscription(subscription)
   if (!plan) {
@@ -44,7 +71,7 @@ async function handleSubscriptionUpsert(subscription: Stripe.Subscription, event
   const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { plan: true } })
   const previousPlan = workspace?.plan
   const planChanged = previousPlan !== plan
-  const renewalDate = new Date(subscription.current_period_end * 1000)
+  const renewalDate = subscriptionPeriodEnd(subscription)
 
   await db.workspace.update({
     where: { id: workspaceId },
@@ -106,17 +133,15 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
   // handleSubscriptionUpsert, so resetting again here would double-grant.
   if (invoice.billing_reason !== 'subscription_cycle') return
 
-  const subscriptionId = (invoice as unknown as { subscription?: string | Stripe.Subscription }).subscription
+  const subscriptionId = invoiceSubscriptionId(invoice)
   if (!subscriptionId) return
 
   const stripe = getStripe()
-  const subscription = await stripe.subscriptions.retrieve(
-    typeof subscriptionId === 'string' ? subscriptionId : subscriptionId.id,
-  )
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId)
   const workspaceId = subscription.metadata?.workspaceId
   if (!workspaceId) return
 
-  const renewalDate = new Date(subscription.current_period_end * 1000)
+  const renewalDate = subscriptionPeriodEnd(subscription)
   await db.workspace.update({ where: { id: workspaceId }, data: { renewalDate, subscriptionStatus: subscription.status } })
   await resetMonthlyCredits(workspaceId, { renewalDate })
 
@@ -142,18 +167,18 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
       : '—'
     const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     const invoiceNum = invoice.number ?? `INV-${Date.now()}`
-    sendInvoiceEmail(email, {
+    after(() => sendInvoiceEmail(email, {
       invoiceNumber: invoiceNum,
       date,
       description:   `Abonnement ${plan ?? 'CarGlow'} — renouvellement mensuel`,
       amountEur,
       receiptUrl:    invoice.hosted_invoice_url ?? undefined,
-    })
+    }))
   }
 }
 
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  const subscriptionId = (invoice as unknown as { subscription?: string | Stripe.Subscription }).subscription
+  const subscriptionId = invoiceSubscriptionId(invoice)
   let workspaceId: string | undefined
   let userId: string | undefined
   let email: string | null = null
@@ -161,9 +186,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 
   if (subscriptionId) {
     const stripe = getStripe()
-    const subscription = await stripe.subscriptions.retrieve(
-      typeof subscriptionId === 'string' ? subscriptionId : subscriptionId.id,
-    )
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
     workspaceId = subscription.metadata?.workspaceId
     userId = subscription.metadata?.userId
     email = subscription.metadata?.email || null
@@ -210,8 +233,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return
   }
 
+  // Stripe redelivers an event it didn't see acknowledged, so the same purchase can arrive
+  // twice; the payment reference recorded on the first grant makes the second a no-op.
+  const paymentRef = typeof session.payment_intent === 'string' ? session.payment_intent : session.id
+  const alreadyGranted = await db.creditTransaction.findFirst({
+    where: { workspaceId, reason: 'PACK_PURCHASE', stripeInvoiceId: paymentRef },
+    select: { id: true },
+  })
+  if (alreadyGranted) return
+
   await grantCredits(workspaceId, packDef.credits, 'PACK_PURCHASE', {
-    stripeInvoiceId: typeof session.payment_intent === 'string' ? session.payment_intent : undefined,
+    stripeInvoiceId: paymentRef,
     notes: `Credit pack purchase: ${pack} (${packDef.credits} credits)`,
   })
 
@@ -230,13 +262,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       ? `${(session.amount_total / 100).toFixed(2).replace('.', ',')} €`
       : '—'
     const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-    sendInvoiceEmail(email, {
+    after(() => sendInvoiceEmail(email, {
       invoiceNumber: `INV-${Date.now()}`,
       date,
       description: `Pack crédits — ${packDef.credits} crédits`,
       amountEur,
-      receiptUrl: typeof session.payment_intent === 'string' ? undefined : undefined,
-    })
+    }))
   }
 }
 

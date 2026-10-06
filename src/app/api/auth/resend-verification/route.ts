@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { sendVerificationEmail } from '@/lib/email'
+import { SITE_URL } from '@/lib/site-config'
 
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
     data: { identifier: `verify:${user.email}`, token, expires },
   })
 
-  const verifyLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}&email=${encodeURIComponent(user.email)}`
+  const verifyLink = `${SITE_URL}/api/auth/verify-email?token=${token}&email=${encodeURIComponent(user.email)}`
   await sendVerificationEmail(user.email, verifyLink)
 
   return NextResponse.json({ ok: true })

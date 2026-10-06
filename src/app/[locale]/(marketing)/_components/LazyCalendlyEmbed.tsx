@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export function LazyCalendlyEmbed() {
+// `url` is the booking page from NEXT_PUBLIC_CALENDLY_URL (e.g. https://calendly.com/<compte>/demo);
+// the inline-embed parameters and brand colours are added here.
+export function LazyCalendlyEmbed({ url }: { url: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [shouldLoad, setShouldLoad] = useState(false)
 
@@ -20,7 +22,7 @@ export function LazyCalendlyEmbed() {
     <div ref={containerRef} className="h-[560px] sm:h-[640px] lg:h-[700px]">
       {shouldLoad ? (
         <iframe
-          src="https://calendly.com/verdia-rendus/nouvelle-reunion?embed_type=Inline&hide_gdpr_banner=1&background_color=fafaf7&text_color=0d1f11&primary_color=52b788"
+          src={`${url}${url.includes('?') ? '&' : '?'}embed_type=Inline&hide_gdpr_banner=1&background_color=fafaf7&text_color=14161a&primary_color=2d7ff9`}
           width="100%"
           height="100%"
           style={{ border: 'none' }}

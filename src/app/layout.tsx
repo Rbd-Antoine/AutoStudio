@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Providers } from '@/components/Providers'
+import { SITE_URL, CALENDLY_URL } from '@/lib/site-config'
 import './globals.css'
 
 const inter = Inter({
@@ -13,7 +14,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://carglow-app.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'CarGlow — Des photos de voitures dignes d\'un showroom, en secondes',
     template: '%s | CarGlow',
@@ -23,8 +24,11 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   // Meta Business domain verification — rendered server-side via Next's Metadata API,
   // so it's present in the initial HTML <head> rather than injected by client JS
-  // (Meta explicitly requires the former; the latter fails verification).
-  verification: { other: { 'facebook-domain-verification': 'w6qw1m5a64t6j6t3mtgqsva7pqngdn' } },
+  // (Meta explicitly requires the former; the latter fails verification). The token is
+  // tied to one domain, so it comes from the environment of the deployment serving it.
+  ...(process.env.FACEBOOK_DOMAIN_VERIFICATION
+    ? { verification: { other: { 'facebook-domain-verification': process.env.FACEBOOK_DOMAIN_VERIFICATION } } }
+    : {}),
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,9 +41,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             actually loads (PostHog, Meta Pixel, Calendly) — each is still deferred/lazy on
             its own terms, this just means the connection is already half-open by the time
             they're needed instead of paying that cost cold. */}
-        <link rel="preconnect" href="https://eu.i.posthog.com" />
-        <link rel="preconnect" href="https://connect.facebook.net" />
-        <link rel="preconnect" href="https://calendly.com" />
+        {process.env.NEXT_PUBLIC_POSTHOG_KEY && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'} />
+        )}
+        {process.env.NEXT_PUBLIC_META_PIXEL_ID && <link rel="preconnect" href="https://connect.facebook.net" />}
+        {CALENDLY_URL && <link rel="preconnect" href="https://calendly.com" />}
       </head>
       <body className="bg-offwhite text-charcoal antialiased">
         <Providers>{children}</Providers>

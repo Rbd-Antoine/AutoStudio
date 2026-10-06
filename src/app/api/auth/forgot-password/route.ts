@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { db } from '@/lib/db'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { SITE_URL } from '@/lib/site-config'
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json().catch(() => ({}))
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
       data: { identifier: `reset:${email}`, token, expires },
     })
 
-    const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`
+    const resetLink = `${SITE_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`
     await sendPasswordResetEmail(email, resetLink)
   }
 

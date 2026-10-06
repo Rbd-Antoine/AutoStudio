@@ -1,7 +1,9 @@
 import { Resend } from 'resend'
+import { SITE_URL, EMAIL_FROM, CONTACT_EMAIL } from './site-config'
 
-const FROM    = 'CarGlow <noreply@carglow-app.com>'
-const REPLY_TO = 'carglow.rendus@gmail.com'
+const FROM     = EMAIL_FROM
+const REPLY_TO = CONTACT_EMAIL
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, '')
 
 let _resend: Resend | null = null
 function getResend(): Resend {
@@ -53,7 +55,7 @@ function layout(content: string): string {
         </td></tr>
         <!-- Footer -->
         <tr><td style="padding-top:24px;text-align:center;font-size:12px;color:#888">
-          CarGlow · <a href="https://carglow-app.com" style="color:#2D7FF9;text-decoration:none">carglow-app.com</a>
+          CarGlow · <a href="${SITE_URL}" style="color:#2D7FF9;text-decoration:none">${SITE_HOST}</a>
         </td></tr>
       </table>
     </td></tr>
@@ -73,7 +75,7 @@ const p = (text: string) =>
   `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:rgba(20,22,26,0.72)">${text}</p>`
 
 // ── 1. Email du "moment magique" ──────────────────────────────────────────────
-// Déclenché par le tout premier rendu réussi (voir /api/generate), pas par
+// Déclenché par le tout premier rendu réussi (voir /api/background-swap), pas par
 // l'inscription ou la vérification d'e-mail — on réagit à l'action, pas au compte.
 // Capitalise sur l'émotion pendant qu'elle est là plutôt que d'attendre un batch.
 
@@ -83,13 +85,13 @@ export async function sendWelcomeEmail(to: string, name: string, imageUrl?: stri
   await sendEmail({
     to,
     subject: 'Votre premier rendu est prêt ✨',
-    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu CarGlow — votre véhicule avec un nouvel arrière-plan en quelques secondes.\n\nVoir mon espace → https://carglow-app.com/app\n\nL'équipe CarGlow`,
+    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu CarGlow — votre véhicule avec un nouvel arrière-plan en quelques secondes.\n\nVoir mon espace → ${SITE_URL}/app\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1(`Bravo, ${displayName} — voici votre premier rendu 👋`)}
       ${imageUrl ? `<div style="text-align:center;margin:0 0 20px"><img src="${imageUrl}" alt="Votre rendu" style="max-width:100%;border-radius:12px;border:1px solid rgba(20,22,26,0.08)"></div>` : ''}
       ${p('Votre véhicule avec un nouvel arrière-plan, généré en quelques secondes. Essayez un autre style, ou passez à la vidéo pour un rendu encore plus percutant sur vos annonces.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/editor', 'Créer un nouveau rendu →')}
+        ${btn(`${SITE_URL}/app/editor`, 'Créer un nouveau rendu →')}
       </div>
       ${p('Si vous avez des questions, répondez simplement à cet email.')}
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
@@ -190,13 +192,13 @@ export async function sendCreditsResetEmail(to: string, opts: { credits: number;
   await sendEmail({
     to,
     subject: `Vos ${credits} crédits du mois sont disponibles`,
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1(`${credits} crédits vous attendent`)}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos crédits gratuits du mois viennent d'être renouvelés.`)}
       ${p('Profitez-en pour générer un nouveau rendu ou essayer un style que vous n\'avez pas encore testé.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/editor', 'Générer un rendu →')}
+        ${btn(`${SITE_URL}/app/editor`, 'Générer un rendu →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -213,13 +215,13 @@ export async function sendReactivationEmail(to: string, opts: { name?: string })
   await sendEmail({
     to,
     subject: 'Votre stock mérite de meilleures photos',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur CarGlow. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur CarGlow. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('On ne vous a pas revu récemment')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, ça fait un moment que vous n'avez pas généré de rendu sur CarGlow.`)}
       ${p('Si vous avez de nouveaux véhicules à mettre en ligne, vos crédits du mois sont peut-être encore disponibles.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/editor', 'Générer un rendu →')}
+        ${btn(`${SITE_URL}/app/editor`, 'Générer un rendu →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -236,13 +238,13 @@ export async function sendReviewRequestEmail(to: string, opts: { name?: string }
   await sendEmail({
     to,
     subject: 'Un avis sur CarGlow ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez CarGlow depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → https://carglow-app.com/app/review\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez CarGlow depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → ${SITE_URL}/app/review\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Votre avis compte')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous utilisez CarGlow depuis quelques rendus déjà.`)}
       ${p('Un avis de votre part — deux minutes, avec possibilité d\'affichage public — aiderait d\'autres concessions à découvrir l\'outil.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/review', 'Donner mon avis →')}
+        ${btn(`${SITE_URL}/app/review`, 'Donner mon avis →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -259,13 +261,13 @@ export async function sendFeatureDiscoveryEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Et si vous transformiez ce rendu en vidéo ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Deux rendus déjà — allons plus loin')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous commencez à prendre en main CarGlow.`)}
       ${p('Saviez-vous que vous pouvez aussi générer une vidéo avant/après, ou transformer un rendu en contenu prêt à publier sur Instagram et Facebook ?')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/editor', 'Essayer maintenant →')}
+        ${btn(`${SITE_URL}/app/editor`, 'Essayer maintenant →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -283,13 +285,13 @@ export async function sendCreditsExhaustedEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Vous avez utilisé tous vos crédits',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe que CarGlow vous est utile. Un rendu coûte environ 1,50€ avec un abonnement, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → https://carglow-app.com/app/billing?upgrade=1\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe que CarGlow vous est utile. Avec un abonnement, un rendu revient à moins d'1 €, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → ${SITE_URL}/app/billing?upgrade=1\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Vous avez utilisé tous vos crédits')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous avez épuisé vos crédits gratuits de ce mois — c'est plutôt bon signe, ça veut dire que CarGlow vous sert vraiment.`)}
-      ${p('Avec un abonnement, chaque rendu revient à environ 1,50€ — contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.')}
+      ${p("Avec un abonnement, chaque rendu revient à moins d'1 € — contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.")}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/billing?upgrade=1', "Voir l'abonnement Essentiel →")}
+        ${btn(`${SITE_URL}/app/billing?upgrade=1`, "Voir l'abonnement Essentiel →")}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -304,13 +306,13 @@ export async function sendCreditsExhaustedFollowupEmail(to: string, opts: { name
   await sendEmail({
     to,
     subject: 'Votre travail est toujours là',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace CarGlow. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → https://carglow-app.com/app/billing\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace CarGlow. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → ${SITE_URL}/app/billing\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Votre travail est toujours là')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos rendus précédents sont toujours disponibles dans votre espace.`)}
       ${p('Dès que vous êtes prêt à continuer, un abonnement débloque de nouveaux crédits immédiatement.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/billing', 'Voir les plans →')}
+        ${btn(`${SITE_URL}/app/billing`, 'Voir les plans →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -327,13 +329,13 @@ export async function sendActivationNudgeEmail(to: string, opts: { name?: string
   await sendEmail({
     to,
     subject: 'Une photo suffit pour commencer',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → https://carglow-app.com/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Une photo suffit pour commencer')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé.`)}
       ${p('Une seule photo de véhicule suffit pour voir un rendu transformé en 60 secondes — sans engagement, gratuitement.')}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/app/editor', 'Essayer maintenant →')}
+        ${btn(`${SITE_URL}/app/editor`, 'Essayer maintenant →')}
       </div>
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
     `),
@@ -350,12 +352,12 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
   await sendEmail({
     to,
     subject: 'Un exemple en 10 secondes, sans importer de photo',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé CarGlow ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → https://carglow-app.com/#galerie\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé CarGlow ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → ${SITE_URL}/#galerie\n\nL'équipe CarGlow`,
     html: layout(`
       ${h1('Voyez un exemple, sans rien importer')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, si le temps vous a manqué jusqu'ici, voici un raccourci : quelques exemples de transformations réelles, sans avoir besoin d'importer votre propre photo.`)}
       <div style="text-align:center;margin:28px 0">
-        ${btn('https://carglow-app.com/#galerie', 'Voir des exemples →')}
+        ${btn(`${SITE_URL}/#galerie`, 'Voir des exemples →')}
       </div>
       ${p('Et si vous préférez essayer directement avec votre propre véhicule, ça reste à un clic.')}
       <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>

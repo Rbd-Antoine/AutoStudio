@@ -8,6 +8,7 @@ import { db } from '@/lib/db'
 import { getAiFeature } from '@/lib/pricing'
 import { CAR_STYLES } from '@/lib/carStyles'
 import { getPublicTestimonials } from '@/lib/reviews'
+import { CALENDLY_URL, CONTACT_EMAIL } from '@/lib/site-config'
 import { GridAvatar } from './_components/GridAvatar'
 import { TrackedLink } from './_components/TrackedLink'
 import { LandingViewedTracker } from './_components/LandingViewedTracker'
@@ -176,7 +177,7 @@ function CalendlySection() {
               Parlons de votre<br /><span className="text-gradient">activité.</span>
             </h2>
             <p className="text-charcoal/50 text-[15px] leading-relaxed mb-8">
-              Réservez 20 minutes avec moi pour découvrir comment CarGlow peut transformer la façon dont votre concession présente ses véhicules.
+              {CALENDLY_URL ? 'Réservez 20 minutes avec moi' : 'Écrivez-moi'} pour découvrir comment CarGlow peut transformer la façon dont votre concession présente ses véhicules.
             </p>
             <div className="flex flex-col gap-3 mb-8">
               {[
@@ -205,10 +206,30 @@ function CalendlySection() {
             </div>
           </div>
 
-          {/* Right: Calendly iframe embed */}
-          <div className="flex-1 w-full rounded-3xl overflow-hidden border border-charcoal/[0.08] shadow-card">
-            <LazyCalendlyEmbed />
-          </div>
+          {/* Right: Calendly booking embed, or a contact card until a booking page is configured */}
+          {CALENDLY_URL ? (
+            <div className="flex-1 w-full rounded-3xl overflow-hidden border border-charcoal/[0.08] shadow-card">
+              <LazyCalendlyEmbed url={CALENDLY_URL} />
+            </div>
+          ) : (
+            <div className="flex-1 w-full rounded-3xl border border-charcoal/[0.08] shadow-card bg-offwhite p-8 sm:p-12 flex flex-col items-start justify-center gap-5 min-h-[320px]">
+              <p className="eyebrow">Demander une démo</p>
+              <p className="font-display font-bold text-charcoal text-2xl leading-snug">
+                Envoyez-nous quelques photos de votre stock, on vous montre le résultat.
+              </p>
+              <p className="text-charcoal/55 text-[15px] leading-relaxed">
+                Décrivez votre activité en quelques lignes : nous revenons vers vous pour caler un échange de 20 minutes.
+              </p>
+              <TrackedLink href="/contact" ctaId="demo_contact" label="Demander une démo" location="demo"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-accent-500 hover:bg-accent-600 text-white font-bold text-base shadow-accent-sm hover:shadow-accent-md transition-all">
+                Demander une démo
+                <ArrowRight className="w-5 h-5" />
+              </TrackedLink>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-charcoal/50 hover:text-charcoal/80 underline underline-offset-2">
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </section>

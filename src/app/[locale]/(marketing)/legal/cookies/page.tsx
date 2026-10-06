@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Politique de cookies',
@@ -40,7 +41,7 @@ export default function CookiesPage() {
 
       <LegalSection title="Contact">
         <p>
-          Pour toute question, écrivez à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.
+          Pour toute question, écrivez à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
           Voir aussi notre <Link href="/legal/privacy" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de confidentialité</Link>.
         </p>
       </LegalSection>

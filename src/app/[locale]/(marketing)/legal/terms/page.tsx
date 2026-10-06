@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Conditions générales',
@@ -20,7 +21,7 @@ export default function TermsPage() {
         </p>
         <p>
           <strong className="text-charcoal/80 font-semibold">Contact :</strong>{' '}
-          <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
       </LegalSection>
 
@@ -180,7 +181,7 @@ export default function TermsPage() {
           <li>leur portabilité ;</li>
           <li>ou s&apos;opposer à certains traitements.</li>
         </ul>
-        <p>Toute demande peut être adressée à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.</p>
+        <p>Toute demande peut être adressée à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
       </LegalSection>
 
       <LegalSection n="17" title="Cookies">
@@ -223,7 +224,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="22" title="Contact">
-        <p>Toute question peut être adressée à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.</p>
+        <p>Toute question peut être adressée à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
       </LegalSection>
     </LegalPageLayout>
   )

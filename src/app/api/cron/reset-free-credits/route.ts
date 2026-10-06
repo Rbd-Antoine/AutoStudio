@@ -36,7 +36,9 @@ export async function GET(req: NextRequest) {
       select: { user: { select: { email: true, name: true } } },
     })
     if (owner?.user.email) {
-      sendCreditsResetEmail(owner.user.email, { credits: balance.monthly, name: owner.user.name ?? undefined }).catch(() => {})
+      // Awaited one at a time: un-awaited sends can be cut off once the response is returned,
+      // and firing them all at once trips Resend's per-second rate limit. Never throws.
+      await sendCreditsResetEmail(owner.user.email, { credits: balance.monthly, name: owner.user.name ?? undefined })
     }
   }
 

@@ -6,6 +6,7 @@ import { trackServerEvent } from '@/lib/analytics/server'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { sendVerificationEmail } from '@/lib/email'
 import crypto from 'crypto'
+import { SITE_URL } from '@/lib/site-config'
 
 /**
  * POST /api/auth/register
@@ -115,8 +116,10 @@ export async function POST(req: NextRequest) {
     await db.verificationToken.create({
       data: { identifier: `verify:${email}`, token: verifToken, expires: verifExpires },
     })
-    const verifyLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verifToken}&email=${encodeURIComponent(email)}`
-    sendVerificationEmail(email, verifyLink)
+    const verifyLink = `${SITE_URL}/api/auth/verify-email?token=${verifToken}&email=${encodeURIComponent(email)}`
+    // Awaited: on serverless, work still pending once the response is sent can be cut off,
+    // and this email is the only way the new account can verify its address.
+    await sendVerificationEmail(email, verifyLink)
 
     console.log(`[auth/register] created account for ${email}`)
     return NextResponse.json({ ok: true })

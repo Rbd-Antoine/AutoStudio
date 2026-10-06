@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Accord de traitement des données',
@@ -69,7 +70,7 @@ export default function DpaPage() {
       </LegalSection>
 
       <LegalSection n="10" title="Contact">
-        <p>Pour toute question relative au présent accord ou à la protection de vos données, écrivez à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>. Voir également notre <Link href="/legal/privacy" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de confidentialité</Link>.</p>
+        <p>Pour toute question relative au présent accord ou à la protection de vos données, écrivez à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Voir également notre <Link href="/legal/privacy" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">politique de confidentialité</Link>.</p>
       </LegalSection>
     </LegalPageLayout>
   )

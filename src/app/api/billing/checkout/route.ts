@@ -6,6 +6,7 @@ import { getPricingConfig, activePromo } from '@/lib/pricing'
 import { trackServerEvent } from '@/lib/analytics/server'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { isEmailVerified } from '@/lib/auth-guards'
+import { SITE_URL } from '@/lib/site-config'
 
 const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ['ESSENTIAL', 'PRO', 'BUSINESS']
 const CREDIT_PACKS: CreditPackId[] = ['pack1', 'pack2', 'pack3']
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     workspaceId,
   }
 
-  const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
+  const baseUrl = SITE_URL
 
   // Everything below can throw on a real misconfiguration (e.g. STRIPE_SECRET_KEY missing —
   // getStripe() throws synchronously) or a live Stripe API error. Previously uncaught, which

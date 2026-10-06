@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
@@ -22,7 +23,7 @@ export default function MentionsLegalesPage() {
       </LegalSection>
 
       <LegalSection title="Contact">
-        <p><a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a></p>
+        <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
       </LegalSection>
     </LegalPageLayout>
   )

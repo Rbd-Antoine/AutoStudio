@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Engagement de service',
@@ -16,7 +17,7 @@ export default function SlaPage() {
       </LegalSection>
 
       <LegalSection n="2" title="Support">
-        <p>Le support est disponible par e-mail à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a> ou via le <Link href="/contact" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">formulaire de contact</Link>.</p>
+        <p>Le support est disponible par e-mail à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> ou via le <Link href="/contact" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">formulaire de contact</Link>.</p>
         <p>CarGlow répond aux demandes dans un délai cible de 24 heures ouvrées, sans que ce délai constitue une garantie contractuelle.</p>
       </LegalSection>
 
@@ -29,7 +30,7 @@ export default function SlaPage() {
       </LegalSection>
 
       <LegalSection n="5" title="Contact">
-        <p>Toute question relative à cet engagement peut être adressée à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.</p>
+        <p>Toute question relative à cet engagement peut être adressée à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
       </LegalSection>
     </LegalPageLayout>
   )

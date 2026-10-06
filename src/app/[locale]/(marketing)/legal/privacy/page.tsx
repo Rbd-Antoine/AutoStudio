@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
+import { CONTACT_EMAIL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -73,7 +74,7 @@ export default function PrivacyPage() {
           <li>leur portabilité ;</li>
           <li>ou s&apos;opposer à certains traitements.</li>
         </ul>
-        <p>Toute demande peut être adressée à <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>.</p>
+        <p>Toute demande peut être adressée à <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
       </LegalSection>
 
       <LegalSection title="Sécurité">
@@ -90,7 +91,7 @@ export default function PrivacyPage() {
       <LegalSection title="Contact">
         <p>
           Pour toute question relative à vos données, écrivez à{' '}
-          <a href="mailto:verdia.rendus@gmail.com">verdia.rendus@gmail.com</a>. Le détail contractuel complet
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Le détail contractuel complet
           figure dans nos <Link href="/legal/terms" className="text-accent-600 underline underline-offset-2 hover:text-accent-700">conditions générales</Link>.
         </p>
       </LegalSection>

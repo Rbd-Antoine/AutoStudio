@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { getStripe } from '@/lib/stripe'
+import { SITE_URL } from '@/lib/site-config'
 
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
@@ -24,13 +25,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'This workspace has no billing history yet' }, { status: 400 })
   }
 
-  const stripe = getStripe()
-  const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
-
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: member.workspace.stripeCustomerId,
-    return_url: `${baseUrl}/app/billing`,
-  })
-
-  return NextResponse.json({ url: portalSession.url })
+  try {
+    const portalSession = await getStripe().billingPortal.sessions.create({
+      customer: member.workspace.stripeCustomerId,
+      return_url: `${SITE_URL}/app/billing`,
+    })
+    return NextResponse.json({ url: portalSession.url })
+  } catch (err) {
+    // Typically the customer portal not yet configured in the Stripe dashboard, or no key.
+    console.error('[billing/portal] could not open the customer portal:', err)
+    return NextResponse.json({ error: 'Le portail de facturation est momentanément indisponible.' }, { status: 503 })
+  }
 }

@@ -32,7 +32,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Logo trop volumineux (5 Mo max).' }, { status: 400 })
     }
     const buffer = Buffer.from(await logo.arrayBuffer())
-    logoUrl = await uploadBuffer(buffer, logo.type, `brand-logo-${summary.workspaceId}-${Date.now()}`)
+    try {
+      logoUrl = await uploadBuffer(buffer, logo.type, `brand-logo-${summary.workspaceId}-${Date.now()}`)
+    } catch (err) {
+      // Most often a missing BLOB_READ_WRITE_TOKEN: answer in JSON so the page can show it
+      // instead of failing to parse a bare 500.
+      console.error('[brand-kit] logo upload failed:', err)
+      return NextResponse.json({ error: "Le logo n'a pas pu être enregistré. Réessayez dans quelques instants." }, { status: 503 })
+    }
   }
 
   const brandKit = await saveBrandKit(summary.workspaceId, {

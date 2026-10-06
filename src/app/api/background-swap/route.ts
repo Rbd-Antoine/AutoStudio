@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import path from 'node:path'
 import { readFile } from 'node:fs/promises'
 import sharp from 'sharp'
@@ -7,11 +7,17 @@ import { db } from '@/lib/db'
 import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
 import { swapBackground } from '@/lib/gemini'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
-import { captureServerException } from '@/lib/analytics/server'
+import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError, type DeductResult } from '@/lib/credits'
+import { trackServerEvent, captureServerException } from '@/lib/analytics/server'
+import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
+import { isEmailVerified } from '@/lib/auth-guards'
+import { isSuperuserAccount } from '@/lib/superusers'
+import { sendWelcomeEmail, sendReviewRequestEmail } from '@/lib/email'
 
 export const maxDuration = 300
 
 const MAX_PHOTOS = 5
+const FEATURE_KEY = 'imageGeneration'
 
 interface ImagePayload {
   base64: string
@@ -25,6 +31,9 @@ interface SwapResult {
   enhancedUrl?: string
   processingMs?: number
   error?: string
+  code?: 'insufficient_credits'
+  available?: number
+  required?: number
 }
 
 // The four background reference photos live in /public — read once per cold start and cached
@@ -50,11 +59,15 @@ async function loadBackgroundReference(slug: string): Promise<{ base64: string; 
   return promise
 }
 
+// The editor sends one request per photo (several photos in one body exceed Vercel's 4.5 Mo
+// request limit), but the route still accepts up to MAX_PHOTOS. Each photo is charged on its
+// own, the same way /api/generate charges a render, and refunded if its render fails.
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
+  const userId = session.user.id
 
   const body = await req.json()
   const { images, backgroundSlug, workspaceId, characteristics } = body as {
@@ -74,17 +87,58 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'workspaceId requis' }, { status: 400 })
   }
 
-  const member = await db.workspaceMember.findUnique({
-    where: { workspaceId_userId: { workspaceId, userId: session.user.id } },
-  })
+  const [member, verified, isSuperuser] = await Promise.all([
+    db.workspaceMember.findUnique({
+      where: { workspaceId_userId: { workspaceId, userId } },
+      include: { workspace: { select: { plan: true } } },
+    }),
+    isEmailVerified(userId),
+    isSuperuserAccount(session.user),
+  ])
   if (!member) return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
+
+  // Same rule as /api/generate: an unverified account gets exactly one free render — enough to
+  // see the product work — then every further one needs a verified email. Bounds disposable-
+  // email credit farming to one render per fake account.
+  if (!verified) {
+    const priorRenders = await db.creditTransaction.count({
+      where: { workspaceId, featureKey: FEATURE_KEY, reason: 'ENHANCEMENT' },
+    })
+    if (priorRenders > 0 || images.length > 1) {
+      return NextResponse.json(
+        { error: 'email_not_verified', message: 'Vérifiez votre adresse e-mail pour générer un nouveau rendu.' },
+        { status: 403 },
+      )
+    }
+  }
 
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'GEMINI_API_KEY absent' }, { status: 500 })
 
   const background = await loadBackgroundReference(backgroundSlug)
+  const analyticsIdentity = { userId, email: session.user.email ?? null, plan: member.workspace.plan, workspaceId }
 
   const results = await Promise.all(images.map(async (image, index): Promise<SwapResult> => {
+    let deduction: DeductResult | null = null
+    if (!isSuperuser) {
+      try {
+        deduction = await deductCredits(workspaceId, FEATURE_KEY)
+      } catch (err) {
+        if (err instanceof InsufficientCreditsError) {
+          trackServerEvent(ANALYTICS_EVENTS.OUT_OF_CREDITS, {
+            ...analyticsIdentity,
+            remainingCredits: err.available,
+            featureKey: FEATURE_KEY,
+            required: err.required,
+            available: err.available,
+          })
+          return { index, error: 'Crédits insuffisants', code: 'insufficient_credits', available: err.available, required: err.required }
+        }
+        captureServerException(err, userId)
+        return { index, error: err instanceof Error ? err.message : 'Erreur inconnue' }
+      }
+    }
+
     const startMs = Date.now()
     const photo = await db.photo.create({
       data: {
@@ -93,7 +147,7 @@ export async function POST(req: NextRequest) {
         status: 'PROCESSING',
         styleUsed: backgroundSlug,
         toolsUsed: ['gemini_background_swap'],
-        createdById: session.user.id,
+        createdById: userId,
       },
     })
 
@@ -109,16 +163,64 @@ export async function POST(req: NextRequest) {
         where: { id: photo.id },
         data: { originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs },
       })
+      if (deduction) {
+        await db.creditTransaction.updateMany({
+          where: { id: { in: deduction.transactionIds } },
+          data: { photoId: photo.id },
+        })
+      }
 
       return { index, photoId: photo.id, originalUrl, enhancedUrl, processingMs }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erreur inconnue'
       console.error('[background-swap]', msg)
-      captureServerException(err, session.user.id)
+      captureServerException(err, userId)
       await db.photo.update({ where: { id: photo.id }, data: { status: 'FAILED', errorMessage: msg } })
+      if (deduction) {
+        await refundCredits(workspaceId, deduction, { featureKey: FEATURE_KEY, photoId: photo.id })
+      }
       return { index, error: msg }
     }
   }))
+
+  const successes = results.filter(r => r.enhancedUrl)
+  if (successes.length > 0) {
+    const remainingCredits = isSuperuser ? 0 : (await getAvailableCredits(workspaceId)).total
+    for (const r of successes) {
+      trackServerEvent(ANALYTICS_EVENTS.IMAGE_GENERATED, { ...analyticsIdentity, remainingCredits, styleSlug: backgroundSlug, processingMs: r.processingMs })
+    }
+    if (!isSuperuser) {
+      trackServerEvent(ANALYTICS_EVENTS.CREDITS_CONSUMED, { ...analyticsIdentity, remainingCredits, featureKey: FEATURE_KEY, amount: successes.length })
+    }
+
+    // Counted after this request's renders are saved, so whichever request finishes the
+    // workspace's first render sends the welcome email — the editor fires one request per
+    // photo in parallel, and a count taken before rendering would have them all claim "first".
+    const enhancedCount = await db.photo.count({ where: { workspaceId, status: 'ENHANCED' } })
+    const email = session.user.email
+    const name = session.user.name ?? email?.split('@')[0] ?? ''
+    if (enhancedCount === successes.length) {
+      trackServerEvent(ANALYTICS_EVENTS.FIRST_IMAGE_GENERATED, { ...analyticsIdentity, remainingCredits })
+      if (email) after(() => sendWelcomeEmail(email, name, successes[0].enhancedUrl))
+    }
+    // Ask for a review once the workspace has real usage behind it. The conditional
+    // updateMany only claims while reviewRequestedAt is still null, so it sends at most once.
+    if (enhancedCount >= 3 && email) {
+      const claimed = await db.workspace.updateMany({
+        where: { id: workspaceId, reviewRequestedAt: null },
+        data: { reviewRequestedAt: new Date() },
+      })
+      if (claimed.count > 0) after(() => sendReviewRequestEmail(email, { name: session.user?.name ?? undefined }))
+    }
+  }
+
+  const insufficient = results.find(r => r.code === 'insufficient_credits')
+  if (insufficient && successes.length === 0) {
+    return NextResponse.json(
+      { error: 'insufficient_credits', message: 'Crédits insuffisants', available: insufficient.available, required: insufficient.required, results },
+      { status: 402 },
+    )
+  }
 
   return NextResponse.json({ results })
 }

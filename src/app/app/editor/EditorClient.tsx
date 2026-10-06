@@ -245,31 +245,62 @@ export default function EditorClient() {
     setPartialError(null)
     try {
       const prepared = await Promise.all(files.map(prepareImageForUpload))
-      const res = await fetch('/api/background-swap', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          images: prepared.map(p => ({ base64: p.base64, mimeType: p.mimeType })),
-          backgroundSlug,
-          characteristics: characteristics.trim() || undefined,
-          workspaceId,
-        }),
-      })
-      const data = await res.json().catch(() => {
-        // A non-JSON body means the request never reached our route handler at all (e.g. the
-        // platform itself rejecting an oversized payload with a plain-text "Request Entity Too
-        // Large") — surface something a user can act on instead of the raw parse exception.
-        throw new Error(res.status === 413
-          ? 'Ces photos sont trop volumineuses. Essayez des versions compressées ou moins de photos à la fois.'
-          : 'Le serveur a renvoyé une réponse inattendue. Réessayez.')
-      })
-      if (!res.ok) throw new Error(data.error ?? 'Erreur inconnue')
+      type SwapResult = { photoId?: string; enhancedUrl?: string; processingMs?: number; error?: string; code?: string; available?: number; required?: number }
 
-      const results = data.results as Array<{ index: number; photoId?: string; enhancedUrl?: string; processingMs?: number; error?: string }>
+      // One request per photo, in parallel: several photos in a single body blow past Vercel's
+      // 4.5 Mo request limit. Each request's outcome is folded into one result per photo, in
+      // upload order, so a single failure doesn't discard the renders that did succeed.
+      const results = await Promise.all(prepared.map(async (p): Promise<SwapResult> => {
+        try {
+          const res = await fetch('/api/background-swap', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              images: [{ base64: p.base64, mimeType: p.mimeType }],
+              backgroundSlug,
+              characteristics: characteristics.trim() || undefined,
+              workspaceId,
+            }),
+          })
+          // A non-JSON body means the request never reached our route handler at all (e.g. the
+          // platform itself rejecting an oversized payload with a plain-text "Request Entity Too
+          // Large") — surface something a user can act on instead of the raw parse exception.
+          const data = await res.json().catch(() => null)
+          if (!data) {
+            return { error: res.status === 413
+              ? 'Cette photo est trop volumineuse. Essayez une version compressée.'
+              : 'Le serveur a renvoyé une réponse inattendue. Réessayez.' }
+          }
+          if (res.status === 402 || data.error === 'insufficient_credits') {
+            return { error: 'Crédits insuffisants', code: 'insufficient_credits', available: data.available, required: data.required }
+          }
+          if (data.error === 'email_not_verified') return { error: data.message, code: 'email_not_verified' }
+          if (!res.ok) return { error: data.error ?? 'Erreur inconnue' }
+          return (data.results as SwapResult[])[0] ?? { error: 'La génération a échoué.' }
+        } catch {
+          return { error: 'Connexion au serveur impossible. Réessayez.' }
+        }
+      }))
+
       const successes = results.filter(r => r.enhancedUrl)
       const failures = results.filter(r => r.error)
+      const outOfCredits = results.find(r => r.code === 'insufficient_credits')
+      const needsVerification = results.some(r => r.code === 'email_not_verified')
 
-      if (successes.length === 0) throw new Error(failures[0]?.error ?? 'La génération a échoué.')
+      if (successes.length === 0) {
+        if (outOfCredits) {
+          setGen({ status: 'idle' })
+          setCreditError({ available: outOfCredits.available ?? 0, required: outOfCredits.required ?? 0 })
+          refreshCredits()
+          return
+        }
+        if (needsVerification) {
+          setGen({ status: 'idle' })
+          setShowVerifyModal(true)
+          return
+        }
+        throw new Error(failures[0]?.error ?? 'La génération a échoué.')
+      }
 
       setVersions(prev => {
         const startIdx = prev.length
@@ -278,7 +309,8 @@ export default function EditorClient() {
       })
       setGen({ status: 'done' })
       if (failures.length > 0) {
-        setPartialError(`${failures.length} photo${failures.length > 1 ? 's' : ''} sur ${files.length} n'${failures.length > 1 ? 'ont' : 'a'} pas pu être traitée${failures.length > 1 ? 's' : ''}.`)
+        const reason = outOfCredits ? ' : crédits insuffisants' : needsVerification ? ' : vérifiez votre adresse e-mail' : ''
+        setPartialError(`${failures.length} photo${failures.length > 1 ? 's' : ''} sur ${files.length} n'${failures.length > 1 ? 'ont' : 'a'} pas pu être traitée${failures.length > 1 ? 's' : ''}${reason}.`)
       }
       refreshCredits()
     } catch (err) {

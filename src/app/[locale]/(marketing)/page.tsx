@@ -9,7 +9,6 @@ import { getAiFeature } from '@/lib/pricing'
 import { CAR_STYLES } from '@/lib/carStyles'
 import { getPublicTestimonials } from '@/lib/reviews'
 import { CALENDLY_URL, CONTACT_EMAIL } from '@/lib/site-config'
-import { GridAvatar } from './_components/GridAvatar'
 import { TrackedLink } from './_components/TrackedLink'
 import { LandingViewedTracker } from './_components/LandingViewedTracker'
 import { GallerySection } from './_components/GallerySection'
@@ -193,8 +192,9 @@ function CalendlySection() {
             </div>
             <div className="card-light rounded-2xl p-5">
               <div className="flex items-center gap-3 mb-3">
-                <GridAvatar col={0} row={1}
-                  className="w-10 h-10 rounded-full shrink-0 bg-accent-200" />
+                <div className="w-10 h-10 rounded-full shrink-0 bg-accent-100 text-accent-700 font-display font-bold text-sm flex items-center justify-center" aria-hidden>
+                  AR
+                </div>
                 <div>
                   <p className="text-sm font-semibold text-charcoal">Antoine R.</p>
                   <p className="text-xs text-charcoal/45">Fondateur de CarGlow</p>

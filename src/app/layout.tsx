@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: '%s | CarGlow',
   },
   description:
-    'CarGlow transforme les photos de votre stock véhicules avec des arrière-plans professionnels générés par IA, le masquage automatique de plaque et votre watermark de concession.',
+    "CarGlow remplace l'arrière-plan des photos de votre stock véhicules par un décor professionnel en quelques secondes, et en tire des vidéos prêtes à publier pour vos annonces et vos réseaux.",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   // Meta Business domain verification — rendered server-side via Next's Metadata API,
   // so it's present in the initial HTML <head> rather than injected by client JS

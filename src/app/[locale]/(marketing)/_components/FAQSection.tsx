@@ -5,11 +5,11 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const FAQS = [
-  { q: 'Comment fonctionne la génération de rendu ?', a: "Vous téléchargez une photo du véhicule, choisissez un style d'arrière-plan parmi nos 6 options, et notre IA remplace l'arrière-plan en environ 60 secondes. L'IA ne touche jamais à la carrosserie, aux vitres, aux jantes ou à la plaque." },
+  { q: 'Comment fonctionne la génération de rendu ?', a: "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un de nos 4 décors (garage néon, hangar industriel, parking souterrain, pièce vide), et notre IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque." },
   { q: 'Quelle qualité de photo est nécessaire ?', a: "Une photo prise avec un smartphone récent est largement suffisante. Photographiez en pleine lumière naturelle, de 3/4 avant, avec la carrosserie entière visible." },
   { q: 'Puis-je utiliser les rendus dans mes annonces ?', a: "Oui, absolument. Les rendus sont téléchargeables en haute résolution et librement utilisables dans vos annonces, réseaux sociaux ou site web." },
   { q: 'Puis-je publier ces vidéos sur mes réseaux ?', a: "Oui. Chaque rendu peut être transformé en courte vidéo de présentation au format Reel, Story, paysage ou carré — prête à publier sur Instagram, Facebook, LinkedIn ou TikTok, sans montage." },
-  { q: 'Le rendu modifie-t-il le véhicule ?', a: "Non. L'IA respecte strictement le véhicule existant : carrosserie, peinture, jantes, vitres, plaque d'immatriculation. Seul l'arrière-plan est transformé." },
+  { q: 'Le rendu modifie-t-il le véhicule ?', a: "Il ne doit pas : seul l'arrière-plan est remplacé, et l'IA a pour consigne de conserver à l'identique la carrosserie, la peinture, les jantes, les vitres et la plaque. Comme pour toute photo d'annonce, relisez le rendu avant de le publier : si un détail du véhicule a bougé, relancez la génération ou corrigez-le avec la retouche." },
   { q: 'Mon premier rendu est vraiment gratuit ?', a: "Oui, sans aucune condition. Créez votre compte, téléchargez votre photo, choisissez votre style et générez votre premier rendu — sans carte bancaire, sans engagement." },
 ]
 

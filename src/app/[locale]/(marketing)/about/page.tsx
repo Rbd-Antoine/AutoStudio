@@ -23,14 +23,9 @@ export default function AboutPage() {
         </p>
 
         <div className="card-light rounded-3xl p-8 mb-16 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          <div
-            className="w-16 h-16 rounded-full shrink-0 bg-accent-200"
-            style={{
-              backgroundImage: 'url(/avatars/face-1-0.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
+          <div className="w-16 h-16 rounded-full shrink-0 bg-accent-100 text-accent-700 font-display font-bold text-xl flex items-center justify-center" aria-hidden>
+            AR
+          </div>
           <div>
             <p className="font-display font-semibold text-charcoal text-lg">Antoine R.</p>
             <p className="text-sm text-accent-600 font-medium mb-2">Fondateur de CarGlow</p>

@@ -3,10 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import {
-  ArrowRight, ChevronLeft, ChevronRight, PlayCircle, Star, X,
+  ArrowRight, ChevronLeft, ChevronRight, PlayCircle, X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { GridAvatar } from './GridAvatar'
 import { carImagePath, videoPaths, SHOWCASE_CARS } from '@/lib/showcase-data'
 import { CAR_STYLES } from '@/lib/carStyles'
 import { TrackedLink } from './TrackedLink'
@@ -318,24 +317,19 @@ export function GallerySection({ workspaceCount }: { workspaceCount: number }) {
             )}
 
             <div className="flex items-center gap-3">
+              {/* Thumbnails of real renders rather than faces: no customer is pictured here. */}
               <div className="flex -space-x-2.5">
-                {[{ col: 0, row: 0 }, { col: 2, row: 0 }, { col: 4, row: 1 }, { col: 1, row: 1 }].map((a, i) => (
-                  <GridAvatar key={i} col={a.col} row={a.row}
-                    className="w-11 h-11 rounded-full ring-2 ring-white bg-accent-100 shrink-0" />
+                {SHOWCASE_CARS.map(car => (
+                  <div key={car.id} className="relative w-11 h-11 rounded-full ring-2 ring-white bg-accent-100 shrink-0 overflow-hidden">
+                    <Image src={carImagePath(car.id, 'thumb')} alt="" fill className="object-cover" sizes="44px" />
+                  </div>
                 ))}
               </div>
-              <div>
-                <p className="text-sm font-semibold text-charcoal">
-                  {workspaceCount >= MIN_WORKSPACE_COUNT_TO_SHOW
-                    ? <>{workspaceCount.toLocaleString('fr-FR')}+ concessions l&apos;utilisent déjà</>
-                    : <>Rejoignez les concessions qui utilisent CarGlow</>}
-                </p>
-                <div className="flex items-center gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 text-accent-500 fill-accent-500" />
-                  ))}
-                </div>
-              </div>
+              <p className="text-sm font-semibold text-charcoal">
+                {workspaceCount >= MIN_WORKSPACE_COUNT_TO_SHOW
+                  ? <>{workspaceCount.toLocaleString('fr-FR')}+ concessions l&apos;utilisent déjà</>
+                  : <>Rejoignez les concessions qui utilisent CarGlow</>}
+              </p>
             </div>
           </div>
 

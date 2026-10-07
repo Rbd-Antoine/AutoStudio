@@ -21,7 +21,7 @@ const CTA_PRESETS = [
   'Prêt pour la route.',
   'Demandez votre devis.',
   'Contactez-nous.',
-  'Votre extérieur mérite mieux.',
+  "Venez l'essayer.",
 ]
 
 interface Props {

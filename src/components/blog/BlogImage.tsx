@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import Image from 'next/image'
-import { Leaf } from 'lucide-react'
+import { Car } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 function imageExists(relativePath: string): boolean {
@@ -28,7 +28,7 @@ export function BlogImage({
           style={{ backgroundImage: 'radial-gradient(circle at 30% 20%, white, transparent 60%)' }}
         />
         <div className="relative text-center px-6">
-          <Leaf className="w-6 h-6 text-charcoal/70 mx-auto mb-3" strokeWidth={1.5} />
+          <Car className="w-6 h-6 text-charcoal/70 mx-auto mb-3" strokeWidth={1.5} />
           <p className="text-charcoal/85 font-display font-semibold text-sm leading-snug line-clamp-3">{title}</p>
         </div>
       </div>

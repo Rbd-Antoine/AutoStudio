@@ -6,7 +6,7 @@ import { parseMarkdown, textContent, nodesToHtml, inlineToHtml, collectLinks, sp
 import type { ContentSegment, FaqItem } from '@/lib/markdown'
 import { getAllArticlesUnfiltered } from '@/lib/blog'
 
-const GUIDE_FILE = path.join(process.cwd(), 'content/guide/guide-utilisateur-verdia.md')
+const GUIDE_FILE = path.join(process.cwd(), 'content/guide/guide-utilisateur-carglow.md')
 
 export interface GuideFrontmatter {
   title: string

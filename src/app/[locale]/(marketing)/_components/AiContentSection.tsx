@@ -71,14 +71,14 @@ export function AiContentSection() {
             </div>
 
             <h2 className="font-display font-bold text-charcoal mb-5" style={{ fontSize: 'clamp(1.9rem,3.8vw,2.9rem)', lineHeight: 1.12 }}>
-              Impressionnez vos clients{' '}
-              <span className="text-gradient">avant même le début des travaux</span>
+              Des annonces qui{' '}
+              <span className="text-gradient">sortent du lot</span>
             </h2>
 
             <p className="text-charcoal/50 text-[15px] leading-relaxed mb-10 max-w-xl">
-              Créez des rendus IA avant / après en quelques secondes pour aider vos clients à
-              se projeter et transformez-les en contenus prêts à publier sur Instagram, Facebook
-              ou LinkedIn.
+              Transformez en quelques secondes la photo prise sur le parc en photo d&apos;annonce
+              au décor professionnel, et déclinez-la en contenus prêts à publier sur Instagram,
+              Facebook ou LinkedIn.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4">

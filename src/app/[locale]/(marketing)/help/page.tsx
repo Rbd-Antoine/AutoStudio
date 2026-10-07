@@ -11,7 +11,7 @@ const CATEGORIES = [
   },
   {
     icon: ImageIcon, title: 'Rendus & éditeur',
-    desc: 'Styles disponibles, retouche, génération vidéo, bibliothèque de rendus',
+    desc: 'Décors disponibles, retouche, kit marketing, bibliothèque de rendus',
   },
   {
     icon: CreditCard, title: 'Abonnement & facturation',

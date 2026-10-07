@@ -136,7 +136,7 @@ function StylePhotosStrip() {
   return (
     <div className="mt-16 pt-14 border-t border-charcoal/[0.06]">
       <div className="text-center max-w-lg mx-auto mb-8">
-        <p className="eyebrow mb-3">Tous les styles</p>
+        <p className="eyebrow mb-3">Tous les décors</p>
         <h3 className="font-display font-bold text-charcoal" style={{ fontSize: 'clamp(1.4rem,2.5vw,1.9rem)' }}>
           Un style pour chaque véhicule.
         </h3>

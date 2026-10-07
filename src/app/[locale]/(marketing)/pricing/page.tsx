@@ -21,9 +21,9 @@ interface Plan {
 
 const PLAN_META: Record<string, { desc: string; cta: string; href: string; badge?: string; highlight: boolean }> = {
   FREE:      { desc: 'Pour tester CarGlow sur un premier véhicule, sans engagement.', cta: 'Commencer gratuitement', href: '/signup', highlight: false },
-  ESSENTIAL: { desc: 'Pour les concessions indépendantes qui publient régulièrement des annonces.', cta: "Démarrer l'essai", href: '/signup?plan=essential', badge: 'Le plus populaire', highlight: true },
-  PRO:       { desc: 'Pour les équipes qui traitent des annonces au quotidien.', cta: "Démarrer l'essai", href: '/signup?plan=pro', highlight: false },
-  BUSINESS:  { desc: 'Pour les groupes multi-sites avec des besoins de volume plus élevés.', cta: "Démarrer l'essai", href: '/signup?plan=business', highlight: false },
+  ESSENTIAL: { desc: 'Pour les concessions indépendantes qui publient régulièrement des annonces.', cta: 'Créer mon compte', href: '/signup?plan=essential', badge: 'Le plus populaire', highlight: true },
+  PRO:       { desc: 'Pour les équipes qui traitent des annonces au quotidien.', cta: 'Créer mon compte', href: '/signup?plan=pro', highlight: false },
+  BUSINESS:  { desc: 'Pour les groupes multi-sites avec des besoins de volume plus élevés.', cta: 'Créer mon compte', href: '/signup?plan=business', highlight: false },
 }
 
 type CellValue = boolean | string
@@ -237,7 +237,6 @@ export default async function PricingPage() {
         <PricingFaqAccordion
           imageGenerationCost={costFor('imageGeneration') ?? 1}
           imageRetouchCost={costFor('imageRetouch') ?? 1}
-          videoGenerationCost={costFor('videoGeneration') ?? 15}
           marketingVideoCost={costFor('marketingVideo') ?? 1}
           freeCredits={plans[0].credits}
         />

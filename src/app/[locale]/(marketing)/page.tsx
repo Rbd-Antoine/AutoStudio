@@ -80,7 +80,7 @@ function HeroSection({ renderCount }: { renderCount: number }) {
         <div className="flex items-center justify-center gap-6 text-sm text-charcoal/40">
           <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-accent-500" /> Sans carte bancaire</span>
           <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-accent-500" /> 60 secondes</span>
-          <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-accent-500" /> Styles illimités</span>
+          <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-accent-500" /> 4 décors au choix</span>
         </div>
 
         {renderCount >= MIN_RENDER_COUNT_TO_SHOW && (
@@ -95,12 +95,12 @@ function HeroSection({ renderCount }: { renderCount: number }) {
 
 // ─── STATS ────────────────────────────────────────────────────────────────────
 const STATS = [
-  { icon: Phone,  value: '2x',  title: 'plus de clics sur vos annonces',
-    desc: "Les annonces avec des photos studio génèrent deux fois plus de contacts qu'avec des photos prises au smartphone dans la rue." },
-  { icon: Wallet, value: '95%', title: 'moins cher',
-    desc: "À partir de 1,50€ par photo, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile." },
-  { icon: Clock,  value: '60s', title: 'par photo',
-    desc: "Uploadez une photo, choisissez un style d'arrière-plan, recevez un rendu photoréaliste en 60 secondes." },
+  { icon: Phone,  value: '5',   title: 'photos à la fois',
+    desc: "Importez toutes les vues extérieures d'un véhicule d'un coup : chaque photo est traitée en parallèle, dans le même décor." },
+  { icon: Wallet, value: '< 1 €', title: 'par rendu avec un abonnement',
+    desc: "Pas de studio à aménager ni de photographe à faire venir : vous payez au rendu, avec vos photos prises au smartphone." },
+  { icon: Clock,  value: '< 60 s', title: 'par photo',
+    desc: "Importez une photo, choisissez un décor, recevez un rendu photoréaliste en moins d'une minute." },
 ]
 
 function StatsSection() {
@@ -149,7 +149,7 @@ function VideoSection() {
 
         {/* Étapes en dessous */}
         <div className="flex flex-col sm:flex-row justify-center gap-8 mt-10 max-w-2xl mx-auto">
-          {['Photographiez votre véhicule', 'Choisissez votre style', 'Recevez votre rendu en 60s'].map((step, i) => (
+          {['Photographiez votre véhicule', 'Choisissez votre décor', "Recevez votre rendu en moins d'une minute"].map((step, i) => (
             <div key={i} className="flex items-center gap-3 text-sm text-charcoal/60">
               <div className="w-7 h-7 rounded-full bg-accent-100 border border-accent-200 flex items-center justify-center text-xs font-bold text-accent-600 shrink-0">
                 {i + 1}
@@ -274,18 +274,18 @@ function ScrollingGallerySection() {
 // approach as PricingSection.tsx) rather than hardcoding numbers here that would silently
 // drift from whatever an admin sets on the pricing page.
 async function HowItWorksSection() {
-  const [retouchCost, videoCost] = await Promise.all([
+  const [retouchCost, kitCost] = await Promise.all([
     getAiFeature('imageRetouch'),
-    getAiFeature('videoGeneration'),
+    getAiFeature('marketingVideo'),
   ])
 
   const steps = [
     { num: '1', title: 'Importez vos photos', img: '/howitworks-import-crop.png',
-      desc: "Uploadez les photos du véhicule prises au smartphone. Jusqu'à 3 photos par annonce, tous les formats acceptés." },
+      desc: "Importez les photos du véhicule prises au smartphone : jusqu'à 5 à la fois, en JPG, PNG, WebP ou HEIC." },
     { num: '2', title: "L'IA applique le nouvel arrière-plan", img: '/howitworks-generate-crop.png',
-      desc: "Choisissez un style parmi nos options. L'IA remplace l'arrière-plan automatiquement, sans jamais toucher au véhicule." },
+      desc: "Choisissez l'un des 4 décors. L'IA remplace l'arrière-plan et a pour consigne de conserver le véhicule à l'identique." },
     { num: '3', title: 'Retouchez à la demande', img: '/howitworks-retouch-crop.png',
-      desc: `Affinez chaque rendu dans l'éditeur intégré, ou transformez-le en vidéo animée. Chaque retouche coûte ${retouchCost?.creditCost ?? 1} crédit, chaque vidéo ${videoCost?.creditCost ?? 15} crédits.` },
+      desc: `Affinez chaque rendu en une phrase, ou déclinez-le en vidéos pour vos réseaux. Une retouche coûte ${retouchCost?.creditCost ?? 1} crédit, une vidéo du kit marketing ${kitCost?.creditCost ?? 1} crédit par format.` },
   ]
 
   return (
@@ -427,18 +427,18 @@ function StylesSection() {
 
 // ─── AUTOMATION ───────────────────────────────────────────────────────────────
 const AUTOMATION_STEPS = [
-  { icon: ScanSearch, title: 'Analyse intelligente', time: '~10 secondes',
-    desc: "L'IA détecte le véhicule, son cadrage et sa carrosserie, et suggère le style d'arrière-plan le plus adapté." },
-  { icon: Layers, title: 'Génération multi-styles', time: '~60 s pour 3 styles',
-    desc: "Générez plusieurs styles en parallèle sur la même photo — studio, showroom, extérieur — pour laisser le client choisir." },
-  { icon: Wand2, title: 'Retouche instantanée', time: '~15 secondes',
-    desc: "Affinez chaque rendu directement dans l'éditeur : changez de style, précisez un détail, régénérez sans repartir de zéro." },
-  { icon: PackageCheck, title: 'Kit annonce prêt à l’emploi', time: '~5 secondes',
-    desc: "Téléchargez le rendu HD et le comparatif avant/après, prêts à publier sur vos annonces ou vos réseaux sociaux." },
+  { icon: ScanSearch, title: 'Import en lot', time: "jusqu'à 5 photos",
+    desc: "Importez toutes les vues extérieures d'un véhicule d'un coup : elles sont traitées en parallèle, dans le même décor." },
+  { icon: Layers, title: 'Remplacement du décor', time: 'quelques secondes par photo',
+    desc: "L'IA remplace l'arrière-plan par le décor choisi, vitres, reflets et ombre au sol compris, sans toucher au véhicule." },
+  { icon: Wand2, title: 'Retouche ciblée', time: '1 crédit',
+    desc: "Affinez un rendu en une phrase, sans repartir de zéro. Chaque version reste disponible dans l'éditeur." },
+  { icon: PackageCheck, title: 'Kit marketing', time: '1 crédit par format',
+    desc: "Déclinez le rendu en vidéos Reel, Story, paysage ou carré à vos couleurs, avec un texte de publication prêt à copier." },
 ]
 
 async function AutomationSection() {
-  const videoCost = await getAiFeature('videoGeneration')
+  const kitCost = await getAiFeature('marketingVideo')
 
   return (
     <section className="section-pad bg-white">
@@ -449,7 +449,7 @@ async function AutomationSection() {
             Gagnez des heures avec<br /><span className="text-gradient">votre IA photo auto.</span>
           </h2>
           <p className="text-charcoal/50 text-[15px] leading-relaxed">
-            CarGlow traite vos photos automatiquement, suggère le style adapté et prépare vos visuels — vous n&apos;avez plus qu&apos;à publier.
+            CarGlow traite vos photos par lot, applique le décor choisi et prépare vos visuels — vous n&apos;avez plus qu&apos;à vérifier et publier.
           </p>
         </div>
 
@@ -480,10 +480,10 @@ async function AutomationSection() {
 
         <div className="flex flex-wrap justify-center gap-3 mt-10">
           {[
-            { icon: Clock,  text: '60 secondes par rendu' },
-            { icon: Layers, text: 'Styles illimités' },
-            { icon: Wand2,  text: 'Retouche dès 1 crédit' },
-            { icon: Clapperboard, text: `Vidéo dès ${videoCost?.creditCost ?? 15} crédits` },
+            { icon: Clock,  text: "Moins d'une minute par rendu" },
+            { icon: Layers, text: '4 décors au choix' },
+            { icon: Wand2,  text: 'Retouche : 1 crédit' },
+            { icon: Clapperboard, text: `Vidéo du kit : ${kitCost?.creditCost ?? 1} crédit par format` },
           ].map(pill => (
             <div key={pill.text} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-accent-50 border border-accent-200/60 text-accent-700 text-sm font-medium">
               <pill.icon className="w-4 h-4 text-accent-500" strokeWidth={1.75} />

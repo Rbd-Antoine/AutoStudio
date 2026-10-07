@@ -24,7 +24,7 @@ export function TabletVideoPlayer() {
       {/* Ambient glow */}
       <div style={{
         position: 'absolute', top: -50, left: -50, right: -50, bottom: -50,
-        background: 'radial-gradient(ellipse at center, rgba(82,183,136,0.20) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse at center, rgba(45,127,249,0.18) 0%, transparent 70%)',
         filter: 'blur(40px)', zIndex: 0, pointerEvents: 'none',
       }} />
       {/* Tablet shell */}
@@ -32,13 +32,13 @@ export function TabletVideoPlayer() {
         position: 'relative', zIndex: 1,
         borderRadius: 28,
         padding: '14px 14px 20px',
-        background: 'linear-gradient(160deg, #243028 0%, #0d1f11 100%)',
-        boxShadow: '0 40px 100px -15px rgba(13,31,17,0.55), 0 0 0 1px rgba(255,255,255,0.06)',
+        background: 'linear-gradient(160deg, #2A2D33 0%, #14161A 100%)',
+        boxShadow: '0 40px 100px -15px rgba(20,22,26,0.55), 0 0 0 1px rgba(255,255,255,0.06)',
       }}>
         {/* Front camera dot */}
         <div style={{
           position: 'absolute', top: 7, left: '50%', transform: 'translateX(-50%)',
-          width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1a2e1e',
+          width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1E2126',
         }} />
         {/* Screen 16:9 via padding-bottom */}
         <div style={{

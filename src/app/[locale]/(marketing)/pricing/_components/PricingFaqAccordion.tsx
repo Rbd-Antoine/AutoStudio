@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 interface Props {
   imageGenerationCost: number
   imageRetouchCost: number
-  videoGenerationCost: number
   marketingVideoCost: number
   freeCredits: number
 }
@@ -16,14 +15,14 @@ interface Props {
 // reads them via listAiFeatures()) rather than being fetched or hardcoded here — same
 // "single source of truth" rule as everywhere else pricing numbers show up, so this text
 // can never drift from what an admin actually configured.
-export function PricingFaqAccordion({ imageGenerationCost, imageRetouchCost, videoGenerationCost, marketingVideoCost, freeCredits }: Props) {
+export function PricingFaqAccordion({ imageGenerationCost, imageRetouchCost, marketingVideoCost, freeCredits }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const PRICING_FAQS = [
-    { q: 'Qu\'est-ce qu\'un crédit ?', a: `Un crédit est consommé à chaque action IA : une génération d'image coûte ${imageGenerationCost} crédit${imageGenerationCost === 1 ? '' : 's'}, une retouche ${imageRetouchCost} crédit${imageRetouchCost === 1 ? '' : 's'}, une génération de vidéo ${videoGenerationCost} crédits.` },
+    { q: 'Qu\'est-ce qu\'un crédit ?', a: `Un crédit est consommé à chaque action IA : une génération d'image coûte ${imageGenerationCost} crédit${imageGenerationCost === 1 ? '' : 's'}, une retouche ${imageRetouchCost} crédit${imageRetouchCost === 1 ? '' : 's'}, une vidéo du kit marketing ${marketingVideoCost} crédit${marketingVideoCost === 1 ? '' : 's'} par format.` },
     { q: 'Combien coûte une vidéo avant/après ?', a: `Chaque format vidéo du kit marketing (Reel, Story, paysage ou carré) coûte ${marketingVideoCost} crédit${marketingVideoCost === 1 ? '' : 's'} et se génère à partir d'un rendu déjà créé : vous ne payez que les formats que vous choisissez.` },
     { q: 'Les crédits mensuels non utilisés sont-ils reportés ?', a: 'Non. Les crédits inclus dans votre abonnement sont renouvelés chaque mois et n\'expirent pas d\'un mois sur l\'autre — mais ils ne se cumulent pas non plus. Les crédits achetés en pack, eux, n\'expirent jamais.' },
-    { q: 'Que contient l\'offre Découverte ?', a: `${freeCredits} crédit${freeCredits === 1 ? '' : 's'} gratuit${freeCredits === 1 ? '' : 's'} chaque mois, sans carte bancaire, avec accès à tous les styles disponibles.` },
+    { q: 'Que contient l\'offre Découverte ?', a: `${freeCredits} crédit${freeCredits === 1 ? '' : 's'} gratuit${freeCredits === 1 ? '' : 's'} chaque mois, sans carte bancaire, avec accès à tous les décors.` },
     { q: 'Puis-je changer de forfait à tout moment ?', a: 'Oui. La mise à niveau est immédiate, la rétrogradation prend effet à la fin de la période de facturation en cours. Aucun frais de résiliation.' },
     { q: 'Puis-je acheter des crédits supplémentaires ?', a: 'Oui — des packs de crédits ponctuels sont disponibles depuis votre compte, en plus de votre abonnement. Ils n\'expirent jamais.' },
     { q: 'Proposez-vous des tarifs pour les grandes équipes ?', a: 'Oui — contactez notre équipe pour un tarif sur mesure au-delà du forfait Business ou pour des groupes multi-sites.' },

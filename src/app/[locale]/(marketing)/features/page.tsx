@@ -1,4 +1,4 @@
-import { Check, Sparkles, Wand2, Film, Share2 } from 'lucide-react'
+import { Check, Sparkles, Wand2, Share2 } from 'lucide-react'
 import { CAR_STYLES } from '@/lib/carStyles'
 
 const FEATURE_SECTIONS = [
@@ -7,7 +7,7 @@ const FEATURE_SECTIONS = [
     icon: Sparkles,
     title: 'Génération de rendu',
     desc:
-      "Importez une photo du véhicule, choisissez un style d'arrière-plan, et l'IA génère un rendu photoréaliste en environ 60 secondes. Le véhicule existant — carrosserie, jantes, vitres, plaque — est toujours respecté : seul l'arrière-plan est transformé.",
+      "Importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors, et l'IA génère un rendu photoréaliste en moins d'une minute. Seul l'arrière-plan est remplacé : l'IA a pour consigne de conserver la carrosserie, les jantes, les vitres et la plaque à l'identique.",
     details: CAR_STYLES.map((s) => `${s.emoji} ${s.name} — ${s.desc}`),
   },
   {
@@ -23,27 +23,15 @@ const FEATURE_SECTIONS = [
     ],
   },
   {
-    id: 'video',
-    icon: Film,
-    title: 'Vidéo avant / après',
-    desc:
-      "Transformez un rendu en courte vidéo animée avec un léger travelling autour du véhicule — un format qui marque davantage qu'une simple image fixe sur une annonce ou un réseau social.",
-    details: [
-      'Travelling fluide autour du véhicule',
-      'Génération automatique, sans montage',
-      'Téléchargeable en HD',
-    ],
-  },
-  {
     id: 'kit-marketing',
     icon: Share2,
     title: 'Kit marketing',
     desc:
-      "Exportez vos rendus avant/après au format Reel, Story, paysage ou carré — prêts à publier sur Instagram, Facebook, LinkedIn ou TikTok pour mettre en avant votre stock, sans compétence en montage vidéo.",
+      "Déclinez un rendu en courtes vidéos au format Reel, Story, paysage ou carré — prêtes à publier sur Instagram, Facebook, LinkedIn ou TikTok pour mettre en avant votre stock, sans compétence en montage vidéo.",
     details: [
       '4 formats adaptés à chaque réseau social',
-      'Texte de fin et appel à l\'action personnalisables',
-      'Prêt à publier en un clic',
+      'Votre logo, votre musique et votre appel à l\'action',
+      'Un texte de publication proposé, prêt à copier',
     ],
   },
 ]

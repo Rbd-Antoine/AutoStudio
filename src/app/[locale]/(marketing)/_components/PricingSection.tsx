@@ -20,10 +20,10 @@ interface MarketingPlan {
 }
 
 const PLAN_META: Record<string, { name: string; badge?: string; highlight: boolean; href: string; cta: string; extraFeatures: string[] }> = {
-  FREE:      { name: 'Découverte', highlight: false, href: '/signup', cta: 'Commencer gratuitement', extraFeatures: ['Tous les styles disponibles', 'Téléchargement HD'] },
-  ESSENTIAL: { name: 'Essentiel',  badge: 'Le plus populaire', highlight: true, href: '/signup?plan=essential', cta: "Démarrer l'essai", extraFeatures: ['Tous les styles', 'Téléchargement HD', 'Support prioritaire'] },
-  PRO:       { name: 'Pro',        highlight: false, href: '/signup?plan=pro', cta: "Démarrer l'essai", extraFeatures: ['Tous les styles', 'Export haute résolution', 'Support dédié'] },
-  BUSINESS:  { name: 'Business',   highlight: false, href: '/signup?plan=business', cta: "Démarrer l'essai", extraFeatures: ['Tous les styles', 'Export haute résolution', 'Support dédié prioritaire'] },
+  FREE:      { name: 'Découverte', highlight: false, href: '/signup', cta: 'Commencer gratuitement', extraFeatures: ['Tous les décors disponibles', 'Téléchargement HD'] },
+  ESSENTIAL: { name: 'Essentiel',  badge: 'Le plus populaire', highlight: true, href: '/signup?plan=essential', cta: 'Créer mon compte', extraFeatures: ['Tous les décors', 'Téléchargement HD', 'Support prioritaire'] },
+  PRO:       { name: 'Pro',        highlight: false, href: '/signup?plan=pro', cta: 'Créer mon compte', extraFeatures: ['Tous les décors', 'Téléchargement HD', 'Support dédié'] },
+  BUSINESS:  { name: 'Business',   highlight: false, href: '/signup?plan=business', cta: 'Créer mon compte', extraFeatures: ['Tous les décors', 'Téléchargement HD', 'Support dédié prioritaire'] },
 }
 
 // Numbers come straight from PricingConfig via a direct data-access call (no client-side

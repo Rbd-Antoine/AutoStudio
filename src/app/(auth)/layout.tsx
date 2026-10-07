@@ -76,7 +76,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
             </p>
           </div>
 
-          {/* Testimonial card */}
+          {/* Testimonial card — only once a real review has been approved */}
+          {authTestimonial && (
           <div className="glass rounded-2xl border border-offwhite/[0.12] p-5 max-w-md">
             <Quote className="w-5 h-5 text-accent-400 mb-3" strokeWidth={1.5} />
             <p className="text-[15px] text-offwhite/85 leading-relaxed">
@@ -92,6 +93,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
               </div>
             </div>
           </div>
+          )}
         </div>
       </aside>
     </div>

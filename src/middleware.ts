@@ -2,10 +2,17 @@ import NextAuth from 'next-auth'
 import { authConfig } from './auth.config'
 import createNextIntlMiddleware from 'next-intl/middleware'
 import { routing } from './i18n/routing'
-import type { NextRequest, NextFetchEvent } from 'next/server'
+import { NextResponse, type NextRequest, type NextFetchEvent } from 'next/server'
 
 const { auth } = NextAuth(authConfig)
 const intlMiddleware = createNextIntlMiddleware(routing)
+
+// The app and auth pages live outside the [locale] segment, but next-intl's <Link> prefixes
+// the active locale, so a sign-up CTA clicked on /en pointed to /en/signup — a 404. Requests
+// like that are redirected to the unprefixed page.
+const LOCALE_PREFIXED_APP_PAGE = new RegExp(
+  `^/(?:${routing.locales.join('|')})(/(?:app|signin|signup|forgot-password|reset-password|verify|check-email|auth)(?:/.*)?)$`,
+)
 
 // Pages that authenticated users should not see (redirect them to /app)
 const GUEST_ONLY = ['/signin', '/signup', '/forgot-password', '/reset-password', '/verify']
@@ -41,6 +48,12 @@ const authMiddleware = auth(function middleware(req: any) {
 // straight to locale routing.
 export default function middleware(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl
+  const unprefixed = pathname.match(LOCALE_PREFIXED_APP_PAGE)
+  if (unprefixed) {
+    const url = req.nextUrl.clone()
+    url.pathname = unprefixed[1]
+    return NextResponse.redirect(url)
+  }
   const needsAuth = pathname.startsWith('/app') || GUEST_ONLY.includes(pathname) || AUTH_ONLY.includes(pathname)
   if (needsAuth) return (authMiddleware as any)(req, event)
   return intlMiddleware(req)

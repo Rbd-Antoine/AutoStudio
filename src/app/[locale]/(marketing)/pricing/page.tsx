@@ -103,7 +103,7 @@ export default async function PricingPage() {
                     {isPromo && <span className="text-[11px] font-semibold text-accent-400 w-full">1ère année</span>}
                   </div>
                   <p className={cn('text-xs mt-1', meta.highlight ? 'text-charcoal/40' : 'text-charcoal/40')}>
-                    {plan.credits.toLocaleString()} crédit{plan.credits === 1 ? '' : 's'} / mois
+                    {plan.credits.toLocaleString('fr-FR')} crédit{plan.credits === 1 ? '' : 's'} / mois
                   </p>
                 </div>
 
@@ -193,7 +193,7 @@ export default async function PricingPage() {
                 <td className="px-6 py-3.5 text-sm text-charcoal/60">Crédits inclus / mois</td>
                 {plans.map(p => (
                   <td key={p.id} className={cn('px-4 py-3.5 text-center', PLAN_META[p.id]?.highlight && 'bg-accent-50/30')}>
-                    <CellIcon value={p.credits.toLocaleString()} highlight={!!PLAN_META[p.id]?.highlight} />
+                    <CellIcon value={p.credits.toLocaleString('fr-FR')} highlight={!!PLAN_META[p.id]?.highlight} />
                   </td>
                 ))}
               </tr>

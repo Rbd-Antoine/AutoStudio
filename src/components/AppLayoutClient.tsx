@@ -106,6 +106,8 @@ interface InitialWorkspace {
   plan: string
   creditsRemaining: number
   isSuperuser: boolean
+  name?: string | null
+  email?: string | null
 }
 
 export default function AppLayoutClient({
@@ -161,7 +163,10 @@ export default function AppLayoutClient({
     router.refresh()
   }
 
-  const displayName = session?.user?.name ?? session?.user?.email ?? 'You'
+  // The server-rendered summary comes first: useSession() is always empty while this renders on
+  // the server, so the sidebar used to show "You" until the client session had loaded.
+  const displayName = initialWorkspace?.name ?? initialWorkspace?.email
+    ?? session?.user?.name ?? session?.user?.email ?? 'Vous'
   const planLabel   = ws?.plan ? ws.plan.charAt(0) + ws.plan.slice(1).toLowerCase() : '—'
   const avatarChar  = displayName.charAt(0).toUpperCase()
 
@@ -210,7 +215,7 @@ export default function AppLayoutClient({
               {ws?.creditsRemaining === 0 ? "S'abonner" : 'Crédits'}
             </span>
             <span className={cn('text-sm font-semibold tabular-nums', ws?.creditsRemaining === 0 ? 'text-rose-700' : 'text-accent-700')}>
-              {ws ? ws.creditsRemaining.toLocaleString() : '—'}
+              {ws ? ws.creditsRemaining.toLocaleString('fr-FR') : '—'}
             </span>
           </Link>
           <div className="flex items-center gap-2 px-2 py-1.5">

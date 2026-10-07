@@ -243,7 +243,7 @@ export default function BillingPage() {
                 Plan {currentPlanMeta?.label ?? plan}
               </h1>
               <p className="text-charcoal/45 mt-2 text-[15px]">
-                {workspace ? `${totalCredits.toLocaleString()} crédits disponibles` : 'Chargement…'}
+                {workspace ? `${totalCredits.toLocaleString('fr-FR')} crédits disponibles` : 'Chargement…'}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export default function BillingPage() {
             <ul className="space-y-2 mb-5">
               <li className="flex items-center gap-2 text-sm text-charcoal/65">
                 <Check className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" strokeWidth={2.5} />
-                {(currentPlanMeta?.credits ?? 0).toLocaleString()} crédit{(currentPlanMeta?.credits ?? 0) === 1 ? '' : 's'} / mois
+                {(currentPlanMeta?.credits ?? 0).toLocaleString('fr-FR')} crédit{(currentPlanMeta?.credits ?? 0) === 1 ? '' : 's'} / mois
               </li>
               {renewalDateLabel && (
                 <li className="flex items-center gap-2 text-sm text-charcoal/65">
@@ -313,10 +313,10 @@ export default function BillingPage() {
                 <div className="text-[10px] font-semibold uppercase tracking-widest text-charcoal/40 mb-1">Crédits mensuels</div>
                 <div className="flex items-baseline gap-2">
                   <span className="font-display font-bold text-2xl tabular-nums text-charcoal">
-                    {monthlyCredits.toLocaleString()}
+                    {monthlyCredits.toLocaleString('fr-FR')}
                   </span>
                   <span className="text-charcoal/40 text-sm tabular-nums">
-                    / {monthlyAllotment.toLocaleString()}
+                    / {monthlyAllotment.toLocaleString('fr-FR')}
                   </span>
                 </div>
               </div>
@@ -345,7 +345,7 @@ export default function BillingPage() {
 
             <div className="pt-3 border-t border-accent-100 flex items-center justify-between">
               <div className="text-xs text-charcoal/45">Crédits achetés (n&apos;expirent jamais)</div>
-              <div className="font-display font-bold text-charcoal tabular-nums">{bonusCredits.toLocaleString()}</div>
+              <div className="font-display font-bold text-charcoal tabular-nums">{bonusCredits.toLocaleString('fr-FR')}</div>
             </div>
           </div>
 
@@ -402,7 +402,7 @@ export default function BillingPage() {
                     </div>
                     {isPromo && <div className="text-[11px] font-semibold text-rose-500 mb-1">1ère année</div>}
                     <div className="text-xs text-charcoal/50 mb-3">
-                      {p.credits.toLocaleString()} crédit{p.credits === 1 ? '' : 's'} / mois
+                      {p.credits.toLocaleString('fr-FR')} crédit{p.credits === 1 ? '' : 's'} / mois
                     </div>
                     {PLAN_PITCH[p.id] && (
                       <p className="text-xs text-charcoal/45 leading-relaxed mb-4">{PLAN_PITCH[p.id]}</p>
@@ -538,7 +538,7 @@ function TopUpModal({
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-4 h-4 text-accent-500" strokeWidth={2} />
-                  <span className="font-display font-bold text-lg tabular-nums text-charcoal">{p.credits.toLocaleString()}</span>
+                  <span className="font-display font-bold text-lg tabular-nums text-charcoal">{p.credits.toLocaleString('fr-FR')}</span>
                 </div>
                 <span className="tabular-nums font-semibold text-charcoal">€{p.price}</span>
               </button>
@@ -546,7 +546,7 @@ function TopUpModal({
           </div>
 
           <div className="mt-5 rounded-xl border border-accent-100 bg-offwhite p-4 space-y-2 text-sm">
-            <div className="flex justify-between text-charcoal/60"><span>Crédits</span><span className="tabular-nums text-charcoal">{pack.credits.toLocaleString()}</span></div>
+            <div className="flex justify-between text-charcoal/60"><span>Crédits</span><span className="tabular-nums text-charcoal">{pack.credits.toLocaleString('fr-FR')}</span></div>
             <div className="flex justify-between text-charcoal/60"><span>Prix</span><span className="tabular-nums text-charcoal">€{pack.price}</span></div>
             <div className="flex justify-between text-charcoal/60"><span>Prix / crédit</span><span className="tabular-nums text-charcoal">€{perCredit.toFixed(2)}</span></div>
           </div>

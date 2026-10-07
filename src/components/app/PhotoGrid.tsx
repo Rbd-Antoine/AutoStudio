@@ -180,7 +180,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 <div className="text-[11px] text-charcoal/50 mt-0.5 flex items-center gap-1.5">
                   <span>{p.styleUsed ?? 'Personnalisé'}</span>
                   <span>·</span>
-                  <span>{timeAgo(p.createdAt)}</span>
+                  <span suppressHydrationWarning>{timeAgo(p.createdAt)}</span>
                 </div>
               </div>
             </button>
@@ -207,7 +207,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 <div className="text-[12px] text-charcoal/50 flex items-center gap-1.5">
                   <span>{preview.styleUsed ?? 'Personnalisé'}</span>
                   <span>·</span>
-                  <span>{timeAgo(preview.createdAt)}</span>
+                  <span suppressHydrationWarning>{timeAgo(preview.createdAt)}</span>
                   <span>·</span>
                   <span className="tabular-nums">{previewIdx + 1} / {photos.length}</span>
                 </div>

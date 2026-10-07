@@ -67,7 +67,7 @@ export default async function DashboardPage() {
                 Tableau de bord
               </h1>
               <p className="text-charcoal/45 mt-2 text-[15px]">
-                <span className="text-accent-700 font-semibold">{creditsRemaining.toLocaleString()}</span> crédits restants
+                <span className="text-accent-700 font-semibold">{creditsRemaining.toLocaleString('fr-FR')}</span> crédits restants
               </p>
             </div>
             <Link
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
               <Clock3 className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
             </div>
             <div>
-              <p className="font-display font-bold text-xl text-charcoal leading-none">{creditsRemaining.toLocaleString()}</p>
+              <p className="font-display font-bold text-xl text-charcoal leading-none">{creditsRemaining.toLocaleString('fr-FR')}</p>
               <p className="text-xs text-charcoal/45 mt-1">Crédits restants</p>
             </div>
           </div>

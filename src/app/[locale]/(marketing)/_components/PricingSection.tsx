@@ -39,7 +39,7 @@ async function getPlans(): Promise<MarketingPlan[]> {
   ]
   return raw.map(p => {
     const meta = PLAN_META[p.id]
-    const creditsLabel = `${p.credits.toLocaleString()} crédit${p.credits === 1 ? '' : 's'} / mois`
+    const creditsLabel = `${p.credits.toLocaleString('fr-FR')} crédit${p.credits === 1 ? '' : 's'} / mois`
     const isPromo = promo && promo.plan === p.id
     return {
       id: p.id,

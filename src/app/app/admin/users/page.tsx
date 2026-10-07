@@ -146,7 +146,7 @@ function SummaryCard({ icon: Icon, label, value, sub }: { icon: typeof Users; la
         <Icon className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
       </div>
       <div>
-        <p className="text-2xl font-display font-bold text-charcoal tabular-nums leading-none">{value.toLocaleString()}</p>
+        <p className="text-2xl font-display font-bold text-charcoal tabular-nums leading-none">{value.toLocaleString('fr-FR')}</p>
         <p className="text-xs text-charcoal/45 mt-1">{label}</p>
         {sub && <p className="text-[11px] text-accent-600 font-medium mt-0.5">{sub}</p>}
       </div>

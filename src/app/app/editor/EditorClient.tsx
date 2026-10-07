@@ -415,7 +415,7 @@ export default function EditorClient() {
               : 'bg-accent-50 border-accent-200 text-accent-700 hover:bg-accent-100',
           )}
         >
-          {credits === null ? '…' : credits === 0 ? "S'abonner" : `${credits.toLocaleString()} crédit${credits === 1 ? '' : 's'}`}
+          {credits === null ? '…' : credits === 0 ? "S'abonner" : `${credits.toLocaleString('fr-FR')} crédit${credits === 1 ? '' : 's'}`}
         </Link>
       </header>
 

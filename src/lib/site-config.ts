@@ -17,7 +17,7 @@ export const SITE_URL = (
 export const EMAIL_FROM = process.env.EMAIL_FROM || 'AutoStudio <onboarding@resend.dev>'
 
 // Shown on the legal pages, used as the reply-to of every email, and the contact form's inbox.
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'carglow.rendus@gmail.com'
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'autostudioia@gmail.com'
 
 // Booking calendar embedded on the landing page; the section is hidden while it is unset.
 export const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || ''

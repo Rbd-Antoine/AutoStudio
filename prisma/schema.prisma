@@ -1,8 +1,8 @@
 // =============================================================================
-// CarGlow — Prisma schema
+// AutoStudio — Prisma schema
 // =============================================================================
 // Postgres + Prisma. Designed for multi-tenant SaaS with workspaces.
-// Run: pnpm db:generate && pnpm db:push
+// Schema changes: `npx prisma migrate dev --name <change>` (see README, "Database changes").
 // =============================================================================
 
 generator client {
@@ -529,4 +529,16 @@ model ShareLink {
   photo Photo? @relation(fields: [photoId], references: [id], onDelete: Cascade)
 
   @@index([slug])
+}
+
+// ── ABUSE PROTECTION ────────────────────────────────────────────────────────
+
+// One row per attempt at a rate-limited action (sign-up, password reset, contact form…), keyed
+// by action + IP, email or workspace. See src/lib/rate-limit.ts; old rows are purged daily.
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
 }

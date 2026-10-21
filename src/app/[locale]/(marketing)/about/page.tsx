@@ -11,14 +11,14 @@ export default function AboutPage() {
           <span className="text-gradient">mérite une photo digne d&apos;un showroom.</span>
         </h1>
         <p className="text-lg text-charcoal/55 leading-relaxed mb-6 max-w-2xl">
-          CarGlow est né d&apos;un constat simple : les concessions perdent des clics non pas à cause
+          AutoStudio est né d&apos;un constat simple : les concessions perdent des clics non pas à cause
           de la qualité de leurs véhicules, mais parce que leurs photos sont prises à la va-vite sur
           un parking, avec un arrière-plan qui n&apos;inspire pas confiance. Le véhicule était le bon,
           la photo ne le montrait pas.
         </p>
         <p className="text-lg text-charcoal/55 leading-relaxed mb-12 max-w-2xl">
-          Nous avons construit CarGlow pour combler ce fossé. Aujourd&apos;hui, des concessions
-          utilisent CarGlow pour transformer une simple photo de véhicule prise au smartphone
+          Nous avons construit AutoStudio pour combler ce fossé. Aujourd&apos;hui, des concessions
+          utilisent AutoStudio pour transformer une simple photo de véhicule prise au smartphone
           en rendu photoréaliste en 60 secondes — et vendre plus vite.
         </p>
 
@@ -28,9 +28,9 @@ export default function AboutPage() {
           </div>
           <div>
             <p className="font-display font-semibold text-charcoal text-lg">Antoine R.</p>
-            <p className="text-sm text-accent-600 font-medium mb-2">Fondateur de CarGlow</p>
+            <p className="text-sm text-accent-600 font-medium mb-2">Fondateur d&apos;AutoStudio</p>
             <p className="text-sm text-charcoal/50 leading-relaxed max-w-lg">
-              &ldquo;Je réponds personnellement à chaque demande. CarGlow est encore une petite équipe —
+              &ldquo;Je réponds personnellement à chaque demande. AutoStudio est encore une petite équipe —
               c&apos;est ce qui nous permet d&apos;aller vite et de rester à l&apos;écoute des concessions
               qui l&apos;utilisent tous les jours.&rdquo;
             </p>

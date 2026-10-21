@@ -15,7 +15,7 @@ export function BlogCTA({ html }: { html: string }) {
         href="/signup"
         className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-accent-700 hover:text-accent-800 transition-colors"
       >
-        Essayer CarGlow gratuitement <ArrowRight className="w-3.5 h-3.5" />
+        Essayer AutoStudio gratuitement <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </div>
   )

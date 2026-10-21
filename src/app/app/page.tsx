@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ImageIcon, ArrowRight, AlertCircle, CreditCard, Sparkles, Clock3 } from 'lucide-react'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { ensureWorkspaceId } from '@/lib/workspace'
 import { isRealHostedUrl } from '@/lib/photo-url'
 import PhotoGrid from '@/components/app/PhotoGrid'
 import OnboardingBanner from '@/app/app/_components/OnboardingBanner'
@@ -14,11 +15,11 @@ export default async function DashboardPage() {
   const userId      = session.user.id
   const workspaceId = session.user.workspaceId
 
-  const workspace = workspaceId
-    ? await db.workspace.findUnique({ where: { id: workspaceId } })
-    : await db.workspaceMember
-        .findFirst({ where: { userId }, include: { workspace: true }, orderBy: { joinedAt: 'asc' } })
-        .then(m => m?.workspace ?? null)
+  // An account without a workspace (its provisioning failed at sign-up) gets one here: sending
+  // it to /signin instead looped, since the middleware sends signed-in users back to /app.
+  const workspace =
+    (workspaceId ? await db.workspace.findUnique({ where: { id: workspaceId } }) : null) ??
+    await db.workspace.findUnique({ where: { id: await ensureWorkspaceId(userId, session.user.name) } })
 
   if (!workspace) redirect('/signin')
 

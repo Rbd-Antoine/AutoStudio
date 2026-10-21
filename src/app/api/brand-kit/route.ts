@@ -3,9 +3,7 @@ import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { getWorkspaceSummary } from '@/lib/workspace-summary'
 import { saveBrandKit } from '@/lib/brand-kit'
 import { uploadBuffer } from '@/lib/blob-storage'
-
-const MAX_LOGO_BYTES = 5 * 1024 * 1024
-const ALLOWED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']
+import { normalizeLogo, InvalidImageError, MAX_LOGO_BYTES } from '@/lib/image-validation'
 
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
@@ -25,15 +23,18 @@ export async function POST(req: NextRequest) {
 
   let logoUrl: string | undefined
   if (logo && logo.size > 0) {
-    if (!ALLOWED_LOGO_TYPES.includes(logo.type)) {
-      return NextResponse.json({ error: 'Format de logo non supporté (PNG, JPG, WEBP ou SVG).' }, { status: 400 })
-    }
     if (logo.size > MAX_LOGO_BYTES) {
       return NextResponse.json({ error: 'Logo trop volumineux (5 Mo max).' }, { status: 400 })
     }
-    const buffer = Buffer.from(await logo.arrayBuffer())
+    let normalized: Awaited<ReturnType<typeof normalizeLogo>>
     try {
-      logoUrl = await uploadBuffer(buffer, logo.type, `brand-logo-${summary.workspaceId}-${Date.now()}`)
+      normalized = await normalizeLogo(Buffer.from(await logo.arrayBuffer()))
+    } catch (err) {
+      if (err instanceof InvalidImageError) return NextResponse.json({ error: err.message }, { status: 400 })
+      throw err
+    }
+    try {
+      logoUrl = await uploadBuffer(normalized.buffer, normalized.mimeType, `brand-logo-${summary.workspaceId}-${Date.now()}`)
     } catch (err) {
       // Most often a missing BLOB_READ_WRITE_TOKEN: answer in JSON so the page can show it
       // instead of failing to parse a bare 500.

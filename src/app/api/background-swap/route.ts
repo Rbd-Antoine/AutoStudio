@@ -13,11 +13,13 @@ import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { isEmailVerified } from '@/lib/auth-guards'
 import { isSuperuserAccount } from '@/lib/superusers'
 import { sendWelcomeEmail, sendReviewRequestEmail } from '@/lib/email'
+import { base64PhotoType, InvalidImageError, type PhotoMimeType } from '@/lib/image-validation'
 
 export const maxDuration = 300
 
 const MAX_PHOTOS = 5
 const FEATURE_KEY = 'imageGeneration'
+const RENDER_FAILED_MESSAGE = "Le rendu a échoué, aucun crédit n'a été consommé. Veuillez réessayer."
 
 interface ImagePayload {
   base64: string
@@ -61,7 +63,7 @@ async function loadBackgroundReference(slug: string): Promise<{ base64: string; 
 
 // The editor sends one request per photo (several photos in one body exceed Vercel's 4.5 Mo
 // request limit), but the route still accepts up to MAX_PHOTOS. Each photo is charged on its
-// own, the same way /api/generate charges a render, and refunded if its render fails.
+// own, and refunded if its render fails.
 export async function POST(req: NextRequest) {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
@@ -87,6 +89,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'workspaceId requis' }, { status: 400 })
   }
 
+  // Each photo is retyped from its own bytes before anything is charged or stored.
+  let photos: { base64: string; mimeType: PhotoMimeType }[]
+  try {
+    photos = images.map(image => ({ base64: image?.base64, mimeType: base64PhotoType(image?.base64) }))
+  } catch (err) {
+    if (err instanceof InvalidImageError) return NextResponse.json({ error: err.message }, { status: 400 })
+    throw err
+  }
+
   const [member, verified, isSuperuser] = await Promise.all([
     db.workspaceMember.findUnique({
       where: { workspaceId_userId: { workspaceId, userId } },
@@ -97,7 +108,7 @@ export async function POST(req: NextRequest) {
   ])
   if (!member) return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
 
-  // Same rule as /api/generate: an unverified account gets exactly one free render — enough to
+  // An unverified account gets exactly one free render — enough to
   // see the product work — then every further one needs a verified email. Bounds disposable-
   // email credit farming to one render per fake account.
   if (!verified) {
@@ -118,7 +129,7 @@ export async function POST(req: NextRequest) {
   const background = await loadBackgroundReference(backgroundSlug)
   const analyticsIdentity = { userId, email: session.user.email ?? null, plan: member.workspace.plan, workspaceId }
 
-  const results = await Promise.all(images.map(async (image, index): Promise<SwapResult> => {
+  const results = await Promise.all(photos.map(async (image, index): Promise<SwapResult> => {
     let deduction: DeductResult | null = null
     if (!isSuperuser) {
       try {
@@ -135,7 +146,7 @@ export async function POST(req: NextRequest) {
           return { index, error: 'Crédits insuffisants', code: 'insufficient_credits', available: err.available, required: err.required }
         }
         captureServerException(err, userId)
-        return { index, error: err instanceof Error ? err.message : 'Erreur inconnue' }
+        return { index, error: RENDER_FAILED_MESSAGE }
       }
     }
 
@@ -179,7 +190,8 @@ export async function POST(req: NextRequest) {
       if (deduction) {
         await refundCredits(workspaceId, deduction, { featureKey: FEATURE_KEY, photoId: photo.id })
       }
-      return { index, error: msg }
+      // The detailed cause (often a raw Gemini response) stays in the Photo row and the logs.
+      return { index, error: RENDER_FAILED_MESSAGE }
     }
   }))
 

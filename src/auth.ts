@@ -4,7 +4,8 @@ import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
-import { getPricingConfig, monthlyCreditsForPlan } from '@/lib/pricing'
+import { provisionWorkspace } from '@/lib/workspace'
+import { GOOGLE_SIGN_IN_ENABLED } from '@/lib/site-config'
 import { trackServerEvent } from '@/lib/analytics/server'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 
@@ -21,7 +22,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
 
   providers: [
-    GoogleProvider({
+    // Registered only once the OAuth client is configured (see GOOGLE_SIGN_IN_ENABLED).
+    ...(GOOGLE_SIGN_IN_ENABLED ? [GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       // Google verifies the email before issuing it in the profile, so treating it as
@@ -43,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           emailVerified: profile.email_verified ? new Date() : null,
         }
       },
-    }),
+    })] : []),
     CredentialsProvider({
       id:   'credentials',
       name: 'Email',
@@ -138,23 +140,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // since this handler only ever runs for Google sign-ups in this app.
     async createUser({ user }) {
       if (!user.id) return
+      // A failure here doesn't block the sign-in: the dashboard provisions a missing workspace
+      // on first visit (see provisionWorkspace).
       try {
-        const config = await getPricingConfig()
-        const freeCredits = monthlyCreditsForPlan(config, 'FREE')
-        const nextReset = new Date()
-        nextReset.setMonth(nextReset.getMonth() + 1)
-
-        const [workspace] = await Promise.all([
-          db.workspace.create({
-            data: {
-              name:           user.name ?? 'My Workspace',
-              slug:           `ws-${user.id}`,
-              plan:           'FREE',
-              monthlyCredits: freeCredits,
-              renewalDate:    nextReset,
-              members: { create: { userId: user.id, role: 'OWNER' } },
-            },
-          }),
+        const [{ workspaceId, freeCredits }] = await Promise.all([
+          provisionWorkspace(user.id, user.name ?? 'My Workspace'),
           db.user.update({ where: { id: user.id }, data: { emailVerified: new Date() } }),
         ])
 
@@ -163,7 +153,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email ?? null,
           plan: 'FREE',
           remainingCredits: freeCredits,
-          workspaceId: workspace.id,
+          workspaceId,
           method: 'google',
         })
       } catch (err) {

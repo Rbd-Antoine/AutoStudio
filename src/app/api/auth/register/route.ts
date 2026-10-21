@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
-import { getPricingConfig, monthlyCreditsForPlan } from '@/lib/pricing'
+import { provisionWorkspace } from '@/lib/workspace'
+import { checkRateLimit, clientIp, tooManyRequests, HOUR } from '@/lib/rate-limit'
 import { trackServerEvent } from '@/lib/analytics/server'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { sendVerificationEmail } from '@/lib/email'
@@ -51,6 +52,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Le mot de passe est trop long.' }, { status: 400 })
   }
 
+  // Every new account gets a free render and sends a verification email, so sign-ups from one
+  // address are capped to keep both from being farmed.
+  if (!(await checkRateLimit(`register:${clientIp(req)}`, 5, HOUR))) {
+    return tooManyRequests('Trop de comptes créés depuis cette connexion. Réessayez dans une heure.')
+  }
+
   try {
     const existing = await db.user.findUnique({
       where:  { email },
@@ -67,38 +74,21 @@ export async function POST(req: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 12)
 
     // ── Fresh account → create user + workspace + membership ─────────────
-    const user = await db.user.create({
-      data: {
-        email,
-        name:     name ?? email.split('@')[0],
-        password: passwordHash,
-        // emailVerified reste null jusqu'à confirmation par email
-      },
-    })
-
-    const config = await getPricingConfig()
-
-    // FREE plan: 1 credit/month, same "monthly allotment" model as paid plans. There's no
-    // Stripe subscription to key a renewal off, so renewalDate is set here and
-    // /api/cron/reset-free-credits resets it (and monthlyCredits) once it's due.
-    const nextReset = new Date()
-    nextReset.setMonth(nextReset.getMonth() + 1)
-
-    const freeCredits = monthlyCreditsForPlan(config, 'FREE')
-
-    const workspace = await db.workspace.create({
-      data: {
-        // The company name is what the Marketing Kit end card falls back to when no BrandKit
-        // exists (see src/lib/brand-kit.ts) — prefer it over the person's own name.
-        name:           companyName ?? name ?? 'My Workspace',
-        slug:           `ws-${user.id}`,
-        plan:           'FREE',
-        monthlyCredits: freeCredits,
-        renewalDate:    nextReset,
-        members: {
-          create: { userId: user.id, role: 'OWNER' },
+    // One transaction: a user row without its workspace would be an account that can sign in
+    // but has nowhere to put credits or photos.
+    const { user, workspaceId, freeCredits } = await db.$transaction(async tx => {
+      const user = await tx.user.create({
+        data: {
+          email,
+          name:     name ?? email.split('@')[0],
+          password: passwordHash,
+          // emailVerified reste null jusqu'à confirmation par email
         },
-      },
+      })
+      // The company name is what the Marketing Kit end card falls back to when no BrandKit
+      // exists (see src/lib/brand-kit.ts) — prefer it over the person's own name.
+      const provisioned = await provisionWorkspace(user.id, companyName ?? name ?? 'My Workspace', tx)
+      return { user, ...provisioned }
     })
 
     trackServerEvent(ANALYTICS_EVENTS.ACCOUNT_CREATED, {
@@ -106,7 +96,7 @@ export async function POST(req: NextRequest) {
       email: user.email,
       plan: 'FREE',
       remainingCredits: freeCredits,
-      workspaceId: workspace.id,
+      workspaceId,
       method: 'credentials',
     })
 

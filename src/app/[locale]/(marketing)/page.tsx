@@ -133,12 +133,12 @@ function VideoSection() {
       <div className="page-container">
         {/* Text */}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <p className="eyebrow mb-3">CarGlow en action</p>
+          <p className="eyebrow mb-3">AutoStudio en action</p>
           <h2 className="font-display font-bold text-charcoal mb-5" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.75rem)' }}>
             60 secondes.<br /><span className="text-gradient">Une photo transformée.</span>
           </h2>
           <p className="text-charcoal/50 text-[15px] leading-relaxed">
-            Regardez comment CarGlow transforme une simple photo de véhicule en rendu photoréaliste.
+            Regardez comment AutoStudio transforme une simple photo de véhicule en rendu photoréaliste.
           </p>
         </div>
 
@@ -176,7 +176,7 @@ function CalendlySection() {
               Parlons de votre<br /><span className="text-gradient">activité.</span>
             </h2>
             <p className="text-charcoal/50 text-[15px] leading-relaxed mb-8">
-              {CALENDLY_URL ? 'Réservez 20 minutes avec moi' : 'Écrivez-moi'} pour découvrir comment CarGlow peut transformer la façon dont votre concession présente ses véhicules.
+              {CALENDLY_URL ? 'Réservez 20 minutes avec moi' : 'Écrivez-moi'} pour découvrir comment AutoStudio peut transformer la façon dont votre concession présente ses véhicules.
             </p>
             <div className="flex flex-col gap-3 mb-8">
               {[
@@ -197,11 +197,11 @@ function CalendlySection() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-charcoal">Antoine R.</p>
-                  <p className="text-xs text-charcoal/45">Fondateur de CarGlow</p>
+                  <p className="text-xs text-charcoal/45">Fondateur d&apos;AutoStudio</p>
                 </div>
               </div>
               <p className="text-xs text-charcoal/50 leading-relaxed">
-                &ldquo;Je réponds personnellement à chaque demande. Montrez-moi une photo de votre stock et on voit ensemble ce que CarGlow peut faire.&rdquo;
+                &ldquo;Je réponds personnellement à chaque demande. Montrez-moi une photo de votre stock et on voit ensemble ce qu&apos;AutoStudio peut faire.&rdquo;
               </p>
             </div>
           </div>
@@ -250,7 +250,7 @@ function ScrollingGallerySection() {
   return (
     <section className="py-14 bg-white overflow-hidden">
       <div className="page-container mb-8">
-        <p className="eyebrow text-center">Rendus générés par CarGlow</p>
+        <p className="eyebrow text-center">Rendus générés par AutoStudio</p>
       </div>
       <div className="relative">
         <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
@@ -449,7 +449,7 @@ async function AutomationSection() {
             Gagnez des heures avec<br /><span className="text-gradient">votre IA photo auto.</span>
           </h2>
           <p className="text-charcoal/50 text-[15px] leading-relaxed">
-            CarGlow traite vos photos par lot, applique le décor choisi et prépare vos visuels — vous n&apos;avez plus qu&apos;à vérifier et publier.
+            AutoStudio traite vos photos par lot, applique le décor choisi et prépare vos visuels — vous n&apos;avez plus qu&apos;à vérifier et publier.
           </p>
         </div>
 

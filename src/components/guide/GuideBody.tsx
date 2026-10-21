@@ -35,7 +35,7 @@ export function GuideBody({ guide }: { guide: Guide }) {
           {section.id === 'regles-metier' && (
             <div className="not-prose rounded-2xl border border-accent-200 bg-accent-50/60 px-6 py-5 my-8 flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-[15px] text-charcoal/70 font-medium text-center sm:text-left">
-                Ces règles s&apos;appliquent automatiquement à chaque rendu CarGlow.
+                Ces règles s&apos;appliquent automatiquement à chaque rendu AutoStudio.
               </p>
               <GuideSignupButton className="shrink-0" />
             </div>

@@ -5,11 +5,17 @@ import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { generateText } from '@/lib/gemini'
 import { CAR_STYLES, buildSocialCaptionPrompt } from '@/lib/carPrompts'
 import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
+import { isEmailVerified } from '@/lib/auth-guards'
+import { checkRateLimit, tooManyRequests, DAY } from '@/lib/rate-limit'
 
 export const maxDuration = 30
 
+const MAX_CTA_LENGTH = 120
+const DAILY_CAPTIONS_PER_WORKSPACE = 30
+
 // Free — a short text completion is cheap relative to the video render, which already costs
-// a credit; gating this too would just add friction to something meant to lower it.
+// a credit; gating this too would just add friction to something meant to lower it. Still
+// bounded (verified email, daily cap, short CTA) so it can't be used as a free Gemini proxy.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
@@ -17,6 +23,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params
   const body = await req.json().catch(() => ({}))
   const { ctaText } = body as { ctaText?: string }
+  if (ctaText !== undefined && (typeof ctaText !== 'string' || ctaText.length > MAX_CTA_LENGTH)) {
+    return NextResponse.json({ error: `Appel à l'action trop long (${MAX_CTA_LENGTH} caractères max).` }, { status: 400 })
+  }
 
   const photo = await db.photo.findUnique({
     where: { id },
@@ -29,6 +38,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   if (!photo || photo.workspace.members.length === 0) {
     return NextResponse.json({ error: 'Rendu introuvable' }, { status: 404 })
+  }
+
+  if (!(await isEmailVerified(session.user.id))) {
+    return NextResponse.json(
+      { error: 'email_not_verified', message: 'Vérifiez votre adresse e-mail pour générer un texte.' },
+      { status: 403 },
+    )
+  }
+  if (!(await checkRateLimit(`marketing-caption:${photo.workspaceId}`, DAILY_CAPTIONS_PER_WORKSPACE, DAY))) {
+    return tooManyRequests('Limite quotidienne de textes atteinte. Réessayez demain.')
   }
 
   const apiKey = process.env.GEMINI_API_KEY

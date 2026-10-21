@@ -12,3 +12,10 @@ export function getVideoProvider(): VideoRenderProvider {
       throw new Error(`Unknown VIDEO_PROVIDER: "${name}"`)
   }
 }
+
+// Marketing videos are offered only once the provider's credentials are set, rather than
+// charging (then refunding) a credit for a render that can't start.
+export function isVideoProviderConfigured(): boolean {
+  const name = process.env.VIDEO_PROVIDER || 'shotstack'
+  return name === 'shotstack' && !!process.env.SHOTSTACK_API_KEY
+}

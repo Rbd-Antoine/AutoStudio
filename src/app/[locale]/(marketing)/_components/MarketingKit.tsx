@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { TrackedLink } from './TrackedLink'
-import { carImagePath, videoPaths, SHOWCASE_CARS } from '@/lib/showcase-data'
+import { carImagePath, SHOWCASE_CARS } from '@/lib/showcase-data'
 
 // One generated photo, shown cropped into the three formats a dealer actually needs to post
 // (feed, story/reel, square) — same image, no separate render per ratio needed.
@@ -87,7 +87,7 @@ export function MarketingKit() {
             Le kit marketing, <span className="text-gradient">généré en un clic</span>
           </h2>
           <p className="text-charcoal/50 text-[15px] leading-relaxed">
-            À partir de la même photo, CarGlow produit le visuel avant/après déjà décliné aux
+            À partir de la même photo, AutoStudio produit le visuel avant/après déjà décliné aux
             formats des réseaux — vous n&apos;avez rien à recadrer ni remonter.
           </p>
         </div>

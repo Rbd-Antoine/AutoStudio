@@ -7,7 +7,7 @@ import { Mail, User, Building2, KeyRound, ArrowRight, Check, Loader2 } from 'luc
 import { signIn } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { trackEvent } from '@/lib/meta'
-import { GoogleIcon } from '@/components/GoogleIcon'
+import { GoogleSignInSection } from '@/components/auth/GoogleSignIn'
 
 function validatePassword(pwd: string): string | null {
   if (pwd.length < 8)        return 'Le mot de passe doit contenir au moins 8 caractères.'
@@ -100,23 +100,14 @@ export default function SignUpPage() {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => signIn('google', { callbackUrl: '/app' })}
-        className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.02] px-4 py-2.5 text-sm font-semibold text-charcoal/85 transition-colors"
-      >
-        <GoogleIcon className="w-4 h-4" />
-        S&apos;inscrire avec Google
-      </button>
-      <p className="text-[11.5px] text-charcoal/45 text-center mt-2">
-        Accès immédiat à votre espace — aucune vérification d&apos;e-mail nécessaire.
-      </p>
-
-      <div className="flex items-center gap-3 my-6">
-        <div className="h-px flex-1 bg-charcoal/[0.08]" />
-        <span className="text-[11px] uppercase tracking-widest text-charcoal/35">ou avec e-mail</span>
-        <div className="h-px flex-1 bg-charcoal/[0.08]" />
-      </div>
+      <GoogleSignInSection
+        label="S'inscrire avec Google"
+        note={
+          <p className="text-[11.5px] text-charcoal/45 text-center mt-2">
+            Accès immédiat à votre espace — aucune vérification d&apos;e-mail nécessaire.
+          </p>
+        }
+      />
 
       <form onSubmit={submit} className="space-y-4">
         <Field label="Nom complet" icon={User}>

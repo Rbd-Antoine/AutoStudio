@@ -47,7 +47,7 @@ function layout(content: string): string {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
         <!-- Logo -->
         <tr><td style="padding-bottom:24px;text-align:center">
-          <span style="font-size:22px;font-weight:700;color:#14161A;letter-spacing:-0.5px">CarGlow</span>
+          <span style="font-size:22px;font-weight:700;color:#14161A;letter-spacing:-0.5px">AutoStudio</span>
         </td></tr>
         <!-- Card -->
         <tr><td style="background:#ffffff;border-radius:16px;padding:40px 36px;border:1px solid rgba(20,22,26,0.07)">
@@ -55,7 +55,7 @@ function layout(content: string): string {
         </td></tr>
         <!-- Footer -->
         <tr><td style="padding-top:24px;text-align:center;font-size:12px;color:#888">
-          CarGlow · <a href="${SITE_URL}" style="color:#2D7FF9;text-decoration:none">${SITE_HOST}</a>
+          AutoStudio · <a href="${SITE_URL}" style="color:#2D7FF9;text-decoration:none">${SITE_HOST}</a>
         </td></tr>
       </table>
     </td></tr>
@@ -85,7 +85,7 @@ export async function sendWelcomeEmail(to: string, name: string, imageUrl?: stri
   await sendEmail({
     to,
     subject: 'Votre premier rendu est prêt ✨',
-    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu CarGlow — votre véhicule avec un nouvel arrière-plan en quelques secondes.\n\nVoir mon espace → ${SITE_URL}/app\n\nL'équipe CarGlow`,
+    text: `Bonjour ${displayName},\n\nVoici votre tout premier rendu AutoStudio — votre véhicule avec un nouvel arrière-plan en quelques secondes.\n\nVoir mon espace → ${SITE_URL}/app\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1(`Bravo, ${displayName} — voici votre premier rendu 👋`)}
       ${imageUrl ? `<div style="text-align:center;margin:0 0 20px"><img src="${imageUrl}" alt="Votre rendu" style="max-width:100%;border-radius:12px;border:1px solid rgba(20,22,26,0.08)"></div>` : ''}
@@ -94,7 +94,7 @@ export async function sendWelcomeEmail(to: string, name: string, imageUrl?: stri
         ${btn(`${SITE_URL}/app/editor`, 'Créer un nouveau rendu →')}
       </div>
       ${p('Si vous avez des questions, répondez simplement à cet email.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -114,8 +114,8 @@ export async function sendInvoiceEmail(to: string, invoice: InvoiceData) {
 
   await sendEmail({
     to,
-    subject: `Votre reçu CarGlow — ${invoiceNumber}`,
-    text: `Bonjour,\n\nVoici votre reçu pour votre achat du ${date}.\n\nDescription : ${description}\nMontant : ${amountEur}\nNuméro : ${invoiceNumber}\n\n${receiptUrl ? `Télécharger la facture : ${receiptUrl}\n\n` : ''}Merci de votre confiance.\n\nL'équipe CarGlow`,
+    subject: `Votre reçu AutoStudio — ${invoiceNumber}`,
+    text: `Bonjour,\n\nVoici votre reçu pour votre achat du ${date}.\n\nDescription : ${description}\nMontant : ${amountEur}\nNuméro : ${invoiceNumber}\n\n${receiptUrl ? `Télécharger la facture : ${receiptUrl}\n\n` : ''}Merci de votre confiance.\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Votre reçu de paiement')}
       ${p(`Merci pour votre achat du <strong>${date}</strong>. Voici le récapitulatif :`)}
@@ -135,7 +135,7 @@ export async function sendInvoiceEmail(to: string, invoice: InvoiceData) {
       </table>
       ${receiptUrl ? `<div style="text-align:center;margin:24px 0">${btn(receiptUrl, 'Télécharger la facture →')}</div>` : ''}
       ${p('Pour toute question sur votre facture, répondez à cet email.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -145,16 +145,16 @@ export async function sendInvoiceEmail(to: string, invoice: InvoiceData) {
 export async function sendVerificationEmail(to: string, verifyLink: string) {
   await sendEmail({
     to,
-    subject: 'Vérifiez votre adresse email — CarGlow',
-    text: `Bonjour,\n\nCliquez sur ce lien pour confirmer votre adresse email (valable 24h) :\n${verifyLink}\n\nSi vous n'avez pas créé de compte CarGlow, ignorez cet email.\n\nL'équipe CarGlow`,
+    subject: 'Vérifiez votre adresse email — AutoStudio',
+    text: `Bonjour,\n\nCliquez sur ce lien pour confirmer votre adresse email (valable 24h) :\n${verifyLink}\n\nSi vous n'avez pas créé de compte AutoStudio, ignorez cet email.\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Confirmez votre adresse email')}
-      ${p('Merci de vous être inscrit sur CarGlow ! Cliquez sur le bouton ci-dessous pour activer votre compte.')}
+      ${p('Merci de vous être inscrit sur AutoStudio ! Cliquez sur le bouton ci-dessous pour activer votre compte.')}
       ${p('Ce lien est valable <strong>24 heures</strong>.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(verifyLink, 'Confirmer mon adresse email →')}
       </div>
-      ${p('Si vous n\'avez pas créé de compte CarGlow, ignorez simplement cet email.')}
+      ${p('Si vous n\'avez pas créé de compte AutoStudio, ignorez simplement cet email.')}
       <p style="margin:24px 0 0;font-size:13px;color:#aaa">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>${verifyLink}</p>
     `),
   })
@@ -165,11 +165,11 @@ export async function sendVerificationEmail(to: string, verifyLink: string) {
 export async function sendPasswordResetEmail(to: string, resetLink: string) {
   await sendEmail({
     to,
-    subject: 'Réinitialiser votre mot de passe CarGlow',
-    text: `Bonjour,\n\nVous avez demandé à réinitialiser votre mot de passe.\n\nCliquez sur ce lien (valable 1 heure) :\n${resetLink}\n\nSi vous n'avez pas fait cette demande, ignorez cet email.\n\nL'équipe CarGlow`,
+    subject: 'Réinitialiser votre mot de passe AutoStudio',
+    text: `Bonjour,\n\nVous avez demandé à réinitialiser votre mot de passe.\n\nCliquez sur ce lien (valable 1 heure) :\n${resetLink}\n\nSi vous n'avez pas fait cette demande, ignorez cet email.\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Réinitialisation du mot de passe')}
-      ${p('Vous avez demandé à réinitialiser le mot de passe de votre compte CarGlow.')}
+      ${p('Vous avez demandé à réinitialiser le mot de passe de votre compte AutoStudio.')}
       ${p('Cliquez sur le bouton ci-dessous. Ce lien est valable <strong>1 heure</strong>.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(resetLink, 'Réinitialiser mon mot de passe →')}
@@ -192,7 +192,7 @@ export async function sendCreditsResetEmail(to: string, opts: { credits: number;
   await sendEmail({
     to,
     subject: `Vos ${credits} crédits du mois sont disponibles`,
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1(`${credits} crédits vous attendent`)}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos crédits gratuits du mois viennent d'être renouvelés.`)}
@@ -200,7 +200,7 @@ export async function sendCreditsResetEmail(to: string, opts: { credits: number;
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/editor`, 'Générer un rendu →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -215,15 +215,15 @@ export async function sendReactivationEmail(to: string, opts: { name?: string })
   await sendEmail({
     to,
     subject: 'Votre stock mérite de meilleures photos',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur CarGlow. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur AutoStudio. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('On ne vous a pas revu récemment')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, ça fait un moment que vous n'avez pas généré de rendu sur CarGlow.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, ça fait un moment que vous n'avez pas généré de rendu sur AutoStudio.`)}
       ${p('Si vous avez de nouveaux véhicules à mettre en ligne, vos crédits du mois sont peut-être encore disponibles.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/editor`, 'Générer un rendu →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -237,16 +237,16 @@ export async function sendReviewRequestEmail(to: string, opts: { name?: string }
 
   await sendEmail({
     to,
-    subject: 'Un avis sur CarGlow ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez CarGlow depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → ${SITE_URL}/app/review\n\nL'équipe CarGlow`,
+    subject: 'Un avis sur AutoStudio ?',
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez AutoStudio depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → ${SITE_URL}/app/review\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Votre avis compte')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous utilisez CarGlow depuis quelques rendus déjà.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous utilisez AutoStudio depuis quelques rendus déjà.`)}
       ${p('Un avis de votre part — deux minutes, avec possibilité d\'affichage public — aiderait d\'autres concessions à découvrir l\'outil.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/review`, 'Donner mon avis →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -261,15 +261,15 @@ export async function sendFeatureDiscoveryEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Et si vous transformiez ce rendu en vidéo ?',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Deux rendus déjà — allons plus loin')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous commencez à prendre en main CarGlow.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous commencez à prendre en main AutoStudio.`)}
       ${p('Saviez-vous que vous pouvez aussi générer une vidéo avant/après, ou transformer un rendu en contenu prêt à publier sur Instagram et Facebook ?')}
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/editor`, 'Essayer maintenant →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -285,15 +285,15 @@ export async function sendCreditsExhaustedEmail(to: string, opts: { name?: strin
   await sendEmail({
     to,
     subject: 'Vous avez utilisé tous vos crédits',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe que CarGlow vous est utile. Avec un abonnement, un rendu revient à moins d'1 €, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → ${SITE_URL}/app/billing?upgrade=1\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe qu'AutoStudio vous est utile. Avec un abonnement, un rendu revient à moins d'1 €, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → ${SITE_URL}/app/billing?upgrade=1\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Vous avez utilisé tous vos crédits')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous avez épuisé vos crédits gratuits de ce mois — c'est plutôt bon signe, ça veut dire que CarGlow vous sert vraiment.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous avez épuisé vos crédits gratuits de ce mois — c'est plutôt bon signe, ça veut dire qu'AutoStudio vous sert vraiment.`)}
       ${p("Avec un abonnement, chaque rendu revient à moins d'1 € — contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.")}
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/billing?upgrade=1`, "Voir l'abonnement Essentiel →")}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -306,7 +306,7 @@ export async function sendCreditsExhaustedFollowupEmail(to: string, opts: { name
   await sendEmail({
     to,
     subject: 'Votre travail est toujours là',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace CarGlow. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → ${SITE_URL}/app/billing\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace AutoStudio. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → ${SITE_URL}/app/billing\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Votre travail est toujours là')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vos rendus précédents sont toujours disponibles dans votre espace.`)}
@@ -314,7 +314,7 @@ export async function sendCreditsExhaustedFollowupEmail(to: string, opts: { name
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/billing`, 'Voir les plans →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -329,15 +329,15 @@ export async function sendActivationNudgeEmail(to: string, opts: { name?: string
   await sendEmail({
     to,
     subject: 'Une photo suffit pour commencer',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → ${SITE_URL}/app/editor\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur AutoStudio mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Une photo suffit pour commencer')}
-      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous vous êtes inscrit sur CarGlow mais n'avez pas encore essayé.`)}
+      ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, vous vous êtes inscrit sur AutoStudio mais n'avez pas encore essayé.`)}
       ${p('Une seule photo de véhicule suffit pour voir un rendu transformé en 60 secondes — sans engagement, gratuitement.')}
       <div style="text-align:center;margin:28px 0">
         ${btn(`${SITE_URL}/app/editor`, 'Essayer maintenant →')}
       </div>
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }
@@ -352,7 +352,7 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
   await sendEmail({
     to,
     subject: 'Un exemple en 10 secondes, sans importer de photo',
-    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé CarGlow ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → ${SITE_URL}/#galerie\n\nL'équipe CarGlow`,
+    text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé AutoStudio ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → ${SITE_URL}/#galerie\n\nL'équipe AutoStudio`,
     html: layout(`
       ${h1('Voyez un exemple, sans rien importer')}
       ${p(`Bonjour${displayName ? ` ${displayName}` : ''}, si le temps vous a manqué jusqu'ici, voici un raccourci : quelques exemples de transformations réelles, sans avoir besoin d'importer votre propre photo.`)}
@@ -360,7 +360,7 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
         ${btn(`${SITE_URL}/#galerie`, 'Voir des exemples →')}
       </div>
       ${p('Et si vous préférez essayer directement avec votre propre véhicule, ça reste à un clic.')}
-      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe CarGlow</p>
+      <p style="margin:24px 0 0;font-size:14px;color:#888">L'équipe AutoStudio</p>
     `),
   })
 }

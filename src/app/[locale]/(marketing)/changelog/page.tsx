@@ -4,10 +4,9 @@ import { Sparkles, Wrench, Shield, Plus } from 'lucide-react'
 const ENTRIES = [
   {
     date: '28 juillet 2026',
-    tag: 'Nouveauté',
-    title: 'Offre d\'été',
+    tag: 'Amélioration',
+    title: 'Facturation',
     items: [
-      { icon: Sparkles, text: 'Le plan Essentiel passe à 19€/mois la première année (au lieu de 39€) jusqu\'au 31 août.' },
       { icon: Wrench,   text: 'Interface de facturation retravaillée : plans mis en avant, paiement sécurisé par Stripe plus visible.' },
     ],
   },
@@ -27,7 +26,7 @@ const ENTRIES = [
     title: 'Contenu prêt à publier',
     items: [
       { icon: Sparkles, text: 'Nouvelle section sur la page d\'accueil dédiée au contenu pour les réseaux sociaux.' },
-      { icon: Plus,     text: 'Nouveau favicon et icône CarGlow.' },
+      { icon: Plus,     text: 'Nouveau favicon et icône AutoStudio.' },
     ],
   },
   {
@@ -62,7 +61,7 @@ export default function ChangelogPage() {
       <div className="max-w-3xl mx-auto">
         <p className="eyebrow mb-4">Journal des mises à jour</p>
         <h1 className="text-[clamp(2rem,4vw,3.5rem)] font-display font-bold text-charcoal mb-4 leading-[1.1]">
-          Quoi de neuf chez <span className="text-gradient">CarGlow.</span>
+          Quoi de neuf chez <span className="text-gradient">AutoStudio.</span>
         </h1>
         <p className="text-charcoal/55 mb-14 text-[15px]">
           Les dernières améliorations apportées à la plateforme.

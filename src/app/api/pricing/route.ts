@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getPricingConfig, creditPacks, listAiFeatures, activePromo } from '@/lib/pricing'
+import { isVideoProviderConfigured } from '@/lib/marketing-video/provider'
 
 // Public, read-only. The whole app (pricing page, account page, editor cost labels) fetches
 // numbers from here instead of hardcoding them — this is the single source of truth.
@@ -15,7 +16,14 @@ export async function GET() {
       { id: 'BUSINESS', label: 'Business', price: config.businessPrice, credits: config.businessCredits },
     ],
     packs: creditPacks(config),
-    features: features.map(f => ({ key: f.key, label: f.label, creditCost: f.creditCost, enabled: f.enabled })),
+    // `enabled` also reflects whether the feature can run here: the marketing video needs its
+    // rendering provider configured.
+    features: features.map(f => ({
+      key: f.key,
+      label: f.label,
+      creditCost: f.creditCost,
+      enabled: f.enabled && (f.key !== 'marketingVideo' || isVideoProviderConfigured()),
+    })),
     promo: activePromo(config),
   })
 }

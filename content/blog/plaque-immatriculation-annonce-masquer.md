@@ -5,7 +5,7 @@ slug: plaque-immatriculation-annonce-masquer
 date: 2026-08-11
 updated: 2026-08-11
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Réglementation
 tags: [plaque, RGPD, sécurité, annonces]
 targetKeyword: masquer plaque immatriculation annonce
@@ -82,4 +82,4 @@ Le VIN n'apparaît normalement pas sur les photos extérieures. S'il est visible
 
 ---
 
-*CarGlow conserve la plaque telle qu'elle apparaît sur votre photo : posez votre cache aux couleurs de la concession avant la prise de vue, il sera conservé sur le rendu final.*
+*AutoStudio conserve la plaque telle qu'elle apparaît sur votre photo : posez votre cache aux couleurs de la concession avant la prise de vue, il sera conservé sur le rendu final.*

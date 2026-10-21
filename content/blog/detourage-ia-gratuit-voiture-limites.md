@@ -5,7 +5,7 @@ slug: detourage-ia-gratuit-voiture-limites
 date: 2026-08-04
 updated: 2026-08-04
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Photo et annonces
 tags: [IA, détourage, outils, qualité]
 targetKeyword: détourage voiture ia gratuit
@@ -88,4 +88,4 @@ Ce n'est pas utile : les photos d'habitacle, de compteur et de détails doivent 
 
 ---
 
-*CarGlow ne détoure pas : il recompose la scène avec l'un de ses quatre décors, vitres, reflets et ombres compris, en conservant le véhicule. Comparez avant/après sur votre première photo, offerte.*
+*AutoStudio ne détoure pas : il recompose la scène avec l'un de ses quatre décors, vitres, reflets et ombres compris, en conservant le véhicule. Comparez avant/après sur votre première photo, offerte.*

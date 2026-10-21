@@ -89,7 +89,7 @@ function CheckEmailContent() {
         <p className="text-xs font-semibold text-charcoal/40 uppercase tracking-widest mb-2">À faire</p>
         <ol className="space-y-2 text-sm text-charcoal/60">
           <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Ouvrez votre boîte mail</li>
-          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Cherchez un email de <strong>CarGlow</strong> (pensez à vérifier vos spams)</li>
+          <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Cherchez un email de <strong>AutoStudio</strong> (pensez à vérifier vos spams)</li>
           <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-accent-400 shrink-0" strokeWidth={2} /> Cliquez sur le bouton de confirmation</li>
         </ol>
       </div>

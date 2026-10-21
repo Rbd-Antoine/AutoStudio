@@ -99,7 +99,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
         </div>
         <h2 className="font-display font-semibold text-lg text-charcoal mb-2">Aucun rendu encore</h2>
         <p className="text-charcoal/50 text-sm mb-6">
-          Téléchargez une photo de votre véhicule et CarGlow génère un rendu photoréaliste en 60 secondes.
+          Téléchargez une photo de votre véhicule et AutoStudio génère un rendu photoréaliste en 60 secondes.
         </p>
         <Link
           href="/app/editor"
@@ -224,7 +224,7 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
                 {preview.fullUrl && (
                   <a
                     href={preview.fullUrl}
-                    download={`carglow-${preview.vehicleName ?? preview.id}.${preview.isVideo ? 'mp4' : 'png'}`}
+                    download={`autostudio-${preview.vehicleName ?? preview.id}.${preview.isVideo ? 'mp4' : 'png'}`}
                     onClick={() => markDownloaded(preview.id)}
                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm transition-all"
                   >

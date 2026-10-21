@@ -171,7 +171,7 @@ export default function EditorClient() {
   }, [])
 
   useEffect(() => { refreshCredits() }, [refreshCredits])
-  useEffect(() => { setMarketingKitSeen(localStorage.getItem('carglow-marketing-kit-seen') === '1') }, [])
+  useEffect(() => { setMarketingKitSeen(localStorage.getItem('autostudio-marketing-kit-seen') === '1') }, [])
 
   const selected = selectedIdx !== null ? versions[selectedIdx] : null
 
@@ -381,7 +381,7 @@ export default function EditorClient() {
   const handleDownload = async () => {
     const url = selected?.url
     if (!url) return
-    await downloadUrlAsFile(url, `carglow-${backgroundSlug}-${Date.now()}.png`)
+    await downloadUrlAsFile(url, `autostudio-${backgroundSlug}-${Date.now()}.png`)
   }
 
   // Deliberately does NOT require `files` — the button always stays clickable so a click with
@@ -401,7 +401,7 @@ export default function EditorClient() {
         </Link>
         <Link href="/" className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-carglow.png" alt="CarGlow" className="h-8 sm:h-14 w-auto object-contain" />
+          <img src="/logo-autostudio.png" alt="AutoStudio" className="h-8 sm:h-14 w-auto object-contain" />
         </Link>
         {/* Turns into a standing "recharge" prompt at 0 rather than a passive "0 crédits" —
             this is a permanent, always-visible reminder regardless of where the zero-credit
@@ -558,7 +558,7 @@ export default function EditorClient() {
                     <button
                       onClick={() => {
                         setShowMarketingKit(true)
-                        localStorage.setItem('carglow-marketing-kit-seen', '1')
+                        localStorage.setItem('autostudio-marketing-kit-seen', '1')
                         setMarketingKitSeen(true)
                       }}
                       className="relative flex items-center gap-1.5 px-4 py-2 rounded-xl border border-accent-200 text-accent-700 hover:bg-accent-50 text-xs font-semibold transition-all"
@@ -1061,7 +1061,7 @@ function InsufficientCreditsModal({
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     rows={3}
-                    placeholder="Qu'est-ce qui vous plaît, ou vous freine, avec CarGlow ?"
+                    placeholder="Qu'est-ce qui vous plaît, ou vous freine, avec AutoStudio ?"
                     className="w-full rounded-lg border border-accent-200 px-3 py-2 text-sm focus:outline-none focus:border-accent-400 resize-none"
                   />
                   <p className="text-[11px] text-charcoal/35">

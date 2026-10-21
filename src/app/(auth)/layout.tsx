@@ -4,6 +4,8 @@ import { Quote } from 'lucide-react'
 import { AuthVisualCarousel } from '@/components/AuthVisualCarousel'
 import { TestimonialAvatar } from '@/components/TestimonialAvatar'
 import { getPublicTestimonials } from '@/lib/reviews'
+import { GOOGLE_SIGN_IN_ENABLED } from '@/lib/site-config'
+import { GoogleSignInProvider } from '@/components/auth/GoogleSignIn'
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   const testimonials = await getPublicTestimonials()
@@ -20,8 +22,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         <header className="px-6 lg:px-10 py-6 border-b border-charcoal/[0.06]">
           <Link href="/" className="inline-flex items-center">
             <Image
-              src="/logo-carglow.png"
-              alt="CarGlow"
+              src="/logo-autostudio.png"
+              alt="AutoStudio"
               width={500}
               height={500}
               className="h-20 w-auto object-contain"
@@ -33,13 +35,13 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         {/* Form area */}
         <main className="flex-1 flex items-center justify-center px-6 lg:px-10 py-8">
           <div className="w-full max-w-md">
-            {children}
+            <GoogleSignInProvider enabled={GOOGLE_SIGN_IN_ENABLED}>{children}</GoogleSignInProvider>
           </div>
         </main>
 
         {/* Footer */}
         <footer className="px-6 lg:px-10 py-6 border-t border-charcoal/[0.06] flex flex-wrap items-center justify-between gap-3 text-xs text-charcoal/40">
-          <div>© {new Date().getFullYear()} CarGlow</div>
+          <div>© {new Date().getFullYear()} AutoStudio</div>
           <div className="flex items-center gap-4">
             <Link href="/legal/terms"   className="hover:text-charcoal/70">CGU</Link>
             <Link href="/legal/privacy" className="hover:text-charcoal/70">Confidentialité</Link>
@@ -50,7 +52,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 
       {/* ── Visual column ───────────────────────────────────────────── */}
       <aside className="hidden lg:block lg:w-[44%] xl:w-[48%] relative overflow-hidden">
-        {/* Scrolling background — real CarGlow renders */}
+        {/* Scrolling background — real AutoStudio renders */}
         <AuthVisualCarousel />
         {/* Dark overlay for text readability over the photo */}
         <div className="absolute inset-0 bg-gradient-to-br from-charcoal/80 via-charcoal/60 to-charcoal/90" />

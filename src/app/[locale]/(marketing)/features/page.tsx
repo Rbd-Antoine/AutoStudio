@@ -46,7 +46,7 @@ export default function FeaturesPage() {
           <span className="text-gradient">Un client convaincu.</span>
         </h1>
         <p className="text-lg text-charcoal/50">
-          CarGlow transforme une photo de véhicule en rendu photoréaliste, affine le résultat par
+          AutoStudio transforme une photo de véhicule en rendu photoréaliste, affine le résultat par
           instruction, puis le transforme en contenu prêt à publier — le tout sans quitter l&apos;outil.
         </p>
       </div>

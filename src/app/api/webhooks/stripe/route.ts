@@ -170,7 +170,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
     after(() => sendInvoiceEmail(email, {
       invoiceNumber: invoiceNum,
       date,
-      description:   `Abonnement ${plan ?? 'CarGlow'} — renouvellement mensuel`,
+      description:   `Abonnement ${plan ?? 'AutoStudio'} — renouvellement mensuel`,
       amountEur,
       receiptUrl:    invoice.hosted_invoice_url ?? undefined,
     }))
@@ -216,6 +216,10 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   if (session.mode !== 'payment') return // subscriptions are handled by the subscription events
+  // With a delayed payment method (SEPA debit, bank transfer…) the session completes while the
+  // payment is still 'unpaid'; the credits are granted on checkout.session.async_payment_succeeded,
+  // which runs this same handler once the money has arrived.
+  if (session.payment_status !== 'paid') return
 
   const workspaceId = session.metadata?.workspaceId
   const pack = session.metadata?.pack as CreditPackId | undefined
@@ -293,6 +297,7 @@ export async function POST(req: NextRequest) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded':
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
         break
       case 'customer.subscription.created':

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
+import { ensureWorkspaceId } from '@/lib/workspace'
 import { isRealHostedUrl } from '@/lib/photo-url'
 import PhotoGrid from '@/components/app/PhotoGrid'
 
@@ -10,15 +11,7 @@ export default async function LibraryPage() {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) redirect('/signin')
 
-  const wsId = session.user.workspaceId ?? await db.workspaceMember
-    .findFirst({
-      where:   { userId: session.user.id },
-      orderBy: { joinedAt: 'asc' },
-      select:  { workspaceId: true },
-    })
-    .then(m => m?.workspaceId ?? null)
-
-  if (!wsId) redirect('/signin')
+  const wsId = session.user.workspaceId ?? await ensureWorkspaceId(session.user.id, session.user.name)
 
   const photos = await db.photo.findMany({
     where: {

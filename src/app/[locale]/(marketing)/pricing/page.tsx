@@ -20,7 +20,7 @@ interface Plan {
 }
 
 const PLAN_META: Record<string, { desc: string; cta: string; href: string; badge?: string; highlight: boolean }> = {
-  FREE:      { desc: 'Pour tester CarGlow sur un premier véhicule, sans engagement.', cta: 'Commencer gratuitement', href: '/signup', highlight: false },
+  FREE:      { desc: 'Pour tester AutoStudio sur un premier véhicule, sans engagement.', cta: 'Commencer gratuitement', href: '/signup', highlight: false },
   ESSENTIAL: { desc: 'Pour les concessions indépendantes qui publient régulièrement des annonces.', cta: 'Créer mon compte', href: '/signup?plan=essential', badge: 'Le plus populaire', highlight: true },
   PRO:       { desc: 'Pour les équipes qui traitent des annonces au quotidien.', cta: 'Créer mon compte', href: '/signup?plan=pro', highlight: false },
   BUSINESS:  { desc: 'Pour les groupes multi-sites avec des besoins de volume plus élevés.', cta: 'Créer mon compte', href: '/signup?plan=business', highlight: false },
@@ -56,6 +56,7 @@ async function getPlansAndFeatures() {
 
 export default async function PricingPage() {
   const { plans, promo, costFor } = await getPlansAndFeatures()
+  const creditsLabel = (n: number | undefined) => n == null ? '—' : `${n} crédit${n > 1 ? 's' : ''}`
 
   return (
     <div className="pt-32 pb-20 bg-offwhite">
@@ -149,15 +150,15 @@ export default async function PricingPage() {
             <tbody>
               <tr className="border-b border-charcoal/[0.06]">
                 <td className="px-6 py-4 text-sm text-charcoal/70">Génération d&apos;image</td>
-                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{costFor('imageGeneration') ?? '—'} crédit</td>
+                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{creditsLabel(costFor('imageGeneration'))}</td>
               </tr>
               <tr className="border-b border-charcoal/[0.06]">
                 <td className="px-6 py-4 text-sm text-charcoal/70">Retouche d&apos;image</td>
-                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{costFor('imageRetouch') ?? '—'} crédit</td>
+                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{creditsLabel(costFor('imageRetouch'))}</td>
               </tr>
               <tr>
-                <td className="px-6 py-4 text-sm text-charcoal/70">Génération de vidéo</td>
-                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{costFor('videoGeneration') ?? '—'} crédits</td>
+                <td className="px-6 py-4 text-sm text-charcoal/70">Vidéo marketing (par format)</td>
+                <td className="px-6 py-4 text-right font-semibold text-charcoal tabular-nums">{creditsLabel(costFor('marketingVideo'))}</td>
               </tr>
             </tbody>
           </table>

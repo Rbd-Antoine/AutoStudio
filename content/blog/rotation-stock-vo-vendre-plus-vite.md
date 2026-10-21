@@ -5,7 +5,7 @@ slug: rotation-stock-vo-vendre-plus-vite
 date: 2026-08-25
 updated: 2026-08-25
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Vendre plus vite
 tags: [stock, rotation, VO, rentabilité]
 targetKeyword: rotation stock vo
@@ -84,4 +84,4 @@ C'est le plus coûteux. La présentation, la réactivité et le délai de mise e
 
 ---
 
-*CarGlow supprime l'attente liée aux photos : le véhicule est photographié sur place, le décor est remplacé en quelques secondes, l'annonce peut partir le jour même.*
+*AutoStudio supprime l'attente liée aux photos : le véhicule est photographié sur place, le décor est remplacé en quelques secondes, l'annonce peut partir le jour même.*

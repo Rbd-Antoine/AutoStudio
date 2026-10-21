@@ -1,6 +1,6 @@
 ---
 title: "Guide utilisateur"
-description: "Guide complet pour utiliser CarGlow : photographier le véhicule, importer les photos, choisir un décor, générer et vérifier le rendu, retoucher, créer le kit marketing, gérer ses crédits."
+description: "Guide complet pour utiliser AutoStudio : photographier le véhicule, importer les photos, choisir un décor, générer et vérifier le rendu, retoucher, créer le kit marketing, gérer ses crédits."
 slug: guide
 canonical: /guide
 ogDescription: "Tout ce qu'il faut savoir pour transformer les photos de votre parc en photos d'annonce au décor professionnel, de la prise de vue au téléchargement."
@@ -22,7 +22,7 @@ toc:
   - { id: faq, label: "FAQ" }
 ---
 
-Bienvenue sur CarGlow, l'outil qui **remplace l'arrière-plan des photos de vos véhicules par un décor professionnel**, en quelques secondes. Vous photographiez la voiture là où elle se trouve, sur le parc, dans la rue, devant l'atelier : CarGlow conserve le véhicule et change uniquement ce qu'il y a autour.
+Bienvenue sur AutoStudio, l'outil qui **remplace l'arrière-plan des photos de vos véhicules par un décor professionnel**, en quelques secondes. Vous photographiez la voiture là où elle se trouve, sur le parc, dans la rue, devant l'atelier : AutoStudio conserve le véhicule et change uniquement ce qu'il y a autour.
 
 Ce guide vous accompagne de la première photo jusqu'au téléchargement du rendu et à sa publication.
 
@@ -73,7 +73,7 @@ Chaque photo importée produira un rendu distinct, dans le même décor : c'est 
 
 ## 4. Choisir un décor {#choisir-style}
 
-CarGlow propose quatre décors, chacun issu d'une vraie photo de référence :
+AutoStudio propose quatre décors, chacun issu d'une vraie photo de référence :
 
 | Décor | Ce que ça donne | Pour quels véhicules |
 |---|---|---|
@@ -176,7 +176,7 @@ Les tarifs et volumes à jour sont sur la page [Tarifs](/pricing). Depuis la pag
 
 - vos photos sont transmises de manière sécurisée au service d'IA (Google Gemini) uniquement pour produire les rendus demandés ;
 - elles ne sont pas utilisées pour entraîner des modèles ;
-- CarGlow ne revendique aucun droit sur vos photos ni sur vos rendus ;
+- AutoStudio ne revendique aucun droit sur vos photos ni sur vos rendus ;
 - évitez les photos où des personnes sont reconnaissables : cadrez le véhicule, pas les clients ni les passants.
 
 Le détail est dans la [politique de confidentialité](/legal/privacy).

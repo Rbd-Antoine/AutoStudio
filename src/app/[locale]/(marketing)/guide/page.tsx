@@ -73,7 +73,7 @@ export default function GuidePage() {
   const howToLd = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    name: 'Comment créer un rendu de véhicule avec CarGlow',
+    name: 'Comment créer un rendu de véhicule avec AutoStudio',
     description: frontmatter.description,
     step: howToSteps,
   }

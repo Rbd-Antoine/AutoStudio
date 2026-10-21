@@ -45,8 +45,8 @@ export function Footer() {
           <div className="shrink-0">
             <Link href="/" className="inline-flex mb-4">
               <Image
-                src="/logo-carglow.png"
-                alt="CarGlow"
+                src="/logo-autostudio.png"
+                alt="AutoStudio"
                 width={500}
                 height={500}
                 className="h-20 w-auto object-contain rounded-xl"
@@ -97,7 +97,7 @@ export function Footer() {
       <div className="border-t border-charcoal/[0.06]">
         <div className="page-container pt-5 pb-24 lg:pb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-charcoal/30">
-            © {new Date().getFullYear()} CarGlow. {t('copyright')}
+            © {new Date().getFullYear()} AutoStudio. {t('copyright')}
           </p>
           <p className="text-xs text-charcoal/20">
             🇫🇷 {t('builtInEurope')}

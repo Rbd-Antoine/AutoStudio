@@ -15,11 +15,16 @@ export default function ForgotPasswordPage() {
     setLoading(true)
     setError(null)
     try {
-      await fetch('/api/auth/forgot-password', {
+      const res = await fetch('/api/auth/forgot-password', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ email }),
       })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error ?? 'Une erreur est survenue. Veuillez réessayer.')
+        return
+      }
       setDone(true)
     } catch {
       setError('Une erreur est survenue. Veuillez réessayer.')

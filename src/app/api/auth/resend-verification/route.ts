@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { sendVerificationEmail } from '@/lib/email'
 import { SITE_URL } from '@/lib/site-config'
+import { checkRateLimit, tooManyRequests, MINUTE } from '@/lib/rate-limit'
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) return NextResponse.json({ error: 'Non authentifié.' }, { status: 401 })
 
@@ -16,6 +17,10 @@ export async function POST(req: NextRequest) {
 
   if (!user) return NextResponse.json({ error: 'Compte introuvable.' }, { status: 404 })
   if (user.emailVerified) return NextResponse.json({ ok: true }) // déjà vérifié
+
+  if (!(await checkRateLimit(`resend-verification:${session.user.id}`, 1, MINUTE))) {
+    return tooManyRequests('Un e-mail vient d\'être envoyé. Patientez une minute avant de redemander.')
+  }
 
   const token   = crypto.randomBytes(32).toString('hex')
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h

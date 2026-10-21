@@ -1,8 +1,8 @@
-# CarGlow
+# AutoStudio
 
 Next.js 15 · React 19 · TypeScript · Tailwind CSS · Prisma 7 (Postgres) · NextAuth v5 · Stripe · Gemini
 
-CarGlow replaces the background of a dealer's vehicle photos with one of four real background
+AutoStudio replaces the background of a dealer's vehicle photos with one of four real background
 scenes, without touching the vehicle, and turns a render into short social videos.
 
 ## What's in the app
@@ -33,8 +33,9 @@ npm run dev
 
 No local Postgres? `npx prisma dev` starts a throwaway one and prints its `DATABASE_URL`.
 
-Outside production, `src/lib/dev-auth.ts` signs you in as the first `SUPERUSER_EMAILS`
-address when there is no session, if that account exists in the database.
+With `DEV_AUTH_BYPASS="true"` in `.env` (`next dev` only), `src/lib/dev-auth.ts` signs you in as
+the first `SUPERUSER_EMAILS` address when there is no session, if that account exists in the
+database. Never set it on Vercel.
 
 ## Deploy (Vercel)
 
@@ -44,9 +45,9 @@ address when there is no session, if that account exists in the database.
 3. Set the environment variables listed in `.env.example`.
 4. Run `npx prisma migrate deploy && npx prisma db seed` once against the production database.
 5. Point the Stripe webhook at `https://<domain>/api/webhooks/stripe` with the events
-   `checkout.session.completed`, `customer.subscription.created`,
-   `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`,
-   `invoice.payment_failed`.
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `customer.subscription.created`, `customer.subscription.updated`,
+   `customer.subscription.deleted`, `invoice.paid`, `invoice.payment_failed`.
 
 The daily jobs in `vercel.json` (`/api/cron/*`) require `CRON_SECRET`.
 

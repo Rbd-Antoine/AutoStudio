@@ -16,11 +16,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'CarGlow — Des photos de voitures dignes d\'un showroom, en secondes',
-    template: '%s | CarGlow',
+    default: 'AutoStudio — Des photos de voitures dignes d\'un showroom, en secondes',
+    template: '%s | AutoStudio',
   },
   description:
-    "CarGlow remplace l'arrière-plan des photos de votre stock véhicules par un décor professionnel en quelques secondes, et en tire des vidéos prêtes à publier pour vos annonces et vos réseaux.",
+    "AutoStudio remplace l'arrière-plan des photos de votre stock véhicules par un décor professionnel en quelques secondes, et en tire des vidéos prêtes à publier pour vos annonces et vos réseaux.",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   // Meta Business domain verification — rendered server-side via Next's Metadata API,
   // so it's present in the initial HTML <head> rather than injected by client JS

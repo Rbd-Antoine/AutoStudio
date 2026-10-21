@@ -26,7 +26,7 @@ export function LazyCalendlyEmbed({ url }: { url: string }) {
           width="100%"
           height="100%"
           style={{ border: 'none' }}
-          title="Réserver une démo CarGlow"
+          title="Réserver une démo AutoStudio"
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-offwhite">

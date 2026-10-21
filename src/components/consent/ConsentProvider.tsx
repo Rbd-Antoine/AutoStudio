@@ -7,6 +7,7 @@ import {
   CONSENT_COOKIE_NAME, CONSENT_MAX_AGE_SECONDS, DEFAULT_CATEGORIES,
   parseConsentCookie, serializeConsent, type ConsentCategories,
 } from '@/lib/consent'
+import { setAnalyticsConsent } from '@/lib/analytics/client'
 
 // 'unknown' until the client has actually checked for a stored cookie — the server (and
 // the first client render, pre-hydration) always renders this, so there's nothing for
@@ -21,7 +22,7 @@ interface ConsentContextValue {
   bannerOpen: boolean
   acceptAll: () => void
   rejectAll: () => void
-  savePreferences: (next: { marketing: boolean }) => void
+  savePreferences: (next: { marketing: boolean; analytics: boolean }) => void
   openBanner: () => void
 }
 
@@ -61,6 +62,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     const stored = parseConsentCookie(readCookie(CONSENT_COOKIE_NAME))
     if (stored) {
       setCategories(stored.categories)
+      setAnalyticsConsent(stored.categories.analytics)
       setBannerOpen(false)
     } else {
       setBannerOpen(true)
@@ -71,15 +73,16 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const persist = useCallback((next: { marketing: boolean; analytics: boolean }) => {
     writeConsentCookie(next)
     if (!next.marketing) clearMetaCookies()
+    setAnalyticsConsent(next.analytics)
     setCategories({ necessary: true, ...next })
     setStatus('decided')
     setBannerOpen(false)
   }, [])
 
-  const acceptAll = useCallback(() => persist({ marketing: true, analytics: false }), [persist])
+  const acceptAll = useCallback(() => persist({ marketing: true, analytics: true }), [persist])
   const rejectAll = useCallback(() => persist({ marketing: false, analytics: false }), [persist])
   const savePreferences = useCallback(
-    (next: { marketing: boolean }) => persist({ marketing: next.marketing, analytics: false }),
+    (next: { marketing: boolean; analytics: boolean }) => persist(next),
     [persist],
   )
   const openBanner = useCallback(() => setBannerOpen(true), [])

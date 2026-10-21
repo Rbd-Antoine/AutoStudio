@@ -1,5 +1,6 @@
 import type { RenderStatus, VideoRenderProvider, VideoTimelineSpec } from '../types'
 import { TIMING } from '../templates'
+import { isOwnBlobUrl } from '@/lib/photo-url'
 
 // Confirmed against Shotstack's published Edit API docs (base URLs, auth header,
 // timeline/tracks/clips/output shape, GET /render/{id} status enum, and — after an initial
@@ -38,6 +39,7 @@ function buildCaptionAsset(label: string, side: 'left' | 'right', width: number,
 // standard file, so this isn't a hosting/format problem). Inlining the logo as a base64 data
 // URI removes the network fetch from their renderer's critical path entirely.
 async function logoToDataUri(logoUrl: string): Promise<string | null> {
+  if (!isOwnBlobUrl(logoUrl)) return null
   try {
     const res = await fetch(logoUrl)
     if (!res.ok) return null

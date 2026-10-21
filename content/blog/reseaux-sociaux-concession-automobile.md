@@ -5,7 +5,7 @@ slug: reseaux-sociaux-concession-automobile
 date: 2026-08-18
 updated: 2026-08-18
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Vendre plus vite
 tags: [réseaux sociaux, vidéo, marketing, visibilité]
 targetKeyword: réseaux sociaux concession automobile
@@ -86,4 +86,4 @@ Uniquement avec son accord explicite, idéalement écrit. Sans accord, photograp
 
 ---
 
-*Avec le kit marketing de CarGlow, un rendu se décline en vidéos aux formats Reel, Story, paysage ou carré, avec une proposition de texte de publication à votre nom.*
+*Avec le kit marketing d'AutoStudio, un rendu se décline en vidéos aux formats Reel, Story, paysage ou carré, avec une proposition de texte de publication à votre nom.*

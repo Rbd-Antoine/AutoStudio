@@ -5,7 +5,7 @@ slug: annonces-vo-pas-assez-d-appels
 date: 2026-09-15
 updated: 2026-09-15
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Vendre plus vite
 tags: [annonces, conversion, VO, contacts]
 targetKeyword: annonce voiture occasion pas de contact
@@ -95,4 +95,4 @@ Une à deux semaines donnent généralement une tendance exploitable sur les ouv
 
 ---
 
-*CarGlow vous aide sur la cause n° 1 : importez la photo prise sur le parc, choisissez un décor, et obtenez une photo principale nette et homogène en quelques secondes.*
+*AutoStudio vous aide sur la cause n° 1 : importez la photo prise sur le parc, choisissez un décor, et obtenez une photo principale nette et homogène en quelques secondes.*

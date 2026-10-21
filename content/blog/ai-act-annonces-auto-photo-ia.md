@@ -5,7 +5,7 @@ slug: ai-act-annonces-auto-photo-ia
 date: 2026-09-29
 updated: 2026-09-29
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Réglementation
 tags: [AI Act, réglementation, transparence, annonces]
 targetKeyword: ai act photo annonce voiture
@@ -90,4 +90,4 @@ Les retouches classiques (exposition, recadrage, redressement) ne relèvent pas 
 
 ---
 
-*CarGlow ne remplace que l'arrière-plan : la consigne donnée à l'IA est de conserver le véhicule à l'identique, et vous pouvez comparer avant/après avant de télécharger.*
+*AutoStudio ne remplace que l'arrière-plan : la consigne donnée à l'IA est de conserver le véhicule à l'identique, et vous pouvez comparer avant/après avant de télécharger.*

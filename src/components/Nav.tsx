@@ -74,8 +74,8 @@ export function Nav() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
-            src="/logo-carglow.png"
-            alt="CarGlow"
+            src="/logo-autostudio.png"
+            alt="AutoStudio"
             width={500}
             height={500}
             className="h-10 sm:h-16 lg:h-24 w-auto object-contain"

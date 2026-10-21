@@ -11,7 +11,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 const adapter = new PrismaPg(process.env.DATABASE_URL!)
 const db      = new PrismaClient({ adapter })
 
-const DEMO_EMAIL    = 'demo@carglow.dev'
+const DEMO_EMAIL    = 'demo@autostudio.dev'
 const DEMO_NAME     = 'Marcus Hill'
 const ENHANCED_IMG  = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=85'
 const ORIGINAL_IMGS = [

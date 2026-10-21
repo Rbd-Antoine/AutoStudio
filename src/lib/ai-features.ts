@@ -5,7 +5,6 @@
 export const DEFAULT_AI_FEATURES: ReadonlyArray<{ key: string; label: string; creditCost: number }> = [
   { key: 'imageGeneration', label: 'Image generation', creditCost: 1 },
   { key: 'imageRetouch', label: 'Image retouch', creditCost: 1 },
-  { key: 'videoGeneration', label: 'Video generation', creditCost: 15 },
   // 1 credit per format generated (Reel/Story/Landscape/Square are 4 separate Shotstack calls).
   { key: 'marketingVideo', label: 'Marketing video kit', creditCost: 1 },
 ]

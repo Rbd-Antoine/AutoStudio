@@ -48,6 +48,8 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
   const [error, setError]       = useState<string | null>(null)
   const [insufficientCredits, setInsufficientCredits] = useState<{ available: number; required: number } | null>(null)
   const [creditCost, setCreditCost] = useState<number | null>(null)
+  // false when the video renderer isn't configured on this deployment (see /api/pricing)
+  const [videoAvailable, setVideoAvailable] = useState(true)
   const [showVerifyModal, setShowVerifyModal] = useState(false)
 
   const [captionStatus, setCaptionStatus] = useState<'idle' | 'loading' | 'error'>('idle')
@@ -69,7 +71,10 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
       .then(r => r.json())
       .then(d => {
         const feature = (d.features ?? []).find((f: { key: string }) => f.key === 'marketingVideo')
-        if (feature) setCreditCost(feature.creditCost)
+        if (feature) {
+          setCreditCost(feature.creditCost)
+          setVideoAvailable(feature.enabled !== false)
+        }
       })
       .catch(() => {})
   }, [])
@@ -113,7 +118,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
   }
 
   const download = () => {
-    if (videoUrl) downloadUrlAsFile(videoUrl, `carglow-marketing-${format}-${Date.now()}.mp4`)
+    if (videoUrl) downloadUrlAsFile(videoUrl, `autostudio-marketing-${format}-${Date.now()}.mp4`)
   }
 
   const generateCaption = async () => {
@@ -126,6 +131,11 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
         body: JSON.stringify({ ctaText }),
       })
       const data = await res.json()
+      if (data.error === 'email_not_verified') {
+        setCaptionStatus('idle')
+        setShowVerifyModal(true)
+        return
+      }
       if (!res.ok) throw new Error(data.error ?? 'Erreur inconnue')
       setCaption(data.caption)
       setCaptionStatus('idle')
@@ -273,6 +283,7 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                   <input
                     type="text"
                     value={ctaText}
+                    maxLength={120}
                     onChange={e => setCtaText(e.target.value)}
                     placeholder="Demandez votre devis."
                     className="w-full rounded-lg border border-accent-100 px-3 py-2 text-sm mb-2 focus:outline-none focus:border-accent-400"
@@ -340,9 +351,15 @@ export function MarketingKitModal({ photoId, onClose, hasVideoAfter = false }: P
                   </div>
                 )}
 
+                {!videoAvailable && (
+                  <p className="text-sm text-charcoal/60 bg-charcoal/[0.03] border border-charcoal/[0.08] rounded-lg px-3 py-2">
+                    La création de vidéos marketing arrive bientôt. Le texte pour les réseaux sociaux est déjà disponible.
+                  </p>
+                )}
+
                 <button
                   onClick={generate}
-                  disabled={status === 'loading'}
+                  disabled={status === 'loading' || !videoAvailable}
                   className="flex items-center justify-center gap-2 rounded-xl bg-accent-500 hover:bg-accent-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-3 text-sm font-semibold transition-colors"
                 >
                   {status === 'loading'

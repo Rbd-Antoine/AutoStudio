@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Mail, ArrowRight, Loader2, Lock, KeyRound } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { cn } from '@/lib/utils'
-import { GoogleIcon } from '@/components/GoogleIcon'
+import { GoogleSignInSection } from '@/components/auth/GoogleSignIn'
 
 export default function SignInPage() {
   const router                  = useRouter()
@@ -40,7 +40,7 @@ export default function SignInPage() {
           Bon retour parmi vous
         </div>
         <h1 className="font-display font-bold tracking-tight text-3xl xl:text-4xl leading-[1.1] text-charcoal">
-          Connexion à CarGlow.
+          Connexion à AutoStudio.
         </h1>
         <p className="text-charcoal/50 mt-2 text-[15px]">
           Pas encore de compte ?{' '}
@@ -48,20 +48,7 @@ export default function SignInPage() {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => signIn('google', { callbackUrl: '/app' })}
-        className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-charcoal/[0.14] hover:border-charcoal/[0.28] hover:bg-charcoal/[0.02] px-4 py-2.5 text-sm font-semibold text-charcoal/85 transition-colors"
-      >
-        <GoogleIcon className="w-4 h-4" />
-        Continuer avec Google
-      </button>
-
-      <div className="flex items-center gap-3 my-6">
-        <div className="h-px flex-1 bg-charcoal/[0.08]" />
-        <span className="text-[11px] uppercase tracking-widest text-charcoal/35">ou avec e-mail</span>
-        <div className="h-px flex-1 bg-charcoal/[0.08]" />
-      </div>
+      <GoogleSignInSection label="Continuer avec Google" />
 
       <form onSubmit={submit} className="space-y-4">
         {/* Email */}

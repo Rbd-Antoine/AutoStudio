@@ -5,7 +5,7 @@ slug: photos-annonce-vo-ordre-des-cliches
 date: 2026-09-22
 updated: 2026-09-22
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Photo et annonces
 tags: [photo, annonce, VO, prise de vue]
 targetKeyword: photos annonce voiture occasion
@@ -86,4 +86,4 @@ Uniquement des vues extérieures. Les photos d'intérieur, de compteur, de pneus
 
 ---
 
-*CarGlow transforme vos photos extérieures prises sur le parc en photos au décor homogène, jusqu'à cinq à la fois, sans modifier le véhicule. Votre premier rendu est offert.*
+*AutoStudio transforme vos photos extérieures prises sur le parc en photos au décor homogène, jusqu'à cinq à la fois, sans modifier le véhicule. Votre premier rendu est offert.*

@@ -14,10 +14,10 @@ import { cn } from '@/lib/utils'
 import { identifyUser, resetAnalyticsIdentity } from '@/lib/analytics/client'
 import { PromoBanner } from './PromoBanner'
 
-const VERIFY_DISMISS_KEY = 'carglow-verify-reminder-dismissed'
+const VERIFY_DISMISS_KEY = 'autostudio-verify-reminder-dismissed'
 
 // Non-blocking reminder for accounts that used their one free unverified generation
-// (see /api/generate) — everything past that (second render, video, retouch, kit
+// (see /api/background-swap) — everything past that (second render, video, retouch, kit
 // marketing, billing) needs a verified email, so this stays visible until they either
 // verify or dismiss it for the session.
 function VerifyReminderBanner() {
@@ -125,8 +125,10 @@ export default function AppLayoutClient({
   // still refreshes once client-side to pick up anything that changed since that render.
   const [ws, setWs] = useState<WorkspaceSummary | null>(initialWorkspace)
 
+  const userId    = session?.user?.id
+  const userEmail = session?.user?.email
   useEffect(() => {
-    if (!session?.user?.id) return
+    if (!userId) return
     let cancelled = false
     fetch('/api/me')
       .then(r => r.json())
@@ -138,13 +140,11 @@ export default function AppLayoutClient({
           creditsRemaining: d.creditsRemaining ?? 0,
           isSuperuser:      !!d.isSuperuser,
         })
-        if (session.user!.id) {
-          identifyUser(session.user!.id, { email: session.user!.email, plan: d.plan, workspaceId: d.workspaceId })
-        }
+        identifyUser(userId, { email: userEmail, plan: d.plan, workspaceId: d.workspaceId })
       })
       .catch(() => {})
     return () => { cancelled = true }
-  }, [session?.user?.id])
+  }, [userId, userEmail])
 
   const nav = ws?.isSuperuser
     ? [
@@ -175,7 +175,7 @@ export default function AppLayoutClient({
       {/* Sidebar */}
       <aside className="hidden lg:flex w-[210px] shrink-0 flex-col border-r border-accent-100 bg-white">
         <Link href="/" className="flex items-center h-24 px-5 border-b border-accent-100">
-          <Image src="/logo-carglow.png" alt="CarGlow" height={500} width={500} className="h-16 w-auto object-contain" />
+          <Image src="/logo-autostudio.png" alt="AutoStudio" height={500} width={500} className="h-16 w-auto object-contain" />
         </Link>
 
         <nav className="flex-1 px-3 py-4 space-y-0.5">

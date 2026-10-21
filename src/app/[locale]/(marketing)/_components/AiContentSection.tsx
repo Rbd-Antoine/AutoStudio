@@ -26,7 +26,7 @@ const FEATURES = [
   },
   {
     icon: Link2,
-    title: '100 % intégré à CarGlow',
+    title: '100 % intégré à AutoStudio',
     desc: "Passez d'une photo à un rendu IA sans changer d'outil.",
   },
 ]

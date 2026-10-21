@@ -44,50 +44,6 @@ export const CAR_STYLES: Record<string, CarStyle> = {
   },
 }
 
-export function buildImagePrompt(style: CarStyle, characteristics?: string) {
-  const userText = characteristics?.trim() || 'Aucune demande particulière.'
-
-  return `Transform the background of this vehicle photo into a photorealistic scene.
-This is a BACKGROUND REPLACEMENT ONLY — the vehicle itself must remain completely untouched.
-
-SCENE: Keep the exact camera angle, framing, and perspective of the original photo.
-Segment the vehicle precisely and replace only what is behind and around it — the ground
-plane directly under the car may be adapted to match the new scene, but the vehicle's
-position, size, and pose in frame must stay identical.
-
-STYLE: Apply the "${style.name}" background style — ${style.description}.
-${style.keywords}
-
-MOOD: Photorealistic, professional automotive photography — not illustrative, not
-stylized, not cartoon-like. Lighting on the new background should look natural and
-premium, giving a genuine showroom-quality "ready to list" result while remaining fully
-believable as an unedited photo.
-
-SCENE ELEMENTS: ${style.elements}, composed so the vehicle is clearly the focal point.
-
-USER CHARACTERISTICS (optional, provided by the dealer):
-"${userText}"
-→ Incorporate these requests as closely as possible without conflicting with the
-constraints below.
-
-CONSTRAINTS (always apply, regardless of style or user input):
-- Never alter the vehicle itself: body panels, paint color and finish, wheels, glass,
-  badges, lights, and the license plate must be pixel-identical to the source photo in
-  shape and detail — only relighting/color-grading them to match the new scene's ambient
-  light and reflections is allowed, never structural changes.
-- Do not add, remove, or move any part of the vehicle, and never invent or alter text on
-  badges, plates, or dealership markings.
-- Generate realistic contact shadows and, where the style calls for it, plausible
-  reflections of the vehicle on the new ground surface — mismatched or missing shadows
-  break the illusion immediately.
-- Never place the vehicle in a physically implausible position (floating, wrong scale
-  relative to the new background, tilted ground plane that doesn't match its wheels).
-- No hallucinated people, other vehicles, or logos in the new background unless already
-  present in the source photo.
-
-OUTPUT: a single photorealistic image, same resolution/aspect ratio as the input photo.`
-}
-
 export function buildBackgroundSwapPrompt(characteristics?: string) {
   const userText = characteristics?.trim() || 'Aucune demande particulière.'
 
@@ -152,37 +108,6 @@ CONSTRAINTS:
   dealer's trust in the rendering.
 
 OUTPUT: a single photorealistic image, same resolution/aspect ratio as the input image.`
-}
-
-export function buildVideoPrompt(characteristics?: string) {
-  const userText = characteristics?.trim() || 'Aucune demande particulière.'
-
-  return `Animate this vehicle image into a short, photorealistic video clip.
-
-CAMERA: Slow, smooth cinematic orbit or gentle lateral push around the vehicle (pick
-whichever best fits the framing) — no cuts, no zoom snaps, natural gimbal-smooth motion.
-Duration: 4-6 seconds.
-
-MOTION: Add only natural, physically plausible ambient movement — subtle shifts in light
-reflections across the paint and glass as the implied camera/light moves, soft background
-motion (e.g. distant traffic blur, drifting light bokeh) if appropriate to the scene. The
-vehicle itself stays parked and stationary throughout — no driving, no wheels turning, no
-doors opening. No people or other vehicles entering the frame unless already present in
-the source image.
-
-STYLE: Photorealistic, professional automotive video — not illustrative, not stylized,
-no CGI-looking particle effects or exaggerated motion.
-
-STRUCTURAL LOCK: The vehicle's shape, color, position, and the overall composition must
-remain exactly as shown in the source image throughout the entire clip — the video brings
-the still image to life, it does not reinterpret or regenerate the scene.
-
-USER CHARACTERISTICS (optional, for context only, no structural changes):
-"${userText}"
-
-GOAL: Give the dealer a short, believable "showroom-quality" preview that reinforces the
-premium feel from the still image — polished, professional, real — without introducing
-anything that wasn't already validated in the image generation step.`
 }
 
 export function buildSocialCaptionPrompt(styleName: string, businessName?: string, ctaText?: string) {

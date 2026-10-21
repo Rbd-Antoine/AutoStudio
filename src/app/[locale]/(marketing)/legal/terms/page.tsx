@@ -1,23 +1,26 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalPageLayout, LegalSection } from '@/components/legal/LegalPageLayout'
-import { CONTACT_EMAIL } from '@/lib/site-config'
+import { CONTACT_EMAIL, LEGAL_ENTITY } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Conditions générales',
-  description: "Conditions générales d'utilisation et de vente de CarGlow.",
+  description: "Conditions générales d'utilisation et de vente d'AutoStudio.",
 }
 
 export default function TermsPage() {
   return (
-    <LegalPageLayout eyebrow="Conditions générales" title="Conditions générales d'utilisation et de vente" updated="17 juillet 2026">
+    <LegalPageLayout eyebrow="Conditions générales" title="Conditions générales d'utilisation et de vente" updated="10 octobre 2026">
       <LegalSection n="1" title="Éditeur">
-        <p>CarGlow est exploité par une entreprise individuelle.</p>
+        <p>
+          AutoStudio est exploité par une entreprise individuelle
+          {LEGAL_ENTITY.ownerName && <> ({LEGAL_ENTITY.ownerName})</>}.
+        </p>
+        {LEGAL_ENTITY.taxId && <p>NIF : {LEGAL_ENTITY.taxId}</p>}
+        {LEGAL_ENTITY.vat && <p>TVA : {LEGAL_ENTITY.vat}</p>}
         <p>
           <strong className="text-charcoal/80 font-semibold">Adresse :</strong><br />
-          201 Rua Saraiva de Carvalho<br />
-          1250-247 Lisbonne<br />
-          Portugal
+          {LEGAL_ENTITY.address.map((line, i) => <span key={i}>{line}<br /></span>)}
         </p>
         <p>
           <strong className="text-charcoal/80 font-semibold">Contact :</strong>{' '}
@@ -27,15 +30,15 @@ export default function TermsPage() {
 
       <LegalSection n="2" title="Objet du service">
         <p>
-          CarGlow est une plateforme SaaS destinée aux professionnels de l&apos;automobile permettant de générer,
-          grâce à l&apos;intelligence artificielle, des arrière-plans photoréalistes, du masquage de plaque
-          d&apos;immatriculation, des vidéos et d&apos;autres contenus visuels à partir de photographies de
-          véhicules fournies par l&apos;utilisateur.
+          AutoStudio est une plateforme SaaS destinée aux professionnels de l&apos;automobile permettant, grâce à
+          l&apos;intelligence artificielle, de remplacer l&apos;arrière-plan de photographies de véhicules fournies par
+          l&apos;utilisateur, de retoucher ces rendus et d&apos;en tirer des contenus marketing (vidéos courtes, textes
+          pour les réseaux sociaux).
         </p>
       </LegalSection>
 
       <LegalSection n="3" title="Acceptation">
-        <p>L&apos;utilisation de CarGlow implique l&apos;acceptation sans réserve des présentes conditions.</p>
+        <p>L&apos;utilisation d&apos;AutoStudio implique l&apos;acceptation sans réserve des présentes conditions.</p>
         <p>Si l&apos;utilisateur n&apos;accepte pas ces conditions, il ne doit pas utiliser le service.</p>
       </LegalSection>
 
@@ -47,7 +50,7 @@ export default function TermsPage() {
           <li>de toute activité réalisée depuis son compte.</li>
         </ul>
         <p>
-          CarGlow peut suspendre ou supprimer un compte en cas de fraude, d&apos;utilisation abusive, de tentative
+          AutoStudio peut suspendre ou supprimer un compte en cas de fraude, d&apos;utilisation abusive, de tentative
           de piratage ou de violation des présentes conditions.
         </p>
       </LegalSection>
@@ -57,28 +60,24 @@ export default function TermsPage() {
         <ul>
           <li>disposer des droits nécessaires sur les photographies importées ;</li>
           <li>ne pas importer de contenus illicites, diffamatoires, haineux ou portant atteinte aux droits de tiers ;</li>
-          <li>utiliser CarGlow uniquement dans un cadre légal.</li>
+          <li>utiliser AutoStudio uniquement dans un cadre légal.</li>
         </ul>
         <p>Il est interdit de tenter de contourner les limitations techniques ou de perturber le fonctionnement du service.</p>
       </LegalSection>
 
       <LegalSection n="6" title="Intelligence artificielle">
-        <p>CarGlow utilise notamment les modèles d&apos;intelligence artificielle de Google Gemini afin de générer les contenus demandés.</p>
+        <p>AutoStudio utilise notamment les modèles d&apos;intelligence artificielle de Google Gemini afin de générer les contenus demandés.</p>
         <p>Les résultats produits sont générés automatiquement et peuvent contenir des erreurs, imprécisions ou différences par rapport aux attentes.</p>
-        <p>Les rendus sont fournis uniquement comme aide à la conception et à la visualisation.</p>
-        <p>Ils ne constituent pas :</p>
-        <ul>
-          <li>un plan technique ;</li>
-          <li>un plan d&apos;exécution ;</li>
-          <li>un devis ;</li>
-          <li>une étude de faisabilité ;</li>
-          <li>une garantie de résultat.</li>
-        </ul>
-        <p>L&apos;utilisateur reste seul responsable des décisions prises sur la base des contenus générés.</p>
+        <p>
+          Avant toute publication, l&apos;utilisateur vérifie que chaque rendu représente fidèlement le véhicule
+          (état, couleur, équipements, immatriculation) : les rendus ne constituent ni une description contractuelle
+          du véhicule ni une garantie de résultat.
+        </p>
+        <p>L&apos;utilisateur reste seul responsable de l&apos;usage qu&apos;il fait des contenus générés, notamment dans ses annonces.</p>
       </LegalSection>
 
       <LegalSection n="7" title="Propriété intellectuelle">
-        <p>CarGlow demeure propriétaire :</p>
+        <p>AutoStudio demeure propriétaire :</p>
         <ul>
           <li>du logiciel ;</li>
           <li>du site internet ;</li>
@@ -103,12 +102,12 @@ export default function TermsPage() {
 
       <LegalSection n="9" title="Paiement">
         <p>Les paiements sont traités exclusivement par Stripe.</p>
-        <p>CarGlow n&apos;a jamais accès aux numéros de cartes bancaires.</p>
+        <p>AutoStudio n&apos;a jamais accès aux numéros de cartes bancaires.</p>
         <p>En cas d&apos;échec de paiement, l&apos;accès aux fonctionnalités payantes peut être suspendu.</p>
       </LegalSection>
 
       <LegalSection n="10" title="Disponibilité">
-        <p>CarGlow s&apos;efforce d&apos;assurer une disponibilité maximale.</p>
+        <p>AutoStudio s&apos;efforce d&apos;assurer une disponibilité maximale.</p>
         <p>Toutefois, aucune disponibilité permanente n&apos;est garantie.</p>
         <p>Des interruptions peuvent intervenir pour :</p>
         <ul>
@@ -120,19 +119,19 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="11" title="Limitation de responsabilité">
-        <p>Dans les limites autorisées par la loi, CarGlow ne pourra être tenu responsable notamment :</p>
+        <p>Dans les limites autorisées par la loi, AutoStudio ne pourra être tenu responsable notamment :</p>
         <ul>
           <li>des pertes d&apos;exploitation ;</li>
           <li>de la perte de clientèle ;</li>
           <li>d&apos;une mauvaise interprétation des rendus ;</li>
-          <li>d&apos;une erreur de conception réalisée par l&apos;utilisateur ;</li>
+          <li>de l&apos;usage des rendus par l&apos;utilisateur, notamment dans ses annonces ;</li>
           <li>de pertes indirectes ou immatérielles.</li>
         </ul>
-        <p>La responsabilité maximale de CarGlow est limitée au montant effectivement payé par l&apos;utilisateur au cours des douze derniers mois.</p>
+        <p>La responsabilité maximale d&apos;AutoStudio est limitée au montant effectivement payé par l&apos;utilisateur au cours des douze derniers mois.</p>
       </LegalSection>
 
       <LegalSection n="12" title="Protection des données">
-        <p>CarGlow respecte le Règlement Général sur la Protection des Données (RGPD).</p>
+        <p>AutoStudio respecte le Règlement Général sur la Protection des Données (RGPD).</p>
         <p>Les données peuvent comprendre notamment :</p>
         <ul>
           <li>nom ;</li>
@@ -149,11 +148,11 @@ export default function TermsPage() {
       <LegalSection n="13" title="Utilisation des images">
         <p>Les images envoyées par l&apos;utilisateur sont utilisées uniquement afin de produire les rendus demandés.</p>
         <p>Selon la fonctionnalité utilisée, elles peuvent être transmises de manière sécurisée à Google Gemini pour permettre la génération des contenus.</p>
-        <p>CarGlow ne revendique aucun droit de propriété sur les photographies importées.</p>
+        <p>AutoStudio ne revendique aucun droit de propriété sur les photographies importées.</p>
       </LegalSection>
 
       <LegalSection n="14" title="Prestataires">
-        <p>CarGlow utilise différents prestataires techniques, notamment :</p>
+        <p>AutoStudio utilise différents prestataires techniques, notamment :</p>
         <ul>
           <li>Google Gemini pour la génération de contenus IA ;</li>
           <li>Stripe pour les paiements ;</li>
@@ -185,7 +184,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="17" title="Cookies">
-        <p>CarGlow utilise des cookies afin :</p>
+        <p>AutoStudio utilise des cookies afin :</p>
         <ul>
           <li>d&apos;assurer le fonctionnement du site ;</li>
           <li>de maintenir la session utilisateur ;</li>
@@ -199,12 +198,12 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection n="18" title="Sécurité">
-        <p>CarGlow met en œuvre des mesures techniques et organisationnelles raisonnables afin de protéger les données contre toute perte, accès non autorisé ou divulgation.</p>
-        <p>Aucun système informatique ne pouvant garantir une sécurité absolue, CarGlow ne peut toutefois garantir une protection totale contre tous les risques.</p>
+        <p>AutoStudio met en œuvre des mesures techniques et organisationnelles raisonnables afin de protéger les données contre toute perte, accès non autorisé ou divulgation.</p>
+        <p>Aucun système informatique ne pouvant garantir une sécurité absolue, AutoStudio ne peut toutefois garantir une protection totale contre tous les risques.</p>
       </LegalSection>
 
       <LegalSection n="19" title="Suspension ou résiliation">
-        <p>CarGlow peut suspendre immédiatement un compte en cas :</p>
+        <p>AutoStudio peut suspendre immédiatement un compte en cas :</p>
         <ul>
           <li>d&apos;utilisation frauduleuse ;</li>
           <li>de tentative de piratage ;</li>

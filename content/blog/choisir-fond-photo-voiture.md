@@ -5,7 +5,7 @@ slug: choisir-fond-photo-voiture
 date: 2026-10-06
 updated: 2026-10-06
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Photo et annonces
 tags: [photo, décor, annonce, VO]
 targetKeyword: fond photo voiture
@@ -95,4 +95,4 @@ Il influence surtout la confiance. Un véhicule présenté proprement, dans un d
 
 ---
 
-*Avec CarGlow, vous importez la photo prise sur votre parc et vous choisissez l'un des quatre décors : le véhicule est conservé tel quel, seul l'arrière-plan change. Votre premier rendu est offert.*
+*Avec AutoStudio, vous importez la photo prise sur votre parc et vous choisissez l'un des quatre décors : le véhicule est conservé tel quel, seul l'arrière-plan change. Votre premier rendu est offert.*

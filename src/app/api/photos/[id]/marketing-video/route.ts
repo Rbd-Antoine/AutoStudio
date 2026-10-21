@@ -4,11 +4,11 @@ import { db } from '@/lib/db'
 import { isSuperuserAccount } from '@/lib/superusers'
 import { getDefaultBrandKit } from '@/lib/brand-kit'
 import { buildStoryboardFromPhoto } from '@/lib/marketing-video/build-storyboard'
-import { getVideoProvider } from '@/lib/marketing-video/provider'
+import { getVideoProvider, isVideoProviderConfigured } from '@/lib/marketing-video/provider'
 import type { MarketingVideoFormat } from '@/lib/marketing-video/types'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
 import { isEmailVerified } from '@/lib/auth-guards'
-import { isRealHostedUrl } from '@/lib/photo-url'
+import { isRealHostedUrl, isOwnBlobUrl } from '@/lib/photo-url'
 
 export const maxDuration = 300
 
@@ -30,6 +30,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     logoUrl?: string
     audioTrackUrl?: string
     useVideoAfter?: boolean
+  }
+
+  if (!isVideoProviderConfigured()) {
+    return NextResponse.json({ error: "La création de vidéos marketing n'est pas encore disponible." }, { status: 503 })
   }
 
   if (!VALID_FORMATS.includes(format)) {
@@ -110,7 +114,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const brandKit = await getDefaultBrandKit(photo.workspaceId)
     const spec = buildStoryboardFromPhoto(
       { originalUrl: photo.originalUrl, thumbnailUrl: photo.thumbnailUrl, videoUrl: photoVideoUrl },
-      { format, accentColor, endText, ctaText, businessName, logoUrl, audioTrackUrl, useVideoAfter },
+      // A logo from the request is only used when it is hosted on Blob (the brand kit's own
+      // upload): the video provider downloads it server-side to inline it in the end card.
+      { format, accentColor, endText, ctaText, businessName, logoUrl: isOwnBlobUrl(logoUrl) ? logoUrl : undefined, audioTrackUrl, useVideoAfter },
       brandKit,
     )
 
@@ -154,7 +160,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     }
 
     return NextResponse.json(
-      { error: 'Génération de la vidéo marketing échouée, veuillez réessayer.', detail: msg },
+      { error: 'Génération de la vidéo marketing échouée, veuillez réessayer.' },
       { status: 500 },
     )
   }

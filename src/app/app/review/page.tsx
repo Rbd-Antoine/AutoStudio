@@ -67,7 +67,7 @@ export default function ReviewPage() {
           <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-accent-600/80 mb-2">Votre avis</div>
           <h1 className="font-display font-bold text-[clamp(1.9rem,4vw,2.6rem)] leading-[1.1] text-charcoal">Racontez votre expérience.</h1>
           <p className="text-charcoal/45 mt-2 text-[15px]">
-            Deux minutes suffisent. Avec votre accord, votre témoignage peut être affiché publiquement sur le site CarGlow.
+            Deux minutes suffisent. Avec votre accord, votre témoignage peut être affiché publiquement sur le site AutoStudio.
           </p>
         </div>
       </section>
@@ -99,7 +99,7 @@ export default function ReviewPage() {
                 onChange={e => setQuote(e.target.value)}
                 maxLength={600}
                 rows={5}
-                placeholder="Qu'est-ce que CarGlow vous a apporté ?"
+                placeholder="Qu'est-ce qu'AutoStudio vous a apporté ?"
                 className="w-full bg-offwhite border border-accent-200 rounded-xl px-4 py-3 text-sm text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-accent-400 focus:bg-white transition-colors resize-none"
               />
               <p className="text-xs text-charcoal/35 mt-1.5 text-right">{quote.length}/600</p>
@@ -132,7 +132,7 @@ export default function ReviewPage() {
             <label className="flex items-start gap-3 text-sm text-charcoal/60 px-1">
               <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}
                 className="mt-0.5 w-4 h-4 accent-accent-500" />
-              J&apos;accepte que ce témoignage soit affiché publiquement sur le site CarGlow, après validation.
+              J&apos;accepte que ce témoignage soit affiché publiquement sur le site AutoStudio, après validation.
             </label>
 
             {error && (

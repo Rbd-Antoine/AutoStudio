@@ -3,19 +3,44 @@
 // Client-side analytics (marketing pages, editor UI). Browser-only — never import this
 // from a server component or API route (use '@/lib/analytics/server' there instead).
 //
-// posthog-js is loaded via a dynamic import gated behind the production check, not a
-// static top-level import, so its ~70kB bundle is never fetched at all outside
-// production (dev/preview) and doesn't inflate the shared JS bundle for everyone.
+// posthog-js is loaded via a dynamic import gated behind the production check and the
+// visitor's analytics consent (below), not a static top-level import, so its ~70kB bundle is
+// never fetched outside production or without consent, and doesn't inflate the shared JS
+// bundle for everyone.
 import type { PostHog } from 'posthog-js'
 import { ANALYTICS_EVENTS, type AnalyticsEventName, type ClientTrackPayload } from './events'
+import { CONSENT_COOKIE_NAME, parseConsentCookie } from '@/lib/consent'
 
 export const analyticsEnabled =
   process.env.NODE_ENV === 'production' && !!process.env.NEXT_PUBLIC_POSTHOG_KEY
 
 let posthogPromise: Promise<PostHog> | null = null
 
+// PostHog sets cookies and records sessions, so it only runs once the visitor accepted the
+// "Mesure d'audience" category of the cookie banner. Read from the consent cookie at startup
+// (so a returning visitor's choice applies before hydration), then kept in sync by the
+// ConsentProvider through setAnalyticsConsent().
+let analyticsConsent = readStoredAnalyticsConsent()
+
+function readStoredAnalyticsConsent(): boolean {
+  if (typeof document === 'undefined') return false
+  const row = document.cookie.split('; ').find(r => r.startsWith(`${CONSENT_COOKIE_NAME}=`))
+  const stored = parseConsentCookie(row ? decodeURIComponent(row.slice(CONSENT_COOKIE_NAME.length + 1)) : null)
+  return stored?.categories.analytics === true
+}
+
+export function setAnalyticsConsent(granted: boolean): void {
+  analyticsConsent = granted
+  if (granted) {
+    loadPosthog()?.then(ph => { if (ph.has_opted_out_capturing()) ph.opt_in_capturing() })
+  } else {
+    // Withdrawn after PostHog already loaded: stop capturing and drop its identifiers.
+    posthogPromise?.then(ph => { ph.opt_out_capturing(); ph.reset() })
+  }
+}
+
 function loadPosthog(): Promise<PostHog> | null {
-  if (!analyticsEnabled) return null
+  if (!analyticsEnabled || !analyticsConsent) return null
   if (!posthogPromise) {
     posthogPromise = import('posthog-js').then(({ default: posthog }) => {
       if (!posthog.__loaded) {

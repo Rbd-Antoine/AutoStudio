@@ -19,18 +19,18 @@ const CATEGORIES = [
   },
   {
     icon: Settings, title: 'Paramètres & sécurité',
-    desc: 'RGPD, export de données, suppression de compte',
+    desc: 'RGPD, accès à vos données et suppression du compte sur simple demande par e-mail',
   },
 ]
 
 const FAQ = [
   {
     q: 'Comment fonctionnent les crédits ?',
-    a: 'Chaque génération, retouche ou vidéo consomme un certain nombre de crédits selon votre plan. Le détail du coût par action est visible sur la page Tarifs.',
+    a: "Chaque génération, retouche ou vidéo consomme un nombre fixe de crédits selon l'action. Le détail du coût par action est visible sur la page Tarifs.",
   },
   {
     q: 'Pourquoi mon rendu a-t-il échoué ?',
-    a: 'C\'est généralement lié au format ou au poids de la photo importée. Réessayez avec une photo JPG, PNG ou HEIC de moins de 25 Mo — vos crédits ne sont jamais décomptés en cas d\'échec.',
+    a: 'C\'est généralement lié au format ou au poids de la photo importée. Réessayez avec une photo JPG, PNG ou HEIC de moins de 20 Mo — vos crédits ne sont jamais décomptés en cas d\'échec.',
   },
   {
     q: 'Puis-je résilier à tout moment ?',
@@ -38,7 +38,7 @@ const FAQ = [
   },
   {
     q: 'Quelle est la différence entre génération, retouche et vidéo ?',
-    a: 'La génération crée un rendu complet dans un nouveau style, la retouche modifie un rendu existant par instruction, et la vidéo transforme un avant/après en clip prêt à publier sur les réseaux.',
+    a: "La génération remplace l'arrière-plan de votre photo par l'un de nos décors, la retouche modifie un rendu existant par instruction, et la vidéo transforme un avant/après en clip prêt à publier sur les réseaux.",
   },
 ]
 
@@ -53,7 +53,7 @@ export default function HelpPage() {
             Comment pouvons-nous <span className="text-gradient">vous aider ?</span>
           </h1>
           <p className="text-charcoal/55 text-[15px]">
-            Réponses et guides pour tirer le meilleur de CarGlow.
+            Réponses et guides pour tirer le meilleur d&apos;AutoStudio.
           </p>
         </div>
 

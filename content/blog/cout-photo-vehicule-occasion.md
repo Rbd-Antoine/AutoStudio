@@ -5,7 +5,7 @@ slug: cout-photo-vehicule-occasion
 date: 2026-09-01
 updated: 2026-09-01
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Gérer son activité
 tags: [coûts, photo, studio, productivité]
 targetKeyword: coût photo voiture occasion
@@ -100,4 +100,4 @@ Pour les véhicules en stock depuis longtemps, refaire au moins la photo princip
 
 ---
 
-*Avec CarGlow, vous payez au rendu, sans matériel : une photo prise sur le parc devient une photo au décor homogène en quelques secondes. Votre premier rendu est offert.*
+*Avec AutoStudio, vous payez au rendu, sans matériel : une photo prise sur le parc devient une photo au décor homogène en quelques secondes. Votre premier rendu est offert.*

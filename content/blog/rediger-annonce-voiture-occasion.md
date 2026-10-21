@@ -5,7 +5,7 @@ slug: rediger-annonce-voiture-occasion
 date: 2026-09-08
 updated: 2026-09-08
 author: Antoine R.
-authorRole: Fondateur de CarGlow
+authorRole: Fondateur d'AutoStudio
 category: Photo et annonces
 tags: [annonce, rédaction, VO, modèle]
 targetKeyword: rédiger annonce voiture occasion
@@ -97,4 +97,4 @@ La structure oui, le contenu non : chaque véhicule a son historique, son kilom�
 
 ---
 
-*Une description complète mérite une photo principale à la hauteur : avec CarGlow, la photo prise sur le parc devient en quelques secondes une photo au décor professionnel, sans toucher au véhicule.*
+*Une description complète mérite une photo principale à la hauteur : avec AutoStudio, la photo prise sur le parc devient en quelques secondes une photo au décor professionnel, sans toucher au véhicule.*

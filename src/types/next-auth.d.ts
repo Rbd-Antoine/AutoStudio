@@ -1,5 +1,6 @@
 import type { DefaultSession } from 'next-auth'
-import type { JWT } from 'next-auth/jwt'
+// Loads the module so the augmentation below applies to it.
+import 'next-auth/jwt'
 
 declare module 'next-auth' {
   interface Session {

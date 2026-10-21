@@ -1,4 +1,4 @@
-import { CarStyle, buildImagePrompt, buildRetouchPrompt, buildBackgroundSwapPrompt } from './carPrompts'
+import { buildRetouchPrompt, buildBackgroundSwapPrompt } from './carPrompts'
 
 export interface StyledImage {
   base64: string
@@ -12,10 +12,11 @@ interface ImageInput {
 
 async function callGeminiImage(apiKey: string, prompt: string, images: ImageInput[]): Promise<StyledImage> {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      // The key goes in a header, not the URL, so it never ends up in logged request URLs.
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({
         contents: [{
           parts: [
@@ -48,16 +49,6 @@ async function callGeminiImage(apiKey: string, prompt: string, images: ImageInpu
   }
 }
 
-export async function generateStyledImage(
-  apiKey: string,
-  imageData: string,
-  mimeType: string,
-  style: CarStyle,
-  characteristics?: string,
-): Promise<StyledImage> {
-  return callGeminiImage(apiKey, buildImagePrompt(style, characteristics), [{ mimeType, data: imageData }])
-}
-
 export async function retouchImage(
   apiKey: string,
   imageData: string,
@@ -86,10 +77,10 @@ export async function swapBackground(
 // Plain text completion (no image in/out) — used for the Marketing Kit's social-post caption.
 export async function generateText(apiKey: string, prompt: string): Promise<string> {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
     },
   )

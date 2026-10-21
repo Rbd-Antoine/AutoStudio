@@ -2,9 +2,8 @@
 // access here, so this file is safe to import from both client components (the consent
 // provider) and server code (API routes gating the Meta Conversions API).
 //
-// Only "necessary" and "marketing" are real categories today. "analytics" is modeled
-// now so a future category can be added without a breaking shape change, but nothing
-// reads or sets it yet — don't wire a UI toggle for it until it actually gates something.
+// "marketing" gates the Meta Pixel and Conversions API; "analytics" gates PostHog (audience
+// measurement, session recording). "necessary" is always on.
 
 export type ConsentCategory = 'necessary' | 'marketing' | 'analytics'
 
@@ -22,8 +21,9 @@ export interface StoredConsent {
 
 // Bump this if the cookie policy meaningfully changes — a version mismatch is treated
 // exactly like "no consent on file" and the banner re-asks.
-export const CONSENT_VERSION = 'v1'
-export const CONSENT_COOKIE_NAME = 'carglow_consent'
+// v2: the analytics category (PostHog) became a real choice in the banner.
+export const CONSENT_VERSION = 'v2'
+export const CONSENT_COOKIE_NAME = 'autostudio_consent'
 
 // CNIL mandates re-asking at least every 6 months.
 export const CONSENT_MAX_AGE_SECONDS = 60 * 60 * 24 * 30 * 6

@@ -7,7 +7,7 @@ export default function BookADemoPage() {
       <div className="max-w-2xl mx-auto text-center">
         <p className="eyebrow mb-4">Réserver une démo</p>
         <h1 className="text-[clamp(2rem,4vw,3.5rem)] font-display font-bold text-charcoal mb-4 leading-[1.1]">
-          Voyez CarGlow en action.<br /><span className="text-gradient">30 minutes, sans engagement.</span>
+          Voyez AutoStudio en action.<br /><span className="text-gradient">30 minutes, sans engagement.</span>
         </h1>
         <p className="text-charcoal/50 mb-12 max-w-xl mx-auto">
           Vous gérez plusieurs sites, une agence, ou souhaitez un accompagnement dédié ? Décrivez-nous

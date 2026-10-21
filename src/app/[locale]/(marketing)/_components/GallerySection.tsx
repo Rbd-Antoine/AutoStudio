@@ -298,7 +298,7 @@ export function GallerySection({ workspaceCount }: { workspaceCount: number }) {
               {SHOWCASE.length} transformations<br /><span className="text-gradient">en 60 secondes.</span>
             </h2>
             <p className="text-charcoal/45 text-[15px] leading-relaxed mb-7">
-              Toutes ces transformations ont été générées par CarGlow à partir d&apos;une simple photo de véhicule.
+              Toutes ces transformations ont été générées par AutoStudio à partir d&apos;une simple photo de véhicule.
             </p>
 
             <TrackedLink href="/signup" ctaId="gallery_cta" label="Essayer gratuitement" location="gallery"
@@ -328,7 +328,7 @@ export function GallerySection({ workspaceCount }: { workspaceCount: number }) {
               <p className="text-sm font-semibold text-charcoal">
                 {workspaceCount >= MIN_WORKSPACE_COUNT_TO_SHOW
                   ? <>{workspaceCount.toLocaleString('fr-FR')}+ concessions l&apos;utilisent déjà</>
-                  : <>Rejoignez les concessions qui utilisent CarGlow</>}
+                  : <>Rejoignez les concessions qui utilisent AutoStudio</>}
               </p>
             </div>
           </div>

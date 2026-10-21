@@ -11,7 +11,7 @@ import { getAiFeature, getPricingConfig, monthlyCreditsForPlan } from './pricing
 import { sendCreditsExhaustedEmail } from './email'
 import type { CreditReason } from '@/generated/prisma/client'
 
-export type FeatureKey = 'imageGeneration' | 'imageRetouch' | 'videoGeneration' | (string & {})
+export type FeatureKey = 'imageGeneration' | 'imageRetouch' | 'marketingVideo' | (string & {})
 
 export class InsufficientCreditsError extends Error {
   constructor(public available: number, public required: number) {

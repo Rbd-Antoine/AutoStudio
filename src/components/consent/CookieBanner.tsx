@@ -12,15 +12,49 @@ import { useConsent } from './ConsentProvider'
 const PRIMARY_BUTTON = 'px-5 py-3 rounded-xl bg-offwhite text-charcoal text-sm font-semibold hover:bg-offwhite-300 transition-colors text-center'
 const OUTLINE_BUTTON = 'px-5 py-3 rounded-xl border border-charcoal/[0.18] text-charcoal text-sm font-semibold hover:bg-charcoal/[0.06] transition-colors text-center'
 
+function CategoryToggle({ title, description, checked, onToggle }: {
+  title: string
+  description: string
+  checked: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 p-3.5 rounded-xl bg-charcoal/[0.04] border border-charcoal/[0.08]">
+      <div>
+        <p className="text-sm font-semibold text-charcoal">{title}</p>
+        <p className="text-xs text-charcoal/50 mt-0.5">{description}</p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={`Autoriser : ${title}`}
+        onClick={onToggle}
+        className={cn(
+          'shrink-0 w-11 h-6 rounded-full transition-colors relative',
+          checked ? 'bg-accent-500' : 'bg-offwhite/15',
+        )}
+      >
+        <span className={cn(
+          'absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform',
+          checked ? 'translate-x-5' : 'translate-x-0.5',
+        )} />
+      </button>
+    </div>
+  )
+}
+
 export function CookieBanner() {
   const { status, bannerOpen, categories, acceptAll, rejectAll, savePreferences } = useConsent()
   const [showDetails, setShowDetails] = useState(false)
   const [draftMarketing, setDraftMarketing] = useState(categories.marketing)
+  const [draftAnalytics, setDraftAnalytics] = useState(categories.analytics)
 
   useEffect(() => {
     if (bannerOpen) {
       setShowDetails(false)
       setDraftMarketing(categories.marketing)
+      setDraftAnalytics(categories.analytics)
     }
     // Only re-sync when the banner transitions open — not on every `categories` change,
     // otherwise the in-progress draft toggle would get overwritten while the panel is open.
@@ -43,10 +77,10 @@ export function CookieBanner() {
         {!showDetails ? (
           <>
             <p className="text-sm text-charcoal/70 leading-relaxed mb-4">
-              Nous utilisons des cookies nécessaires au fonctionnement de CarGlow, ainsi que des
-              cookies marketing (Meta/Facebook) — soumis à votre consentement — pour mesurer
-              l&apos;efficacité de nos publicités ; ceux-ci impliquent un transfert de données à
-              Meta. Voir notre{' '}
+              Nous utilisons des cookies nécessaires au fonctionnement d&apos;AutoStudio et, avec votre
+              consentement, des cookies de mesure d&apos;audience (PostHog) pour améliorer le site et
+              des cookies marketing (Meta/Facebook) pour mesurer l&apos;efficacité de nos publicités ;
+              ces derniers impliquent un transfert de données à Meta. Voir notre{' '}
               <Link href="/legal/cookies" className="underline hover:text-charcoal">
                 politique de cookies
               </Link>{' '}
@@ -84,37 +118,25 @@ export function CookieBanner() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between gap-4 p-3.5 rounded-xl bg-charcoal/[0.04] border border-charcoal/[0.08]">
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Marketing</p>
-                  <p className="text-xs text-charcoal/50 mt-0.5">
-                    Meta (Facebook) Pixel — mesure de l&apos;efficacité publicitaire. Implique un
-                    transfert de données à Meta.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={draftMarketing}
-                  aria-label="Autoriser les cookies marketing"
-                  onClick={() => setDraftMarketing(v => !v)}
-                  className={cn(
-                    'shrink-0 w-11 h-6 rounded-full transition-colors relative',
-                    draftMarketing ? 'bg-accent-500' : 'bg-offwhite/15',
-                  )}
-                >
-                  <span className={cn(
-                    'absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform',
-                    draftMarketing ? 'translate-x-5' : 'translate-x-0.5',
-                  )} />
-                </button>
-              </div>
+              <CategoryToggle
+                title="Mesure d'audience"
+                description="PostHog — statistiques de visite et enregistrement des sessions (champs de saisie masqués) pour améliorer le site."
+                checked={draftAnalytics}
+                onToggle={() => setDraftAnalytics(v => !v)}
+              />
+
+              <CategoryToggle
+                title="Marketing"
+                description="Meta (Facebook) Pixel — mesure de l'efficacité publicitaire. Implique un transfert de données à Meta."
+                checked={draftMarketing}
+                onToggle={() => setDraftMarketing(v => !v)}
+              />
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2.5">
               <button onClick={() => setShowDetails(false)} className={OUTLINE_BUTTON}>Retour</button>
               <button
-                onClick={() => savePreferences({ marketing: draftMarketing })}
+                onClick={() => savePreferences({ marketing: draftMarketing, analytics: draftAnalytics })}
                 className="flex-1 px-5 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold transition-colors text-center"
               >
                 Enregistrer mes choix

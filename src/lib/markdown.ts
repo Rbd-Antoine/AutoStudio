@@ -40,9 +40,8 @@ const htmlProcessor = unified().use(remarkRehype).use(rehypeStringify)
 export function nodesToHtml(nodes: RootContent[]): string {
   if (nodes.length === 0) return ''
   const root: Root = { type: 'root', children: nodes }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hastTree = htmlProcessor.runSync(root as any)
-  return htmlProcessor.stringify(hastTree as any).trim()
+  const hastTree = htmlProcessor.runSync(root)
+  return htmlProcessor.stringify(hastTree).trim()
 }
 
 export function inlineToHtml(nodes: PhrasingContent[]): string {

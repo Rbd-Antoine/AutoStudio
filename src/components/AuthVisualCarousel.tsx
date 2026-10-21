@@ -27,7 +27,7 @@ export function AuthVisualCarousel() {
         <Image
           key={src}
           src={src}
-          alt="Rendu de véhicule généré par CarGlow"
+          alt="Rendu de véhicule généré par AutoStudio"
           fill
           priority={i === 0}
           className={cn(

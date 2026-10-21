@@ -13,7 +13,7 @@ interface Promo {
   endDate: string
 }
 
-const DISMISS_KEY = 'carglow-promo-dismissed'
+const DISMISS_KEY = 'autostudio-promo-dismissed'
 
 // Single source of truth for whether a promo is live is activePromo() in src/lib/pricing.ts —
 // this just renders whatever /api/pricing already decided. Dismissing hides it for the
@@ -79,7 +79,6 @@ export function PromoBanner({ ctaHref }: { ctaHref: string }) {
             (locale-prefixed routes, e.g. /fr/pricing) and the app shell (/app/* explicitly
             bypasses locale routing in middleware.ts), so no single Link helper is correct for
             both contexts. A full navigation for one promo CTA is a fine trade-off. */}
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href={ctaHref}
           className="ml-1 inline-flex items-center px-3 py-1 rounded-lg bg-accent-500 hover:bg-accent-400 text-white font-semibold text-xs transition-colors"

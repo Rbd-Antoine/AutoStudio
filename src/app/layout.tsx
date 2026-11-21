@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Providers } from '@/components/Providers'
+import { ChunkReloadGuard } from '@/components/ChunkReloadGuard'
+import { TranslationGuard } from '@/components/TranslationGuard'
 import { SITE_URL, CALENDLY_URL } from '@/lib/site-config'
 import './globals.css'
 
@@ -36,6 +38,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <head>
+        {/* Both before anything hydrates: a stale-deploy chunk error reloads the page once, and
+            a browser translator no longer crashes React (see each component). */}
+        <ChunkReloadGuard />
+        <TranslationGuard />
         <style>{`:root { --font-display: var(--font-inter); }`}</style>
         {/* Warms up the TCP+TLS handshake ahead of time for third-party origins the site
             actually loads (PostHog, Meta Pixel, Calendly) — each is still deferred/lazy on

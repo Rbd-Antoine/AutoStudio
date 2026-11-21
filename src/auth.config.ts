@@ -1,3 +1,5 @@
+// First: drops a localhost NEXTAUTH_URL on a deployment before Auth.js reads it.
+import '@/lib/auth-url-guard'
 import type { NextAuthConfig } from 'next-auth'
 
 // Edge-compatible auth config — no PrismaAdapter, no Node.js-only imports.

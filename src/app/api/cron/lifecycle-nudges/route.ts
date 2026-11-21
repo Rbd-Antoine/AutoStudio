@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rejectUnauthorizedCron } from '@/lib/cron-auth'
 import { db } from '@/lib/db'
 import { sendActivationNudgeEmail, sendFinalActivationNudgeEmail, sendCreditsExhaustedFollowupEmail } from '@/lib/email'
 
@@ -12,11 +13,8 @@ const DAY_MS = 24 * HOUR_MS
 // on a later run. Deliberately conservative on volume: a workspace that never activates gets
 // at most 2 nudges total (day 1, day 3-4) and then nothing further from this cron.
 export async function GET(req: NextRequest) {
-  const secret = process.env.CRON_SECRET
-  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
-  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-  }
+  const denied = rejectUnauthorizedCron(req)
+  if (denied) return denied
 
   const now = Date.now()
 

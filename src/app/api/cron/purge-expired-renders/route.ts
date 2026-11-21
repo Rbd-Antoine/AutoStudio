@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rejectUnauthorizedCron } from '@/lib/cron-auth'
 import { del } from '@vercel/blob'
 import { db } from '@/lib/db'
 import { isOwnBlobUrl } from '@/lib/photo-url'
@@ -12,11 +13,8 @@ const BATCH_SIZE = 1000
 
 // Scheduled daily via vercel.json (Vercel Cron sends `Authorization: Bearer $CRON_SECRET`).
 export async function GET(req: NextRequest) {
-  const secret = process.env.CRON_SECRET
-  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
-  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-  }
+  const denied = rejectUnauthorizedCron(req)
+  if (denied) return denied
 
   const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000)
 

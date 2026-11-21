@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rejectUnauthorizedCron } from '@/lib/cron-auth'
 import { db } from '@/lib/db'
 import { getAvailableCredits } from '@/lib/credits'
 import { sendReactivationEmail } from '@/lib/email'
@@ -14,11 +15,8 @@ const DAY_MS = 24 * 60 * 60 * 1000
 // rather than re-sending every day it stays quiet. Applies to every plan (FREE or paid):
 // a paying subscriber who's gone quiet is the more valuable case to catch, not less.
 export async function GET(req: NextRequest) {
-  const secret = process.env.CRON_SECRET
-  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
-  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-  }
+  const denied = rejectUnauthorizedCron(req)
+  if (denied) return denied
 
   const now = new Date()
   const windowStart = new Date(now.getTime() - 15 * DAY_MS)

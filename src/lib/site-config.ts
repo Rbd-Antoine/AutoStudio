@@ -2,13 +2,33 @@
 // contact address is an environment change, not a code hunt. SITE_URL and EMAIL_FROM are
 // server-only; the NEXT_PUBLIC_* values are inlined at build time and safe in client code.
 
+/** A real Vercel deployment, production or preview, as opposed to a developer's machine. */
+export const IS_DEPLOYMENT = process.env.VERCEL_ENV === 'production' || process.env.VERCEL_ENV === 'preview'
+
+/** Hosts that only ever name a developer's own machine. */
+export function isLocalHost(host: string): boolean {
+  return host === 'localhost' || host === '127.0.0.1'
+}
+
+// NEXTAUTH_URL counts here only where it can be right: a localhost value on a deployment is
+// .env pasted into Vercel (see auth-url-guard.ts), and would put localhost links in every email.
+function nextAuthOrigin(): string {
+  const value = process.env.NEXTAUTH_URL
+  if (!value) return ''
+  try {
+    return IS_DEPLOYMENT && isLocalHost(new URL(value).hostname) ? '' : value
+  } catch {
+    return ''
+  }
+}
+
 // Public origin used for SEO (metadataBase, sitemap, canonical URLs) and every link in emails.
 // On Vercel, VERCEL_PROJECT_PRODUCTION_URL is set automatically to the project's production
 // domain — the custom domain once one is attached, the *.vercel.app one until then.
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '') ||
-  process.env.NEXTAUTH_URL ||
+  nextAuthOrigin() ||
   'http://localhost:3000'
 ).replace(/\/+$/, '')
 

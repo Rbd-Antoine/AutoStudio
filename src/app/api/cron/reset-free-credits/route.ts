@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rejectUnauthorizedCron } from '@/lib/cron-auth'
 import { db } from '@/lib/db'
 import { resetMonthlyCredits } from '@/lib/credits'
 import { sendCreditsResetEmail } from '@/lib/email'
@@ -10,11 +11,8 @@ import { sendCreditsResetEmail } from '@/lib/email'
 // is the FREE-plan equivalent. A workspace is due once its renewalDate has passed (or was never
 // set, for workspaces created before this cron existed).
 export async function GET(req: NextRequest) {
-  const secret = process.env.CRON_SECRET
-  // Refused when CRON_SECRET is unset too, so nobody who finds the URL can trigger the job.
-  if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-  }
+  const denied = rejectUnauthorizedCron(req)
+  if (denied) return denied
 
   const due = await db.workspace.findMany({
     where: {

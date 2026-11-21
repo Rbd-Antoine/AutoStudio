@@ -1,3 +1,5 @@
+// First: drops a localhost NEXTAUTH_URL on a deployment before Auth.js reads it.
+import '@/lib/auth-url-guard'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'

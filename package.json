@@ -14,7 +14,8 @@
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
-    "check:watchdog": "tsx scripts/check-watchdog.ts"
+    "check:watchdog": "tsx scripts/check-watchdog.ts",
+    "check:vehicle-protection": "tsx scripts/check-vehicle-protection.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

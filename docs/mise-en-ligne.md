@@ -82,6 +82,7 @@ Facultatives :
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Statistiques. Le serveur n'envoie qu'en production Vercel. |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CAPI_ACCESS_TOKEN`, `FACEBOOK_DOMAIN_VERIFICATION` | Meta. |
 | `NEXT_PUBLIC_CALENDLY_URL` | Prise de rendez-vous sur l'accueil (masquée sans elle). |
+| `VEHICLE_PROTECTION_URL`, `VEHICLE_PROTECTION_TOKEN` | Service GPU qui remet la voiture photographiée dans le rendu ([vehicle-protection.md](vehicle-protection.md)). À n'activer qu'après le banc d'essai décrit là-bas. |
 
 Les variables `NEXT_PUBLIC_*` sont lues à la construction : redéployer après les avoir ajoutées.
 

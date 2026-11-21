@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { isSuperuserAccount } from '@/lib/superusers'
-import { retouchImage, describeRenderFailure } from '@/lib/gemini'
+import { retouchImage, describeRenderFailure, IMAGE_MODEL } from '@/lib/gemini'
 import { endWithin, type WatchedRun } from '@/lib/watchdog'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError } from '@/lib/credits'
@@ -168,7 +168,10 @@ export async function POST(req: NextRequest) {
     const processingMs = Date.now() - startMs
     await db.photo.update({
       where: { id: photo.id },
-      data: { originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs },
+      data: {
+        originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs,
+        generationInput: { imageModel: IMAGE_MODEL, instruction: instruction.trim() },
+      },
     })
     return { originalUrl, enhancedUrl, processingMs }
   }

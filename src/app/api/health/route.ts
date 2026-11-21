@@ -41,6 +41,8 @@ const OPTIONAL = [
   'NEXT_PUBLIC_META_PIXEL_ID',
   'META_CAPI_ACCESS_TOKEN',
   'OPS_ALERT_EMAIL',
+  'VEHICLE_PROTECTION_URL',
+  'VEHICLE_PROTECTION_TOKEN',
 ] as const
 
 function present(key: string): boolean {

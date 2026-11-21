@@ -316,6 +316,9 @@ model Photo {
   height        Int?
   sizeBytes     Int?
   downloadedAt  DateTime?   // first download timestamp — undownloaded renders are purged 30 days after creation
+  // How the render was made: image model, background, frame, the dealer's characteristics,
+  // vehicle protection's outcome and diagnostics. Read to compare renders and answer a complaint.
+  generationInput Json?
   createdById   String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

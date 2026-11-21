@@ -1,0 +1,9 @@
+modal>=1.0
+torch>=2.6,<2.8
+transformers>=4.57.1,<5
+accelerate>=1.2
+safetensors>=0.4
+pillow>=11
+numpy>=1.26,<2
+opencv-python-headless>=4.10
+fastapi>=0.115

@@ -5,8 +5,9 @@ import sharp from 'sharp'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
-import { swapBackground, describeRenderFailure, nearestAspectRatio, type AspectRatio } from '@/lib/gemini'
+import { swapBackground, describeRenderFailure, nearestAspectRatio, IMAGE_MODEL, type AspectRatio } from '@/lib/gemini'
 import { endWithin, type WatchedRun } from '@/lib/watchdog'
+import { protectVehicle, warmVehicleProtection } from '@/lib/vehicle-protection.server'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError, type DeductResult } from '@/lib/credits'
 import { trackServerEvent, captureServerException } from '@/lib/analytics/server'
@@ -153,6 +154,8 @@ export async function POST(req: NextRequest) {
   if (!apiKey) return NextResponse.json({ error: 'GEMINI_API_KEY absent' }, { status: 500 })
 
   const background = await loadBackgroundReference(backgroundSlug)
+  // The GPU container wakes while Gemini draws, so its cold start is mostly hidden.
+  warmVehicleProtection()
   const analyticsIdentity = { userId, email: session.user.email ?? null, plan: member.workspace.plan, workspaceId }
 
   const results = await Promise.all(photos.map(async (image, index): Promise<SwapResult> => {
@@ -206,24 +209,46 @@ export async function POST(req: NextRequest) {
       }
 
       const left = WATCHDOG_MS - (Date.now() - requestStart)
+      const aspectRatio = await photoAspectRatio(image.base64)
       const [swapped, originalUrl] = await Promise.all([
         swapBackground(
           apiKey,
           { data: image.base64, mimeType: image.mimeType },
           { data: background.base64, mimeType: background.mimeType },
           characteristics,
-          { aspectRatio: await photoAspectRatio(image.base64), timeoutMs: Math.min(GEMINI_TIMEOUT_MS, left - STORE_MARGIN_MS) },
+          { aspectRatio, timeoutMs: Math.min(GEMINI_TIMEOUT_MS, left - STORE_MARGIN_MS) },
         ),
         uploadBase64WithFallback(image.base64, image.mimeType, `original-${photo.id}.jpg`),
       ])
       if (run.abandoned) return { index, error: RENDER_FAILED_MESSAGE }
+
+      // The photographed car put back over Gemini's redraw (badges, wheels, plate), when the
+      // GPU service is configured; otherwise, or on any refusal, the render as drawn.
+      const protection = await protectVehicle(
+        Buffer.from(image.base64, 'base64'),
+        { data: Buffer.from(swapped.base64, 'base64'), mimeType: swapped.mimeType },
+        { mimeType: image.mimeType, requests: characteristics, remainingMs: WATCHDOG_MS - (Date.now() - requestStart) - STORE_MARGIN_MS },
+      )
+      if (run.abandoned) return { index, error: RENDER_FAILED_MESSAGE }
       run.finishing = true
 
-      const enhancedUrl = await uploadBase64WithFallback(swapped.base64, swapped.mimeType, `enhanced-${photo.id}.png`)
+      const enhancedUrl = await uploadBase64WithFallback(protection.image.toString('base64'), protection.mimeType, `enhanced-${photo.id}.png`)
       const processingMs = Date.now() - startMs
       await db.photo.update({
         where: { id: photo.id },
-        data: { originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs },
+        data: {
+          originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs,
+          // How this render was made, to compare renders and diagnose a complaint later.
+          generationInput: {
+            imageModel: IMAGE_MODEL,
+            backgroundSlug,
+            aspectRatio: aspectRatio ?? null,
+            characteristics: characteristics?.trim() || null,
+            vehicleProtection: protection.protected
+              ? { protected: true, ...(protection.diagnostics ? { diagnostics: protection.diagnostics } : {}) }
+              : { protected: false, skipped: protection.skipped ?? null, reason: protection.reason ?? null },
+          },
+        },
       })
       return { index, photoId: photo.id, originalUrl, enhancedUrl, processingMs }
     }

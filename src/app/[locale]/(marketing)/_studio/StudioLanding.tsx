@@ -366,7 +366,7 @@ function Faq({ items }: { items: { q: string; a: string }[] }) {
             </button>
           </h3>
           {open === i && (
-            <p id={`studio-faq-panel-${i}`} role="region" aria-labelledby={`studio-faq-${i}`} className="max-w-[44rem] pb-6 text-[15px] leading-relaxed" style={{ color: C.ash }}>
+            <p id={`studio-faq-panel-${i}`} role="region" aria-labelledby={`studio-faq-${i}`} className="max-w-[36rem] pb-6 text-[15px] leading-relaxed" style={{ color: C.ash }}>
               {item.a}
             </p>
           )}
@@ -403,7 +403,7 @@ function StudioHeader({ chapter }: { chapter: ChapterId }) {
   const t = useTranslations('studio.nav')
   return (
     // A solid band: content scrolling underneath never shows through the links.
-    <header className="fixed inset-x-0 top-0 z-30 border-b" style={{ background: `${C.night}F2`, borderColor: `${C.steel}99` }}>
+    <header className="fixed inset-x-0 top-0 z-30 border-b" style={{ background: C.night, borderColor: `${C.steel}99` }}>
       <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-16">
         <Link href="/" aria-label={t('home')} className={cn(DISPLAY, 'text-2xl font-extrabold tracking-[0.02em]')}>
           AutoStudio

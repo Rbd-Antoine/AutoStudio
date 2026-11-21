@@ -179,3 +179,14 @@ dense et décors de l'éditeur légèrement refroidis.
 - **Police** : `Big Shoulders` n'a pas de métriques de repli dans next/font (avertissement au build) :
   repli explicite sur une condensée, `adjustFontFallback: false`.
 - Console : aucune erreur sur toutes les captures (1440 et 390 px, mouvement réduit compris).
+
+## Phase 5 — finitions et vérification
+
+- Notes finales (5 juges neufs sur les captures finales) : avant 6, studio 6, fonds 5, tarifs 4,
+  contact 4. Détail et analyse dans RAPPORT.md.
+- Corrigé après le passage final : en-tête totalement opaque (le texte se devinait dessous),
+  réponses de la FAQ moins larges.
+- Vérifié sur le build de production : `/pricing`, `/signup`, `/signin`, `/contact`, blog et pages
+  légales répondent 200 ; `/app` redirige vers la connexion sans session ; `/en` sert l'accueil en
+  anglais. `npm run build`, `npm run lint`, `npx tsc --noEmit` : OK.
+- Branche `feature/site-3d` poussée sur `Rbd-Antoine/AutoStudio` ; rien sur `main`.

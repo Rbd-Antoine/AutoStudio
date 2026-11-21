@@ -1,5 +1,7 @@
 import { Resend } from 'resend'
 import { SITE_URL, EMAIL_FROM, CONTACT_EMAIL } from './site-config'
+import { db } from './db'
+import { unsubscribeLinks } from './unsubscribe'
 
 const FROM     = EMAIL_FROM
 const REPLY_TO = CONTACT_EMAIL
@@ -11,6 +13,24 @@ function getResend(): Resend {
   return _resend
 }
 
+// ── Commercial vs transactional ──────────────────────────────────────────────
+// Every email is one of two kinds. Transactional mail (verification, password reset, receipts,
+// the first-render welcome) is needed to use the service and always goes out. Commercial mail
+// (lifecycle nudges, review requests, "credits renewed") must carry a working unsubscribe link,
+// and never reach someone who opted out. Enforcing that here, in the one function every email
+// passes through, means a future promotional email can't forget to.
+
+const UNSUBSCRIBE_SLOT = '<!--UNSUBSCRIBE-->'
+
+// RFC 8058 one-click unsubscribe: lets Gmail and Yahoo show their own "Unsubscribe" button,
+// which they require from bulk senders, and which beats being marked as spam.
+function unsubscribeHeaders(oneClickUrl: string): Record<string, string> {
+  return {
+    'List-Unsubscribe': `<${oneClickUrl}>`,
+    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+  }
+}
+
 // ── Generic send ─────────────────────────────────────────────────────────────
 
 async function sendEmail(opts: {
@@ -18,19 +38,54 @@ async function sendEmail(opts: {
   subject: string
   html: string
   text: string
-}) {
+  /** Commercial email: skipped for anyone who unsubscribed, and gets an unsubscribe link. */
+  marketing?: boolean
+}): Promise<boolean> {
   try {
+    let { html, text } = opts
+    let headers: Record<string, string> | undefined
+
+    if (opts.marketing) {
+      // Fails closed: if the opt-out can't be checked (unknown address, database down), the
+      // email is not sent rather than risk mailing someone who asked us to stop.
+      const user = await db.user.findFirst({
+        where: { email: { equals: opts.to, mode: 'insensitive' } },
+        select: { id: true, marketingUnsubscribedAt: true },
+      })
+      if (!user || user.marketingUnsubscribedAt) return false
+
+      const links = unsubscribeLinks(user.id)
+      html = html.replace(UNSUBSCRIBE_SLOT, `<br><br>Vous recevez cet email parce que vous avez un compte AutoStudio.<br>
+        <a href="${links.page}" style="color:#888;text-decoration:underline">Ne plus recevoir ces emails</a>`)
+      text = `${text}\n\n—\nVous recevez cet email parce que vous avez un compte AutoStudio.\nNe plus recevoir ces emails : ${links.page}`
+      headers = unsubscribeHeaders(links.oneClick)
+    } else {
+      html = html.replace(UNSUBSCRIBE_SLOT, '')
+    }
+
+    // Without a key (local development) nothing leaves the machine: the email is logged.
+    if (!process.env.RESEND_API_KEY) {
+      console.log(`[email] (not sent, no RESEND_API_KEY) to=${opts.to} subject="${opts.subject}"${opts.marketing ? ' [marketing]' : ''}`)
+      return false
+    }
+
     const { error } = await getResend().emails.send({
       from:    FROM,
       replyTo: REPLY_TO,
       to:      opts.to,
       subject: opts.subject,
-      html:    opts.html,
-      text:    opts.text,
+      html,
+      text,
+      ...(headers ? { headers } : {}),
     })
-    if (error) console.error('[email] send error:', error)
+    if (error) {
+      console.error('[email] send error:', error)
+      return false
+    }
+    return true
   } catch (err) {
     console.error('[email] unexpected error:', err)
+    return false
   }
 }
 
@@ -55,7 +110,7 @@ function layout(content: string): string {
         </td></tr>
         <!-- Footer -->
         <tr><td style="padding-top:24px;text-align:center;font-size:12px;color:#888">
-          AutoStudio · <a href="${SITE_URL}" style="color:#2D7FF9;text-decoration:none">${SITE_HOST}</a>
+          AutoStudio · <a href="${SITE_URL}" style="color:#2D7FF9;text-decoration:none">${SITE_HOST}</a>${UNSUBSCRIBE_SLOT}
         </td></tr>
       </table>
     </td></tr>
@@ -191,6 +246,7 @@ export async function sendCreditsResetEmail(to: string, opts: { credits: number;
 
   await sendEmail({
     to,
+    marketing: true,
     subject: `Vos ${credits} crédits du mois sont disponibles`,
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos ${credits} crédits gratuits du mois viennent d'être renouvelés.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -214,6 +270,7 @@ export async function sendReactivationEmail(to: string, opts: { name?: string })
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Votre stock mérite de meilleures photos',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nÇa fait un moment que vous n'avez pas généré de rendu sur AutoStudio. Vos crédits du mois sont peut-être encore disponibles.\n\nGénérer un rendu → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -237,6 +294,7 @@ export async function sendReviewRequestEmail(to: string, opts: { name?: string }
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Un avis sur AutoStudio ?',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous utilisez AutoStudio depuis quelques rendus déjà — votre avis nous aiderait à faire découvrir l'outil à d'autres concessions.\n\nDonner mon avis (2 minutes) → ${SITE_URL}/app/review\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -260,6 +318,7 @@ export async function sendFeatureDiscoveryEmail(to: string, opts: { name?: strin
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Et si vous transformiez ce rendu en vidéo ?',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez déjà généré 2 rendus — essayez maintenant la vidéo avant/après ou le kit marketing pour publier directement sur vos réseaux.\n\nDécouvrir → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -284,6 +343,7 @@ export async function sendCreditsExhaustedEmail(to: string, opts: { name?: strin
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Vous avez utilisé tous vos crédits',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous avez utilisé tous vos crédits gratuits ce mois-ci — signe qu'AutoStudio vous est utile. Avec un abonnement, un rendu revient à moins d'1 €, contre 30 à 80€ pour un studio photo mobile ou un photographe automobile.\n\nVoir l'abonnement Essentiel → ${SITE_URL}/app/billing?upgrade=1\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -305,6 +365,7 @@ export async function sendCreditsExhaustedFollowupEmail(to: string, opts: { name
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Votre travail est toujours là',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVos rendus précédents sont toujours dans votre espace AutoStudio. Dès que vous êtes prêt, un abonnement débloque de nouveaux crédits immédiatement.\n\nVoir les plans → ${SITE_URL}/app/billing\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -328,6 +389,7 @@ export async function sendActivationNudgeEmail(to: string, opts: { name?: string
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Une photo suffit pour commencer',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nVous vous êtes inscrit sur AutoStudio mais n'avez pas encore essayé — une seule photo de véhicule suffit pour voir le résultat en 60 secondes.\n\nEssayer maintenant → ${SITE_URL}/app/editor\n\nL'équipe AutoStudio`,
     html: layout(`
@@ -351,6 +413,7 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
 
   await sendEmail({
     to,
+    marketing: true,
     subject: 'Un exemple en 10 secondes, sans importer de photo',
     text: `Bonjour${displayName ? ` ${displayName}` : ''},\n\nPas encore essayé AutoStudio ? Voyez un exemple de transformation sans même importer de photo.\n\nVoir un exemple → ${SITE_URL}/#galerie\n\nL'équipe AutoStudio`,
     html: layout(`

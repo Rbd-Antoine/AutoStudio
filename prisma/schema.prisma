@@ -119,6 +119,10 @@ model User {
   twoFactorEnabled  Boolean  @default(false)
   twoFactorSecret   String?
   lastLoginAt       DateTime?
+  // Set when the user opts out of commercial email (lifecycle nudges, review requests…) from
+  // the link in those emails or the mail client's one-click button. Transactional email
+  // (verification, password reset, receipts) is never affected. See src/lib/unsubscribe.ts.
+  marketingUnsubscribedAt DateTime?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 

@@ -146,7 +146,7 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
           </div>
         )}
         {/* Readability: a dark band under the text column (left on desktop, bottom on mobile). */}
-        <div className="absolute inset-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${C.night}F5 0%, ${C.night}EB 30%, ${C.night}A6 42%, transparent 60%)` }} />
+        <div className="absolute inset-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${C.night}FA 0%, ${C.night}F0 27%, ${C.night}8C 35%, transparent 43%)` }} />
         {/* The top of the picture (ceiling lights, sky) quietened under the header. */}
         <div className="absolute inset-x-0 top-0 h-32" style={{ background: `linear-gradient(180deg, ${C.night}C7 0%, ${C.night}66 50%, transparent 100%)` }} />
         <div className="absolute inset-x-0 bottom-0 h-[62%] md:hidden" style={{ background: `linear-gradient(0deg, ${C.night} 0%, ${C.night}F0 38%, transparent 100%)` }} />
@@ -157,15 +157,15 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
       <div className="relative z-10">
         {/* 01 — Avant */}
         <section id="avant" ref={el => { sections.current[0] = el }} className="relative" style={{ height: '170vh' }}>
-          <ChapterText eyebrow={t('avant.eyebrow')} title={t('avant.title')} body={t('avant.body')} first>
+          <ChapterText eyebrow={t('avant.eyebrow')} title={t('avant.title')} body={t('avant.body')} first active={chapter === 'avant'}>
             <ScrollHint label={t('scrollHint')} />
           </ChapterText>
         </section>
 
         {/* 02 — Le studio */}
         <section id="studio" ref={el => { sections.current[1] = el }} className="relative" style={{ height: '260vh' }}>
-          <ChapterText eyebrow={t('studio.eyebrow')} title={t('studio.title')} body={t('studio.body')}>
-            <p className="mt-5 max-w-[30rem] border-l pl-4 text-sm leading-relaxed" style={{ borderColor: C.tungsten, color: C.ash }}>
+          <ChapterText eyebrow={t('studio.eyebrow')} title={t('studio.title')} body={t('studio.body')} active={chapter === 'studio'}>
+            <p className="mt-5 max-w-[28rem] border-l-2 pl-4 text-sm leading-relaxed" style={{ borderColor: C.steel, color: '#BDB8AF' }}>
               {t('studio.note')}
             </p>
           </ChapterText>
@@ -173,7 +173,7 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
 
         {/* 03 — Les fonds */}
         <section id="fonds" ref={el => { sections.current[2] = el }} className="relative" style={{ height: '210vh' }}>
-          <ChapterText eyebrow={t('fonds.eyebrow')} title={t('fonds.title')} body={t('fonds.body')}>
+          <ChapterText eyebrow={t('fonds.eyebrow')} title={t('fonds.title')} body={t('fonds.body')} active={chapter === 'fonds'}>
             <DecorPicker decor={decor} onPick={pickDecor} />
           </ChapterText>
         </section>
@@ -256,15 +256,18 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
   )
 }
 
-function ChapterText({ eyebrow, title, body, children, first }: { eyebrow: string; title: string; body: string; children?: React.ReactNode; first?: boolean }) {
+function ChapterText({ eyebrow, title, body, children, first, active }: { eyebrow: string; title: string; body: string; children?: React.ReactNode; first?: boolean; active: boolean }) {
+  // Visible during its own chapter only: leaving, it fades instead of sliding up under the header.
+  // Only the eye loses it: screen readers still read every chapter in order, and focusing a
+  // control scrolls its chapter into view, which makes it visible again.
   return (
-    <div className="sticky top-0 flex h-screen items-end px-4 pb-10 sm:px-8 md:pb-[12vh] lg:px-16">
-      <div className="max-w-[31rem]">
+    <div className="sticky top-0 flex h-screen items-end px-4 pb-10 sm:px-8 md:pb-[17vh] lg:px-16 xl:pl-32">
+      <div className={cn('max-w-[31rem] transition-opacity duration-500 motion-reduce:transition-none', active ? 'opacity-100' : 'pointer-events-none opacity-0')}>
         <p className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.tungsten }}>{eyebrow}</p>
         {first
           ? <h1 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 6vw, 5.5rem)' }}>{title}</h1>
           : <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 6vw, 5.5rem)' }}>{title}</h2>}
-        <p className="mt-5 text-base leading-relaxed sm:text-lg" style={{ color: C.ash }}>{body}</p>
+        <p className="mt-5 max-w-[28rem] text-base leading-relaxed sm:text-lg" style={{ color: C.ash }}>{body}</p>
         {children}
       </div>
     </div>
@@ -352,16 +355,17 @@ function Faq({ items }: { items: { q: string; a: string }[] }) {
 function ChapterRail({ chapter }: { chapter: ChapterId }) {
   const t = useTranslations('studio.nav')
   return (
-    <nav aria-label={t('label')} className="fixed right-4 top-1/2 z-20 hidden -translate-y-1/2 lg:block">
+    // Against the left edge, over the dark side of the scene: it never crosses the car.
+    <nav aria-label={t('label')} className="fixed left-7 top-1/2 z-20 hidden -translate-y-1/2 xl:block">
       <ol className="flex flex-col gap-4 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
         {CHAPTERS.map((id, i) => {
           const active = id === chapter
           return (
             <li key={id}>
-              <a href={`#${id}`} aria-current={active ? 'step' : undefined} className="group flex items-center justify-end gap-3 text-[11px] uppercase tracking-[0.2em]">
-                <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100" style={{ color: active ? C.chalk : C.ash }}>{t(id)}</span>
-                <span className="tabular-nums" style={{ color: active ? C.tungsten : C.ash }}>{String(i + 1).padStart(2, '0')}</span>
-                <span className="block h-px transition-all duration-300" style={{ width: active ? 28 : 12, background: active ? C.tungsten : C.steel }} />
+              <a href={`#${id}`} aria-current={active ? 'step' : undefined} className="group flex items-center gap-3 text-[11px] uppercase tracking-[0.2em]">
+                <span className="block h-px transition-all duration-300" style={{ width: active ? 20 : 10, background: active ? C.tungsten : C.steel }} />
+                <span className="tabular-nums" style={{ color: active ? C.chalk : C.ash }}>{String(i + 1).padStart(2, '0')}</span>
+                <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100" style={{ color: C.ash }}>{t(id)}</span>
               </a>
             </li>
           )
@@ -377,15 +381,15 @@ function StudioHeader({ chapter }: { chapter: ChapterId }) {
     <header className="fixed inset-x-0 top-0 z-30" style={{ background: `linear-gradient(180deg, ${C.night}E6, ${C.night}00)` }}>
       <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-16">
         <Link href="/" aria-label={t('home')} className={cn(DISPLAY, 'text-2xl font-extrabold tracking-[0.02em]')}>
-          Auto<span style={{ color: C.tungsten }}>Studio</span>
+          AutoStudio
         </Link>
         <nav aria-label={t('label')} className="hidden items-center gap-6 md:flex">
           {CHAPTERS.slice(1).map(id => (
-            <a key={id} href={`#${id}`} className="text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: chapter === id ? C.chalk : C.ash }}>{t(id)}</a>
+            <a key={id} href={`#${id}`} className="text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: chapter === id ? C.chalk : '#B5B0A7' }}>{t(id)}</a>
           ))}
         </nav>
         <div className="flex items-center gap-2 sm:gap-4">
-          <RouteLink href="/signin" className="hidden px-2 py-2 text-sm sm:block" style={{ color: C.ash }}>{t('signIn')}</RouteLink>
+          <RouteLink href="/signin" className="hidden px-2 py-2 text-sm transition-colors hover:text-[#ECE8E1] sm:block" style={{ color: '#CFCAC1' }}>{t('signIn')}</RouteLink>
           <TrackedLink href="/signup" ctaId="studio_header" label={t('cta')} location="studio_header"
             className="rounded-sm px-4 py-2.5 text-sm font-semibold" style={{ background: C.tungsten, color: C.night }}>
             {t('cta')}

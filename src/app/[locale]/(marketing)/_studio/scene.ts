@@ -25,15 +25,18 @@ interface Shot {
   /** The picture fills the screen: the view never leaves it at the top, bottom or right (the
    *  left, behind the text, may fade into darkness). Off for the pulled-back final shot. */
   fill?: boolean
+  /** With `fill`: the most of the scene's height the view may show (beyond 1, the floor below the
+   *  picture: a blurred reflection on glossy floors, darkness on the parking's asphalt). */
+  maxH?: number
 }
 
 // One stop per chapter: the camera rests there while the chapter is read, and glides between.
 // On wide screens the box is fitted into the part of the screen right of the text column, so
 // the car never runs under the words, the chapter rail or off the edge.
 const SHOTS: Record<ChapterId, Shot> = {
-  avant:   { box: [180, 200, 1080, 780], text: 0.34, fill: true },
-  studio:  { box: [30, 0, 1170, 880], text: 0.32, fill: true },
-  fonds:   { box: [190, 210, 1060, 770], text: 0.36, fill: true },
+  avant:   { box: [80, 140, 1160, 840], text: 0.37, fill: true, maxH: 1.0 },
+  studio:  { box: [-60, -20, 1260, 920], text: 0.35, fill: true, maxH: 1.16 },
+  fonds:   { box: [190, 210, 1060, 770], text: 0.36, fill: true, maxH: 1.1 },
   tarifs:  { box: [260, 0, 1200, 560], text: 0.0, fill: true },
   contact: { box: [-260, -120, 1460, 1000], text: 0.0 },
 }
@@ -98,7 +101,7 @@ function strike(t: number): number {
 }
 
 /** Share of the screen width kept free on the right for the chapter rail (wide screens). */
-const RAIL = 0.1
+const RAIL = 0.05
 
 /** The view (scene pixels) that keeps `shot.box` in view on a screen of this aspect ratio. */
 function frame(shot: Shot, aspect: number, wide: boolean) {
@@ -123,14 +126,16 @@ function frame(shot: Shot, aspect: number, wide: boolean) {
   if (shot.fill && wide) {
     // At most a little past the bottom of the picture: the floor then fades into darkness like
     // a studio sweep, and the car keeps a comfortable size.
-    const maxH = SCENE_H * 1.05
+    const maxH = SCENE_H * (shot.maxH ?? 1.1)
     if (viewH > maxH) {
       viewW *= maxH / viewH
       viewH = maxH
+      // Re-centred with the narrower view, or the box would drift towards the right edge.
+      cx = (x0 + x1) / 2 - (screenX - 0.5) * viewW
     }
-    // The right edge may pass the picture a little (it continues mirrored and fades), so the car
-    // stays centred in its part of the screen instead of being pushed under the chapter rail.
-    cx = Math.min(cx, SCENE_W + 0.07 * viewW - viewW / 2)
+    // Full bleed: the picture runs to the right edge of the screen (the chapter rail is on the
+    // left, over the dark side); only the text side fades.
+    cx = Math.min(cx, SCENE_W - viewW / 2)
     cy = Math.max(cy, viewH / 2) // the top edge stays inside the picture
   }
   return { cx, cy, viewW, viewH }
@@ -150,7 +155,7 @@ export function sceneAt(p: number, aspect: number, wide: boolean): SceneState {
   const here = frame(SHOTS[chapter], aspect, wide)
   const nextId = CHAPTERS[Math.min(CHAPTERS.length - 1, index + 1)]
   const there = frame(SHOTS[nextId], aspect, wide)
-  const glide = index < CHAPTERS.length - 1 ? smooth(0.62, 1, local) : 0
+  const glide = index < CHAPTERS.length - 1 ? smooth(0.74, 1, local) : 0
   const camera = {
     cx: lerp(here.cx, there.cx, glide),
     cy: lerp(here.cy, there.cy, glide),
@@ -168,8 +173,10 @@ export function sceneAt(p: number, aspect: number, wide: boolean): SceneState {
   const studio = smooth(0.78, 1.08, sx)
   const blackout = smooth(0.7, 0.95, sx) * (1 - smooth(1.05, 1.25, sx))
   const lights = LIGHTS.map((_, i) => {
-    const start = 1.12 + i * 0.13
-    return strike((sx - start) / 0.16)
+    // The five groups strike between 8 % and 62 % of the chapter: all lit well before the camera
+    // leaves for chapter 3.
+    const start = 1.08 + i * 0.1
+    return strike((sx - start) / 0.14)
   })
   const lit = lights.reduce((sum, v) => sum + Math.min(1, v), 0) / LIGHTS.length
   const ambient = sx < 1 ? 1 : clamp01(0.06 + 0.94 * smooth(0.15, 1, lit))

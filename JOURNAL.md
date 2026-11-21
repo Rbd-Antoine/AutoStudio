@@ -97,11 +97,33 @@ juges suivants reçoivent cette contrainte. La note « lumière » du chapitre 2
 |---|---|---|---|
 | 1 | 3/10 | Première version (voiture de la photo collée sur le rendu rempli) | Rectangle visible (bords flous, bande noire), voiture collée, rail sur la voiture, bandes jaunes concurrentes, badge de dev |
 | 2 | 4/10 | Voiture et ombres du vrai rendu, bords prolongés en miroir, reflet au sol, étalonnage du décor, rail sans libellés, badge masqué | Voiture « éclairée différemment » (refusé, voir ci-dessus), joints du sol en losange (couture du miroir), gauche pas assez sombre, plafonniers brûlés, rail illisible |
-| 3 | … | Plus de miroir en bas (fondu avant le bord), ombre de contact renforcée, voile gauche dense, voile haut, jaunes désaturés, voiture recentrée dans sa zone, titre plus compact | |
+| 3 | 4,5/10 | Plus de miroir en bas, ombre de contact renforcée, voile gauche dense, voile haut, jaunes désaturés, voiture recentrée, titre plus compact | Voiture trop grande, collée au titre et au rail ; perspective voiture/décor (celle du rendu) |
+| 4 | 6/10 | Caméra reculée (le palier de capture tombait en plein glissement : lampes avancées, départ de caméra retardé), rail passé à gauche, sol prolongé en reflet flou | Traces de miroir sur les piliers, ombre de contact molle, gauche « boueuse » |
+| 5 | 6/10 | Plus aucun miroir latéral (fondus propres), reflet au sol seulement sur sols brillants, bleu du décor tiré vers l'acier, ciel du parking assombri en haut | Image « découpée » sur fond noir (masque ovale) |
+| 6 | 6/10 | Refonte large : fond perdu à droite et en haut, un seul dégradé linéaire à gauche, logo en craie (un seul accent), note plus contrastée | Le dégradé de gauche voile l'arrière de la voiture (vrai bug, corrigé ensuite), voile laiteux du sol |
+
+**Arrêt du chapitre 2 à 6/10** : trois tours à 6 malgré une refonte large (règle de la mission).
+Correction faite après coup, non re-notée : le fondu de bord ne s'applique plus qu'au décor (il
+assombrissait l'arrière de la voiture, ce qui la modifiait sur la page) et le dégradé de la page
+s'arrête avant la voiture. Le plafond restant vient surtout de la contrainte d'honnêteté (voiture
+et composition du rendu inchangées).
 
 ### Chapitre 1 — Avant
 
 | Tour | Note | Ce qui a changé avant le tour | Principaux reproches |
 |---|---|---|---|
 | 1 | 6/10 | Photo d'origine entière (plus de remplissage visible autour de la voiture) | « Ligne fantôme » en bas (couture du miroir), rail sur la zone chargée, voile gauche trop court, navigation peu lisible sur le ciel |
-| 2 | … | Mêmes corrections communes que le chapitre 2 (bas sans miroir, voiles, rail) | |
+| 2 | 6/10 | Mêmes corrections communes que le chapitre 2 (bas sans miroir, voiles, rail) | Rail sur la zone chargée, voiture coincée entre texte et rail, hangar fantôme sous le titre |
+| 3 | 5/10 | Caméra reculée, sol prolongé en reflet flou | Le reflet flou se lit comme une flaque sur l'asphalte, chevrons au bord droit |
+| 4 | 6/10 | Fondus propres sans miroir, ciel assombri en haut | Masque ovale « projecteur », quart bas vide |
+| 5 | 7/10 | Fond perdu, asphalte jusqu'en bas, voiture recentrée (bug de centrage après plafonnement corrigé) | Dégradé de gauche sur l'arrière de la voiture (corrigé ensuite), voitures garées à droite aussi claires que le sujet |
+
+**Arrêt du chapitre 1 à 7/10** (budget de temps : un site complet à 7 plutôt qu'un chapitre à 9).
+
+### Point d'étape (environ 5 h de mission)
+
+- Phases 0 à 2 faites ; phase 3 : chapitres 2 (6/10, arrêté) et 1 (7/10) bouclés.
+- Chapitres 3, 5 et 4 en cours de premier jugement.
+- Les juges plafonnent surtout sur ce que la contrainte d'honnêteté interdit de toucher.
+- Prochaine étape : un ou deux tours sur 3, 5, 4, puis phase 4 (mobile, mouvement réduit,
+  performance, captures Playwright).

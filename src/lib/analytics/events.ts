@@ -15,6 +15,9 @@ export const ANALYTICS_EVENTS = {
   IMAGE_GENERATED: 'Image Generated',
   IMAGE_RETOUCHED: 'Image Retouched',
   VIDEO_GENERATED: 'Video Generated',
+  // One that started, failed, and was refunded: the model refused, was overloaded, timed out, or
+  // something broke.
+  RENDER_FAILED: 'Render Failed',
   // Payments
   CHECKOUT_STARTED: 'Checkout Started',
   SUBSCRIPTION_PURCHASED: 'Subscription Purchased',
@@ -60,6 +63,8 @@ export interface EventPropertiesMap {
   [ANALYTICS_EVENTS.IMAGE_GENERATED]: { styleSlug?: string; processingMs?: number }
   [ANALYTICS_EVENTS.IMAGE_RETOUCHED]: { processingMs?: number }
   [ANALYTICS_EVENTS.VIDEO_GENERATED]: { styleSlug?: string; processingMs?: number }
+  // reason: 'refused' (the model declined the content), 'unavailable' (overloaded), 'timeout', 'error'.
+  [ANALYTICS_EVENTS.RENDER_FAILED]: { featureKey: string; reason: 'refused' | 'unavailable' | 'timeout' | 'error'; refunded: boolean; processingMs: number }
   [ANALYTICS_EVENTS.CHECKOUT_STARTED]: { kind: 'subscription' | 'pack'; target: string }
   [ANALYTICS_EVENTS.SUBSCRIPTION_PURCHASED]: { amount?: number }
   [ANALYTICS_EVENTS.CREDIT_PACK_PURCHASED]: { pack: string; credits: number; amount?: number }

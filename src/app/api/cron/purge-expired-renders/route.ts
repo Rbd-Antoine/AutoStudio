@@ -3,11 +3,9 @@ import { del } from '@vercel/blob'
 import { db } from '@/lib/db'
 import { isOwnBlobUrl } from '@/lib/photo-url'
 import { RATE_LIMIT_RETENTION_MS } from '@/lib/rate-limit'
+import { failStaleGenerations } from '@/lib/stale-generations'
 
 const RETENTION_DAYS = 30
-// Renders are processed within maxDuration (300 s); a row still PROCESSING an hour later was cut
-// off mid-flight (function timeout, crash) and would otherwise spin in the library forever.
-const STUCK_AFTER_MS = 60 * 60 * 1000
 // Bounded per run so one invocation stays well within the function's time limit; any rest is
 // picked up the next day.
 const BATCH_SIZE = 1000
@@ -63,10 +61,8 @@ export async function GET(req: NextRequest) {
     },
   })
 
-  const stuck = await db.photo.updateMany({
-    where: { status: 'PROCESSING', createdAt: { lt: new Date(Date.now() - STUCK_AFTER_MS) } },
-    data: { status: 'FAILED', errorMessage: 'Traitement interrompu' },
-  })
+  // Renders cut off mid-flight (deploy, crash): marked failed and their credit given back.
+  const stuck = await failStaleGenerations()
 
   const rateLimitRows = await db.rateLimitHit.deleteMany({
     where: { createdAt: { lt: new Date(Date.now() - RATE_LIMIT_RETENTION_MS) } },
@@ -75,7 +71,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     purged: purged.count,
     filesDeleted: filesToDelete.length,
-    stuckMarkedFailed: stuck.count,
+    stuckMarkedFailed: stuck,
     rateLimitRowsDeleted: rateLimitRows.count,
   })
 }

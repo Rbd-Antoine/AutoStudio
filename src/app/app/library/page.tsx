@@ -6,12 +6,17 @@ import { db } from '@/lib/db'
 import { ensureWorkspaceId } from '@/lib/workspace'
 import { isRealHostedUrl } from '@/lib/photo-url'
 import PhotoGrid from '@/components/app/PhotoGrid'
+import { failStaleGenerations } from '@/lib/stale-generations'
 
 export default async function LibraryPage() {
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) redirect('/signin')
 
   const wsId = session.user.workspaceId ?? await ensureWorkspaceId(session.user.id, session.user.name)
+
+  // A render whose function was killed shows as failed (and refunded) as soon as the dealer
+  // looks, not only after the nightly job.
+  await failStaleGenerations(wsId)
 
   const photos = await db.photo.findMany({
     where: {

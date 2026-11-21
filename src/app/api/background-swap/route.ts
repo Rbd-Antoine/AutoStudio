@@ -5,7 +5,8 @@ import sharp from 'sharp'
 import { getSessionOrDevBypass } from '@/lib/dev-auth'
 import { db } from '@/lib/db'
 import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
-import { swapBackground } from '@/lib/gemini'
+import { swapBackground, describeRenderFailure, nearestAspectRatio, type AspectRatio } from '@/lib/gemini'
+import { endWithin, type WatchedRun } from '@/lib/watchdog'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError, type DeductResult } from '@/lib/credits'
 import { trackServerEvent, captureServerException } from '@/lib/analytics/server'
@@ -20,6 +21,28 @@ export const maxDuration = 300
 const MAX_PHOTOS = 5
 const FEATURE_KEY = 'imageGeneration'
 const RENDER_FAILED_MESSAGE = "Le rendu a échoué, aucun crédit n'a été consommé. Veuillez réessayer."
+const TIMEOUT_MESSAGE = "L'IA a mis trop de temps à répondre. Réessayez — votre crédit a été restitué."
+
+// Every request ends before maxDuration (300 s), with the time to refund and record a failure:
+// past WATCHDOG_MS a render is given up by the route itself rather than cut by the platform
+// with its credit taken. Gemini gets at most GEMINI_TIMEOUT_MS (both tries), and always leaves
+// STORE_MARGIN_MS to store the render.
+const WATCHDOG_MS = 285_000
+const GEMINI_TIMEOUT_MS = 200_000
+const STORE_MARGIN_MS = 30_000
+
+// The car photo's own frame, passed to Gemini so the render keeps it (see nearestAspectRatio).
+// Undefined when the photo cannot be read here (HEIC on a sharp build without it): the model
+// then picks the frame itself, as before.
+async function photoAspectRatio(base64: string): Promise<AspectRatio | undefined> {
+  try {
+    const { width, height, orientation } = await sharp(Buffer.from(base64, 'base64')).metadata()
+    // EXIF orientations 5-8 are rotated a quarter turn: the picture shows height x width.
+    return orientation && orientation >= 5 ? nearestAspectRatio(height, width) : nearestAspectRatio(width, height)
+  } catch {
+    return undefined
+  }
+}
 
 interface ImagePayload {
   base64: string
@@ -34,6 +57,8 @@ interface SwapResult {
   processingMs?: number
   error?: string
   code?: 'insufficient_credits'
+  /** HTTP status this photo's failure would have on its own (422 refused, 503 overloaded, 504 timeout). */
+  status?: number
   available?: number
   required?: number
 }
@@ -65,6 +90,7 @@ async function loadBackgroundReference(slug: string): Promise<{ base64: string; 
 // request limit), but the route still accepts up to MAX_PHOTOS. Each photo is charged on its
 // own, and refunded if its render fails.
 export async function POST(req: NextRequest) {
+  const requestStart = Date.now()
   const session = await getSessionOrDevBypass()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
@@ -151,47 +177,85 @@ export async function POST(req: NextRequest) {
     }
 
     const startMs = Date.now()
-    const photo = await db.photo.create({
-      data: {
-        workspaceId,
-        originalUrl: 'car-direct-upload',
-        status: 'PROCESSING',
-        styleUsed: backgroundSlug,
-        toolsUsed: ['gemini_background_swap'],
-        createdById: userId,
-      },
-    })
+    let photoId: string | null = null
+    // Set by whoever gives the credit back, before doing it: never twice.
+    let refunded = false
+    const giveBack = async (reason: string) => {
+      if (!deduction || refunded) return
+      refunded = true
+      await refundCredits(workspaceId, deduction, { featureKey: FEATURE_KEY, photoId: photoId ?? undefined, notes: `Automatic refund: ${reason}` })
+    }
 
-    try {
+    const run: WatchedRun = { finishing: false, abandoned: false }
+    const work = async (): Promise<SwapResult> => {
+      const photo = await db.photo.create({
+        data: {
+          workspaceId,
+          originalUrl: 'car-direct-upload',
+          status: 'PROCESSING',
+          styleUsed: backgroundSlug,
+          toolsUsed: ['gemini_background_swap'],
+          createdById: userId,
+        },
+      })
+      photoId = photo.id
+      // Linked at once, not after success: if the function is killed mid-render, the stale-render
+      // cleanup (stale-generations.ts) reads from the ledger what this photo still owes.
+      if (deduction) {
+        await db.creditTransaction.updateMany({ where: { id: { in: deduction.transactionIds } }, data: { photoId: photo.id } })
+      }
+
+      const left = WATCHDOG_MS - (Date.now() - requestStart)
       const [swapped, originalUrl] = await Promise.all([
-        swapBackground(apiKey, image.base64, image.mimeType, background.base64, background.mimeType, characteristics),
+        swapBackground(
+          apiKey,
+          { data: image.base64, mimeType: image.mimeType },
+          { data: background.base64, mimeType: background.mimeType },
+          characteristics,
+          { aspectRatio: await photoAspectRatio(image.base64), timeoutMs: Math.min(GEMINI_TIMEOUT_MS, left - STORE_MARGIN_MS) },
+        ),
         uploadBase64WithFallback(image.base64, image.mimeType, `original-${photo.id}.jpg`),
       ])
+      if (run.abandoned) return { index, error: RENDER_FAILED_MESSAGE }
+      run.finishing = true
+
       const enhancedUrl = await uploadBase64WithFallback(swapped.base64, swapped.mimeType, `enhanced-${photo.id}.png`)
       const processingMs = Date.now() - startMs
-
       await db.photo.update({
         where: { id: photo.id },
         data: { originalUrl, enhancedUrl, thumbnailUrl: enhancedUrl, status: 'ENHANCED', processingMs },
       })
-      if (deduction) {
-        await db.creditTransaction.updateMany({
-          where: { id: { in: deduction.transactionIds } },
-          data: { photoId: photo.id },
-        })
-      }
-
       return { index, photoId: photo.id, originalUrl, enhancedUrl, processingMs }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erreur inconnue'
-      console.error('[background-swap]', msg)
-      captureServerException(err, userId)
-      await db.photo.update({ where: { id: photo.id }, data: { status: 'FAILED', errorMessage: msg } })
-      if (deduction) {
-        await refundCredits(workspaceId, deduction, { featureKey: FEATURE_KEY, photoId: photo.id })
+    }
+
+    const fail = async (err: unknown, message: string, status: number, reason: 'refused' | 'unavailable' | 'timeout' | 'error'): Promise<SwapResult> => {
+      const detail = err instanceof Error ? err.message : String(err)
+      console.error('[background-swap]', detail)
+      if (reason === 'error') captureServerException(err, userId)
+      if (photoId) {
+        await db.photo.update({ where: { id: photoId }, data: { status: 'FAILED', errorMessage: detail.slice(0, 1000) } })
+          .catch(recordErr => console.error(`[background-swap] failed render ${photoId} not recorded:`, recordErr))
       }
+      await giveBack(reason)
+      trackServerEvent(ANALYTICS_EVENTS.RENDER_FAILED, {
+        ...analyticsIdentity,
+        remainingCredits: 0,
+        featureKey: FEATURE_KEY,
+        reason,
+        refunded: !!deduction,
+        processingMs: Date.now() - startMs,
+      })
       // The detailed cause (often a raw Gemini response) stays in the Photo row and the logs.
-      return { index, error: RENDER_FAILED_MESSAGE }
+      return { index, photoId: photoId ?? undefined, error: message, status }
+    }
+
+    try {
+      const watched = await endWithin(work(), WATCHDOG_MS - (Date.now() - requestStart), run)
+      if (watched.ended) return watched.value
+      return await fail(new Error(`watchdog: no end after ${WATCHDOG_MS / 1000} s`), TIMEOUT_MESSAGE, 504, 'timeout')
+    } catch (err) {
+      const failure = describeRenderFailure(err)
+      return await fail(err, failure.message, failure.status, failure.reason)
     }
   }))
 

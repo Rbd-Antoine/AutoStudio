@@ -1,102 +1,45 @@
 import { NextRequest, NextResponse, after } from 'next/server'
 import Stripe from 'stripe'
 import { db } from '@/lib/db'
-import { getStripe, type SubscriptionPlan, type CreditPackId } from '@/lib/stripe'
-import { getPricingConfig, creditPacks } from '@/lib/pricing'
-import { grantCredits, resetMonthlyCredits, getAvailableCredits } from '@/lib/credits'
-import { trackServerEvent, captureServerException } from '@/lib/analytics/server'
+import { getStripe } from '@/lib/stripe'
+import { resetMonthlyCredits, getAvailableCredits } from '@/lib/credits'
+import { fulfillCheckoutSession, fulfillSubscription, invoiceSubscriptionId } from '@/lib/fulfillment'
+import { trackCheckoutPayment, trackPaymentCompleted } from '@/lib/payment-analytics.server'
+import { trackServerEvent, captureServerException, flushServerAnalytics } from '@/lib/analytics/server'
 import { ANALYTICS_EVENTS } from '@/lib/analytics/events'
 import { sendInvoiceEmail } from '@/lib/email'
 
 // Stripe requires the raw, unparsed request body to verify the webhook signature.
 export const runtime = 'nodejs'
 
-const PLAN_PRICE_ENV: Record<SubscriptionPlan, string> = {
-  ESSENTIAL: 'STRIPE_PRICE_ESSENTIAL',
-  PRO: 'STRIPE_PRICE_PRO',
-  BUSINESS: 'STRIPE_PRICE_BUSINESS',
-}
+// Every handler below delegates the actual "give them what they paid for" work to
+// src/lib/fulfillment.ts, which is idempotent. That is what lets several event types map onto
+// the same fulfilment without double-granting — checkout.session.completed,
+// customer.subscription.created and invoice.paid all describe the same purchase, and whichever
+// arrives first (or arrives at all) is enough. Analytics and receipts, by contrast, only fire on
+// the call that actually did the work, so a Stripe retry never double-counts revenue.
 
-// The price decides the plan; checkout's metadata is only a fallback. A plan switched in the
-// Stripe customer portal keeps the metadata written at checkout, so reading it first would
-// leave the workspace on its old plan.
-function planFromSubscription(subscription: Stripe.Subscription): SubscriptionPlan | null {
-  const priceId = subscription.items.data[0]?.price.id
-  for (const plan of Object.keys(PLAN_PRICE_ENV) as SubscriptionPlan[]) {
-    if (priceId && process.env[PLAN_PRICE_ENV[plan]] === priceId) return plan
-  }
-
-  const metaPlan = subscription.metadata?.plan as SubscriptionPlan | undefined
-  if (metaPlan && metaPlan in PLAN_PRICE_ENV) return metaPlan
-  return null
-}
-
-// Stripe API 2025-03-31.basil moved the billing period onto each subscription item and the
-// invoice's subscription under parent.subscription_details. Webhook payloads follow the API
-// version set on the endpoint in the Stripe dashboard (not this SDK's), so both shapes are read.
-function subscriptionPeriodEnd(subscription: Stripe.Subscription): Date | undefined {
-  const legacy = (subscription as unknown as { current_period_end?: number }).current_period_end
-  const perItem = (subscription.items?.data[0] as unknown as { current_period_end?: number } | undefined)?.current_period_end
-  const seconds = legacy ?? perItem
-  return seconds ? new Date(seconds * 1000) : undefined
-}
-
-function invoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
-  const shape = invoice as unknown as {
-    subscription?: string | { id: string } | null
-    parent?: { subscription_details?: { subscription?: string | { id: string } | null } | null } | null
-  }
-  const subscription = shape.subscription ?? shape.parent?.subscription_details?.subscription
-  if (!subscription) return null
-  return typeof subscription === 'string' ? subscription : subscription.id
-}
+const euros = (cents: number | null | undefined) =>
+  cents ? `${(cents / 100).toFixed(2).replace('.', ',')} €` : '—'
+const today = () => new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 
 async function handleSubscriptionUpsert(subscription: Stripe.Subscription, eventType: 'created' | 'updated') {
-  const workspaceId = subscription.metadata?.workspaceId
-  if (!workspaceId) {
-    console.warn('[webhooks/stripe] subscription has no workspaceId metadata, skipping', subscription.id)
+  const outcome = await fulfillSubscription(subscription)
+  if (outcome.status === 'skipped') {
+    console.warn('[webhooks/stripe] subscription not fulfilled:', outcome.reason)
     return
   }
-
-  // A subscription whose first payment hasn't gone through yet (e.g. awaiting 3-D Secure)
-  // doesn't get the plan; the customer.subscription.updated that follows payment grants it.
-  if (subscription.status === 'incomplete' || subscription.status === 'incomplete_expired') return
-
-  const plan = planFromSubscription(subscription)
-  if (!plan) {
-    console.warn('[webhooks/stripe] could not resolve plan for subscription', subscription.id)
-    return
-  }
-
-  const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { plan: true } })
-  const previousPlan = workspace?.plan
-  const planChanged = previousPlan !== plan
-  const renewalDate = subscriptionPeriodEnd(subscription)
-
-  await db.workspace.update({
-    where: { id: workspaceId },
-    data: {
-      plan,
-      stripeSubscriptionId: subscription.id,
-      subscriptionStatus: subscription.status,
-      renewalDate,
-    },
+  const price = subscription.items.data[0]?.price
+  await trackPaymentCompleted(outcome, {
+    kind: 'subscription', amountCents: price?.unit_amount, currency: price?.currency, customer: subscription.customer,
   })
 
-  // New subscription or a plan change: give the workspace a fresh allotment for the new tier.
-  // Pure status changes (e.g. past_due -> active with no plan change) don't touch credits.
-  if (planChanged) {
-    await resetMonthlyCredits(workspaceId, { renewalDate })
-  }
+  const { userId, email, plan, previousPlan, planChanged, totalCredits, workspaceId } = outcome
+  if (!userId || !plan) return
 
-  const userId = subscription.metadata?.userId
-  if (!userId) return
-  const remainingCredits = (await getAvailableCredits(workspaceId)).total
-  const identity = { userId, email: subscription.metadata?.email || null, plan, remainingCredits, workspaceId }
-  const amount = subscription.items.data[0]?.price.unit_amount ?? undefined
-
-  if (eventType === 'created') {
-    trackServerEvent(ANALYTICS_EVENTS.SUBSCRIPTION_PURCHASED, { ...identity, amount })
+  const identity = { userId, email: email ?? null, plan, remainingCredits: totalCredits ?? 0, workspaceId }
+  if (eventType === 'created' && outcome.status === 'fulfilled') {
+    trackServerEvent(ANALYTICS_EVENTS.SUBSCRIPTION_PURCHASED, { ...identity, amount: price?.unit_amount ?? undefined })
   } else if (planChanged && previousPlan) {
     trackServerEvent(ANALYTICS_EVENTS.UPGRADE_SUBSCRIPTION, { ...identity, fromPlan: previousPlan, toPlan: plan })
   }
@@ -110,13 +53,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 
   await db.workspace.update({
     where: { id: workspaceId },
-    data: { plan: 'FREE', subscriptionStatus: 'canceled', stripeSubscriptionId: null },
+    data: { plan: 'FREE', subscriptionStatus: 'canceled', stripeSubscriptionId: null, cancelAtPeriodEnd: false },
   })
   await resetMonthlyCredits(workspaceId)
 
   const userId = subscription.metadata?.userId
   if (!userId) return
   const remainingCredits = (await getAvailableCredits(workspaceId)).total
+  const endedAt = subscription.ended_at ?? Math.floor(Date.now() / 1000)
   trackServerEvent(ANALYTICS_EVENTS.CANCEL_SUBSCRIPTION, {
     userId,
     email: subscription.metadata?.email || null,
@@ -124,55 +68,49 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     remainingCredits,
     workspaceId,
     cancelledPlan: workspace?.plan ?? 'FREE', // the plan they were on before cancelling
+    ...(subscription.start_date ? { durationDays: Math.round((endedAt - subscription.start_date) / 86400) } : {}),
   })
 }
 
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
-  // Only true recurring renewals reset credits — the first invoice on a brand-new
-  // subscription (billing_reason "subscription_create") is already handled by
-  // handleSubscriptionUpsert, so resetting again here would double-grant.
-  if (invoice.billing_reason !== 'subscription_cycle') return
-
   const subscriptionId = invoiceSubscriptionId(invoice)
   if (!subscriptionId) return
+  const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
 
-  const stripe = getStripe()
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId)
-  const workspaceId = subscription.metadata?.workspaceId
-  if (!workspaceId) return
+  // Run for every paid invoice, not just renewals. The first invoice of a new subscription
+  // resolves to the same fulfilment key as customer.subscription.created and is therefore a
+  // no-op, while a renewal carries a new billing period and grants a fresh allotment. That
+  // means a renewal still lands even if the subscription.updated event is lost.
+  const outcome = await fulfillSubscription(subscription)
+  if (outcome.status === 'skipped') {
+    console.warn('[webhooks/stripe] invoice.paid not fulfilled:', outcome.reason)
+    return
+  }
+  await trackPaymentCompleted(outcome, {
+    kind: 'subscription', amountCents: invoice.amount_paid, currency: invoice.currency, customer: invoice.customer,
+  })
 
-  const renewalDate = subscriptionPeriodEnd(subscription)
-  await db.workspace.update({ where: { id: workspaceId }, data: { renewalDate, subscriptionStatus: subscription.status } })
-  await resetMonthlyCredits(workspaceId, { renewalDate })
+  const isRenewal = invoice.billing_reason === 'subscription_cycle'
+  if (!isRenewal || outcome.status !== 'fulfilled') return
 
-  const userId = subscription.metadata?.userId
-  if (userId) {
-    const remainingCredits = (await getAvailableCredits(workspaceId)).total
+  if (outcome.userId && outcome.plan) {
     trackServerEvent(ANALYTICS_EVENTS.SUBSCRIPTION_RENEWED, {
-      userId,
-      email: subscription.metadata?.email || null,
-      plan: planFromSubscription(subscription) ?? 'FREE',
-      remainingCredits,
-      workspaceId,
+      userId: outcome.userId,
+      email: outcome.email ?? null,
+      plan: outcome.plan,
+      remainingCredits: outcome.totalCredits ?? 0,
+      workspaceId: outcome.workspaceId,
       amount: invoice.amount_paid ?? undefined,
     })
   }
-
-  // Email de facture d'abonnement
-  const email = subscription.metadata?.email
+  const email = outcome.email
   if (email) {
-    const plan = planFromSubscription(subscription)
-    const amountEur = invoice.amount_paid
-      ? `${(invoice.amount_paid / 100).toFixed(2).replace('.', ',')} €`
-      : '—'
-    const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-    const invoiceNum = invoice.number ?? `INV-${Date.now()}`
     after(() => sendInvoiceEmail(email, {
-      invoiceNumber: invoiceNum,
-      date,
-      description:   `Abonnement ${plan ?? 'AutoStudio'} — renouvellement mensuel`,
-      amountEur,
-      receiptUrl:    invoice.hosted_invoice_url ?? undefined,
+      invoiceNumber: invoice.number ?? `INV-${Date.now()}`,
+      date: today(),
+      description: `Abonnement ${outcome.plan ?? 'AutoStudio'} — renouvellement mensuel`,
+      amountEur: euros(invoice.amount_paid),
+      receiptUrl: invoice.hosted_invoice_url ?? undefined,
     }))
   }
 }
@@ -185,8 +123,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   let plan = 'FREE'
 
   if (subscriptionId) {
-    const stripe = getStripe()
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
     workspaceId = subscription.metadata?.workspaceId
     userId = subscription.metadata?.userId
     email = subscription.metadata?.email || null
@@ -215,62 +152,42 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  if (session.mode !== 'payment') return // subscriptions are handled by the subscription events
-  // With a delayed payment method (SEPA debit, bank transfer…) the session completes while the
-  // payment is still 'unpaid'; the credits are granted on checkout.session.async_payment_succeeded,
-  // which runs this same handler once the money has arrived.
-  if (session.payment_status !== 'paid') return
-
-  const workspaceId = session.metadata?.workspaceId
-  const pack = session.metadata?.pack as CreditPackId | undefined
-  const userId = session.metadata?.userId
-  const email = session.metadata?.email || null
-  if (!workspaceId || !pack) {
-    console.warn('[webhooks/stripe] payment checkout missing workspaceId/pack metadata', session.id)
+  // Handles subscriptions too, not just credit packs. A subscription checkout is normally
+  // fulfilled by customer.subscription.created, but running it here as well means a purchase
+  // survives losing either event — the fulfilment key makes the duplicate free.
+  const outcome = await fulfillCheckoutSession(session)
+  if (outcome.status === 'skipped') {
+    console.warn('[webhooks/stripe] checkout not fulfilled:', outcome.reason)
     return
   }
+  await trackCheckoutPayment(outcome, session)
 
-  const config = await getPricingConfig()
-  const packDef = creditPacks(config).find(p => p.id === pack)
-  if (!packDef) {
-    console.warn('[webhooks/stripe] unknown pack in checkout metadata', pack)
-    return
+  if (session.mode !== 'payment') return // subscription analytics fire on the subscription events
+  if (outcome.status !== 'fulfilled' || !outcome.userId || !outcome.workspaceId) return
+
+  const workspace = await db.workspace.findUnique({ where: { id: outcome.workspaceId }, select: { plan: true } })
+  const identity = {
+    userId: outcome.userId,
+    email: outcome.email ?? null,
+    plan: workspace?.plan ?? 'FREE',
+    remainingCredits: outcome.totalCredits ?? 0,
+    workspaceId: outcome.workspaceId,
   }
-
-  // Stripe redelivers an event it didn't see acknowledged, so the same purchase can arrive
-  // twice; the payment reference recorded on the first grant makes the second a no-op.
-  const paymentRef = typeof session.payment_intent === 'string' ? session.payment_intent : session.id
-  const alreadyGranted = await db.creditTransaction.findFirst({
-    where: { workspaceId, reason: 'PACK_PURCHASE', stripeInvoiceId: paymentRef },
-    select: { id: true },
-  })
-  if (alreadyGranted) return
-
-  await grantCredits(workspaceId, packDef.credits, 'PACK_PURCHASE', {
-    stripeInvoiceId: paymentRef,
-    notes: `Credit pack purchase: ${pack} (${packDef.credits} credits)`,
-  })
-
-  if (!userId) return
-  const workspace = await db.workspace.findUnique({ where: { id: workspaceId }, select: { plan: true } })
-  const remainingCredits = (await getAvailableCredits(workspaceId)).total
-  const identity = { userId, email, plan: workspace?.plan ?? 'FREE', remainingCredits, workspaceId }
-
   trackServerEvent(ANALYTICS_EVENTS.CREDIT_PACK_PURCHASED, {
-    ...identity, pack, credits: packDef.credits, amount: session.amount_total ?? undefined,
+    ...identity,
+    pack: session.metadata?.pack ?? 'unknown',
+    credits: outcome.creditsGranted ?? 0,
+    amount: session.amount_total ?? undefined,
   })
-  trackServerEvent(ANALYTICS_EVENTS.CREDITS_PURCHASED, { ...identity, amount: packDef.credits, source: 'pack' })
+  trackServerEvent(ANALYTICS_EVENTS.CREDITS_PURCHASED, { ...identity, amount: outcome.creditsGranted ?? 0, source: 'pack' })
 
+  const email = outcome.email
   if (email) {
-    const amountEur = session.amount_total
-      ? `${(session.amount_total / 100).toFixed(2).replace('.', ',')} €`
-      : '—'
-    const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
     after(() => sendInvoiceEmail(email, {
       invoiceNumber: `INV-${Date.now()}`,
-      date,
-      description: `Pack crédits — ${packDef.credits} crédits`,
-      amountEur,
+      date: today(),
+      description: `Pack crédits — ${outcome.creditsGranted ?? 0} crédits`,
+      amountEur: euros(session.amount_total),
     }))
   }
 }
@@ -291,6 +208,11 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Invalid signature'
     console.error('[webhooks/stripe] signature verification failed:', msg)
+    // Captured, not just logged: a signature that stops verifying (rotated secret, wrong
+    // endpoint) silently breaks every payment — exactly how Florelis's September 2026 incident
+    // stayed invisible for four days.
+    captureServerException(err)
+    await flushServerAnalytics()
     return NextResponse.json({ error: `Webhook signature verification failed: ${msg}` }, { status: 400 })
   }
 
@@ -322,8 +244,11 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error(`[webhooks/stripe] handler error for ${event.type}:`, err)
     captureServerException(err)
+    await flushServerAnalytics()
     return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 
+  // Revenue events are the ones that must not be lost to a function frozen after its response.
+  await flushServerAnalytics()
   return NextResponse.json({ received: true })
 }

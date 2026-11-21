@@ -364,3 +364,32 @@ export async function sendFinalActivationNudgeEmail(to: string, opts: { name?: s
     `),
   })
 }
+
+// ── Alerte exploitation : webhook Stripe en retard ou cassé ──────────────────
+// Envoyée par /api/billing/fulfill quand le filet de sécurité a dû créditer un compte lui-même,
+// longtemps après le paiement : le client a ce qu'il a payé, mais tant que le webhook est cassé,
+// les renouvellements et les annulations ne sont rattrapés par rien. Destinataire :
+// OPS_ALERT_EMAIL, sinon l'adresse de contact.
+export async function sendWebhookFallbackAlert(opts: {
+  customerEmail: string | null
+  sessionId: string
+  mode: string
+  secondsSinceCheckout: number
+  creditsGranted: number
+}) {
+  const minutes = Math.round(opts.secondsSinceCheckout / 60)
+  await sendEmail({
+    to: process.env.OPS_ALERT_EMAIL || CONTACT_EMAIL,
+    subject: `[AutoStudio] Webhook Stripe en échec — paiement rattrapé automatiquement`,
+    text: `Le filet de sécurité post-paiement a dû créditer un compte lui-même : le webhook Stripe n'était toujours pas passé ${minutes} minute(s) après le paiement.\n\nClient : ${opts.customerEmail ?? 'inconnu'}\nSession : ${opts.sessionId}\nType : ${opts.mode}\nCrédits accordés : ${opts.creditsGranted}\n\nLe client a bien reçu ce qu'il a payé. Vérifie l'endpoint webhook dans Stripe (Developers > Webhooks) : tant qu'il est cassé, les renouvellements et les annulations ne sont rattrapés par rien.`,
+    html: layout(`
+      ${h1('Webhook Stripe en échec')}
+      ${p(`Le filet de sécurité post-paiement a dû créditer un compte lui-même : le webhook Stripe n'était toujours pas passé <strong>${minutes} minute(s)</strong> après le paiement.`)}
+      ${p(`Client : <strong>${opts.customerEmail ?? 'inconnu'}</strong><br>Session : <code>${opts.sessionId}</code><br>Type : ${opts.mode}<br>Crédits accordés : ${opts.creditsGranted}`)}
+      ${p("Le client a bien reçu ce qu'il a payé. En revanche, vérifie l'endpoint webhook dans Stripe — tant qu'il est cassé, les renouvellements et les annulations ne sont rattrapés par rien.")}
+      <div style="text-align:center;margin:28px 0">
+        ${btn('https://dashboard.stripe.com/webhooks', 'Ouvrir Stripe →')}
+      </div>
+    `),
+  })
+}

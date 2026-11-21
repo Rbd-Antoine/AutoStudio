@@ -51,6 +51,7 @@ interface WorkspaceInfo {
   bonusCredits: number
   subscriptionStatus: string
   renewalDate: string | null
+  cancelAtPeriodEnd: boolean
 }
 
 interface CreditTx {
@@ -83,6 +84,8 @@ export default function BillingPage() {
   const [portalLoading, setPortalLoading] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
   const [checkoutError, setCheckoutError]     = useState<string | null>(null)
+  const [cancelLoading, setCancelLoading]     = useState(false)
+  const [cancelError, setCancelError]         = useState<string | null>(null)
 
   const plan             = workspace?.plan ?? 'FREE'
   const monthlyCredits   = workspace?.monthlyCredits ?? 0
@@ -111,6 +114,7 @@ export default function BillingPage() {
         bonusCredits:       d.bonusCredits ?? 0,
         subscriptionStatus: d.subscriptionStatus ?? 'active',
         renewalDate:        d.renewalDate ?? null,
+        cancelAtPeriodEnd:  !!d.cancelAtPeriodEnd,
       })
       setPricing(pricingData)
     }).catch(() => {})
@@ -142,34 +146,78 @@ export default function BillingPage() {
     }
   }, [cameFromUpgrade, pricing])
 
-  // Fires once, right after a credit-pack purchase actually succeeds on Stripe's side
-  // (real amount pulled from the completed Checkout session, not a hardcoded price) —
-  // guarded so a refresh of this same URL never double-counts the same purchase.
+  // Back from Stripe Checkout. First the safety net: /api/billing/fulfill grants what was paid
+  // for if the webhook has not (yet) — the customer never depends on the webhook having worked —
+  // and the page shows the new plan and credits at once. Then the Meta Purchase event, once per
+  // session (real amount pulled from the completed Checkout session), so a refresh of this same
+  // URL never double-counts the same purchase.
   useEffect(() => {
     if (searchParams.get('checkout') !== 'success') return
     const sessionId = searchParams.get('session_id')
     if (!sessionId) return
 
-    const trackedKey = `meta_purchase_tracked_${sessionId}`
-    if (sessionStorage.getItem(trackedKey)) return
-
-    fetch(`/api/billing/checkout-session?session_id=${sessionId}`)
-      .then(r => r.json())
+    const fulfil = fetch('/api/billing/fulfill', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId }),
+    })
+      .then(r => (r.ok ? r.json() : null))
       .then(d => {
-        if (!d.paid) return
-        sessionStorage.setItem(trackedKey, '1')
-        trackEvent('Purchase', {
-          eventId: sessionId,
-          value: d.value,
-          currency: d.currency ?? 'EUR',
-          email: d.email ?? undefined,
-        })
+        if (!d?.workspaceId) return
+        setWorkspace(prev => prev && prev.workspaceId === d.workspaceId ? {
+          ...prev,
+          plan: d.plan ?? prev.plan,
+          monthlyCredits: d.monthlyCredits,
+          bonusCredits: d.bonusCredits,
+          subscriptionStatus: d.subscriptionStatus ?? prev.subscriptionStatus,
+          renewalDate: d.renewalDate ?? prev.renewalDate,
+        } : prev)
       })
       .catch(() => {})
-      .finally(() => {
-        router.replace('/app/billing')
-      })
+
+    const trackedKey = `meta_purchase_tracked_${sessionId}`
+    const track = sessionStorage.getItem(trackedKey)
+      ? Promise.resolve()
+      : fetch(`/api/billing/checkout-session?session_id=${sessionId}`)
+          .then(r => r.json())
+          .then(d => {
+            if (!d.paid) return
+            sessionStorage.setItem(trackedKey, '1')
+            trackEvent('Purchase', {
+              eventId: sessionId,
+              value: d.value,
+              currency: d.currency ?? 'EUR',
+              email: d.email ?? undefined,
+            })
+          })
+          .catch(() => {})
+
+    Promise.all([fulfil, track]).finally(() => router.replace('/app/billing'))
   }, [searchParams, router])
+
+  // Cancels at the end of the paid period, or undoes it — from the app, whatever the Stripe
+  // portal's configuration allows.
+  const toggleCancellation = useCallback(async () => {
+    if (!workspace?.workspaceId || cancelLoading) return
+    const resume = workspace.cancelAtPeriodEnd
+    if (!resume && !window.confirm('Annuler votre abonnement ? Vous gardez votre plan et vos crédits jusqu’à la fin de la période payée.')) return
+    setCancelLoading(true)
+    setCancelError(null)
+    try {
+      const res = await fetch('/api/billing/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workspaceId: workspace.workspaceId, resume }),
+      })
+      const d = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(d.message ?? d.error ?? 'Une erreur est survenue.')
+      setWorkspace(prev => prev ? { ...prev, cancelAtPeriodEnd: !!d.cancelAtPeriodEnd, renewalDate: d.renewalDate ?? prev.renewalDate } : prev)
+    } catch (e) {
+      setCancelError(e instanceof Error ? e.message : 'Une erreur est survenue.')
+    } finally {
+      setCancelLoading(false)
+    }
+  }, [workspace, cancelLoading])
 
   const openPortal = useCallback(async () => {
     if (!workspace?.workspaceId || portalLoading) return
@@ -289,12 +337,14 @@ export default function BillingPage() {
               {renewalDateLabel && (
                 <li className="flex items-center gap-2 text-sm text-charcoal/65">
                   <Clock className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" strokeWidth={2} />
-                  Renouvellement le {renewalDateLabel}
+                  {workspace?.cancelAtPeriodEnd && plan !== 'FREE'
+                    ? `Se termine le ${renewalDateLabel}, puis passage au plan gratuit`
+                    : `Renouvellement le ${renewalDateLabel}`}
                 </li>
               )}
             </ul>
 
-            <div className="pt-4 border-t border-accent-100">
+            <div className="pt-4 border-t border-accent-100 flex flex-wrap items-center justify-between gap-3">
               <button
                 onClick={openPortal}
                 disabled={portalLoading || !workspace}
@@ -303,7 +353,17 @@ export default function BillingPage() {
                 Gérer mon plan
                 <ExternalLink className="w-3 h-3" strokeWidth={1.75} />
               </button>
+              {plan !== 'FREE' && plan !== 'UNLIMITED' && (
+                <button
+                  onClick={toggleCancellation}
+                  disabled={cancelLoading || !workspace}
+                  className="text-charcoal/50 hover:text-charcoal/80 disabled:opacity-50 text-sm underline underline-offset-2"
+                >
+                  {cancelLoading ? '…' : workspace?.cancelAtPeriodEnd ? 'Reprendre l’abonnement' : 'Annuler l’abonnement'}
+                </button>
+              )}
             </div>
+            {cancelError && <p className="mt-2 text-sm text-red-600">{cancelError}</p>}
           </div>
 
           {/* Credits card */}

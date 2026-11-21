@@ -15,6 +15,7 @@ export interface WorkspaceSummary {
   creditsPerMonth: number
   subscriptionStatus: string
   renewalDate: Date | null
+  cancelAtPeriodEnd: boolean
   isSuperuser: boolean
   role: string
   emailVerified: boolean
@@ -55,6 +56,7 @@ export async function getWorkspaceSummary(
     creditsPerMonth:    isSuperuser ? 999999 : monthlyCreditsForPlan(config, workspace.plan),
     subscriptionStatus: workspace.subscriptionStatus,
     renewalDate:        workspace.renewalDate,
+    cancelAtPeriodEnd:  workspace.cancelAtPeriodEnd,
     isSuperuser,
     role: member.role,
     emailVerified: !!user?.emailVerified,

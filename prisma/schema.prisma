@@ -141,6 +141,9 @@ model Workspace {
   monthlyCredits      Int      @default(2)
   bonusCredits        Int      @default(0)
   subscriptionStatus  String   @default("active")
+  // Cancellation scheduled for the end of the paid period (in the app or in Stripe's portal):
+  // the plan and credits stay until renewalDate, then customer.subscription.deleted drops to FREE.
+  cancelAtPeriodEnd   Boolean  @default(false)
   lastCreditReset     DateTime @default(now())
   /// @deprecated superseded by PricingConfig; kept until all reads are migrated, then dropped
   creditsPerMonth     Int?
@@ -452,6 +455,9 @@ model CreditTransaction {
   bucket          String?      // "monthly" | "bonus" — which pool this delta was applied to
   photoId         String?
   stripeInvoiceId String?
+  // Exactly-once key of a paid allotment ("sub:<subscription>:<period end>:<plan>" or
+  // "pack:<checkout session>"): see src/lib/fulfillment.ts. Null for every other movement.
+  fulfillmentKey  String?      @unique
   notes           String?
   createdAt       DateTime     @default(now())
 

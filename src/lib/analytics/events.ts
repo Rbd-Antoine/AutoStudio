@@ -23,6 +23,13 @@ export const ANALYTICS_EVENTS = {
   SUBSCRIPTION_PURCHASED: 'Subscription Purchased',
   CREDIT_PACK_PURCHASED: 'Credit Pack Purchased',
   PAYMENT_FAILED: 'Payment Failed',
+  // Sent by whichever call actually fulfilled a payment (webhook or post-checkout safety net),
+  // exactly once per paid period or pack: the revenue event to build dashboards on.
+  PAYMENT_COMPLETED: 'Payment Completed',
+  // The post-checkout safety net granted a purchase the webhook had not: the webhook is late or broken.
+  CHECKOUT_RECONCILED: 'Checkout Reconciled',
+  // A cancellation scheduled for the end of the paid period, or undone (resumed).
+  SUBSCRIPTION_CANCEL_SCHEDULED: 'Subscription Cancel Scheduled',
   // Credits
   CREDITS_CONSUMED: 'Credits Consumed',
   CREDITS_PURCHASED: 'Credits Purchased',
@@ -69,13 +76,16 @@ export interface EventPropertiesMap {
   [ANALYTICS_EVENTS.SUBSCRIPTION_PURCHASED]: { amount?: number }
   [ANALYTICS_EVENTS.CREDIT_PACK_PURCHASED]: { pack: string; credits: number; amount?: number }
   [ANALYTICS_EVENTS.PAYMENT_FAILED]: { reason?: string; amount?: number }
+  [ANALYTICS_EVENTS.PAYMENT_COMPLETED]: { kind: 'subscription' | 'pack'; amount_eur: number | null; currency: string; stripe_customer_id: string | null; is_first_payment: boolean }
+  [ANALYTICS_EVENTS.CHECKOUT_RECONCILED]: { mode: string; secondsSinceCheckout: number; creditsGranted: number }
+  [ANALYTICS_EVENTS.SUBSCRIPTION_CANCEL_SCHEDULED]: { resumed: boolean; endsAt: string | null }
   [ANALYTICS_EVENTS.CREDITS_CONSUMED]: { featureKey: string; amount: number }
   [ANALYTICS_EVENTS.CREDITS_PURCHASED]: { amount: number; source: 'pack' | 'adjustment' }
   [ANALYTICS_EVENTS.OUT_OF_CREDITS]: { featureKey: string; required: number; available: number }
   [ANALYTICS_EVENTS.FIRST_IMAGE_GENERATED]: Record<string, unknown>
   [ANALYTICS_EVENTS.FIRST_VIDEO_GENERATED]: Record<string, unknown>
   [ANALYTICS_EVENTS.UPGRADE_SUBSCRIPTION]: { fromPlan: string; toPlan: string }
-  [ANALYTICS_EVENTS.CANCEL_SUBSCRIPTION]: { cancelledPlan: string }
+  [ANALYTICS_EVENTS.CANCEL_SUBSCRIPTION]: { cancelledPlan: string; durationDays?: number }
   [ANALYTICS_EVENTS.SUBSCRIPTION_RENEWED]: { plan: string; amount?: number }
   [ANALYTICS_EVENTS.REACTIVATION_EMAIL_SENT]: { daysSinceLastRender: number }
   [ANALYTICS_EVENTS.CREDIT_FEEDBACK_SUBMITTED]: { rating: number | null }

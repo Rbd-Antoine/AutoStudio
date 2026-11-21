@@ -39,6 +39,10 @@ database. Never set it on Vercel.
 
 ## Deploy (Vercel)
 
+The full go-live guide, in French, is [docs/mise-en-ligne.md](docs/mise-en-ligne.md); check a
+deployment from the outside with `npx tsx scripts/check-production.ts https://<domain>` (read-only)
+and `/api/health`.
+
 1. Import the repository in Vercel (framework preset: Next.js).
 2. Add a Postgres database (Neon from the Vercel Marketplace, or Supabase) and a Blob store,
    both connected to the project.

@@ -48,13 +48,19 @@ export function Footer() {
           {/* Brand */}
           <div className="shrink-0">
             <Link href="/" className="inline-flex mb-4">
-              <Image
-                src="/logo-autostudio.png"
-                alt="AutoStudio"
-                width={500}
-                height={500}
-                className={k('h-20 w-auto object-contain rounded-xl', 'h-20 w-auto object-contain rounded-xl bg-[#ECE8E1] p-1')}
-              />
+              {/* The dark home page shows the wordmark: the logo file still carries the former
+                  CarGlow brand (to replace site-wide). */}
+              {dark ? (
+                <span className="font-[family-name:var(--font-studio-display)] text-3xl font-extrabold uppercase text-[#ECE8E1]">AutoStudio</span>
+              ) : (
+                <Image
+                  src="/logo-autostudio.png"
+                  alt="AutoStudio"
+                  width={500}
+                  height={500}
+                  className="h-20 w-auto object-contain rounded-xl"
+                />
+              )}
             </Link>
             <p className={k('text-xs text-charcoal/40 leading-relaxed max-w-[200px]', 'text-xs text-[#9A968E] leading-relaxed max-w-[200px]')}>
               {t('tagline')}

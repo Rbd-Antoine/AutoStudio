@@ -179,32 +179,31 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
         </section>
 
         {/* 04 — Tarifs */}
-        <section id="tarifs" ref={el => { sections.current[3] = el }} className="relative min-h-[150vh] px-4 sm:px-8 lg:px-16 py-[18vh]">
+        <section id="tarifs" ref={el => { sections.current[3] = el }} className="relative min-h-[150vh] px-4 sm:px-8 lg:px-16 xl:pl-32 pt-[13vh] pb-[18vh]">
           <div className="mx-auto max-w-6xl">
             <p className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.tungsten }}>{t('tarifs.eyebrow')}</p>
-            <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 7vw, 6rem)' }}>{t('tarifs.title')}</h2>
-            <p className="mt-5 max-w-[34rem] text-base leading-relaxed sm:text-lg" style={{ color: C.ash }}>{t('tarifs.body')}</p>
-            <div className="mt-12 grid gap-px overflow-hidden rounded-sm sm:grid-cols-2 lg:grid-cols-4" style={{ background: C.steel }}>
+            <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)' }}>{t('tarifs.title')}</h2>
+            <p className="mt-4 max-w-[34rem] text-base leading-relaxed" style={{ color: '#BDB8AF' }}>{t('tarifs.body')}</p>
+            {/* Columns drawn by steel rules over the dimmed scene, not filled cards. */}
+            <div className="mt-10 grid border-y sm:grid-cols-2 lg:grid-cols-4 sm:border-r" style={{ borderColor: C.steel, background: `${C.night}99` }}>
               {plans.map(plan => {
                 const featured = plan.id === 'ESSENTIAL'
                 const price = plan.promoPrice ?? plan.price
                 return (
-                  <div key={plan.id} className="relative flex flex-col p-7" style={{ background: `${C.concrete}F2` }}>
-                    {featured && <span className="absolute inset-x-0 top-0 h-[3px]" style={{ background: C.tungsten }} />}
-                    <div className="flex items-baseline justify-between gap-3">
-                      <h3 className={cn(DISPLAY, 'text-3xl font-bold')}>{t(`tarifs.plans.${plan.id}.name`)}</h3>
-                      {featured && <span className="text-[11px] font-medium uppercase tracking-[0.16em]" style={{ color: C.tungsten }}>{t('tarifs.popular')}</span>}
-                    </div>
+                  <div key={plan.id} className="relative flex flex-col border-b px-6 py-7 sm:border-l lg:border-b-0" style={{ borderColor: C.steel, background: featured ? `${C.concrete}B3` : 'transparent' }}>
+                    {featured && <span className="absolute inset-x-0 -top-px h-[3px]" style={{ background: C.tungsten }} />}
+                    <p className="h-4 text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: C.tungsten }}>{featured ? t('tarifs.popular') : ''}</p>
+                    <h3 className={cn(DISPLAY, 'mt-1 text-3xl font-bold')}>{t(`tarifs.plans.${plan.id}.name`)}</h3>
                     <div className="mt-6 flex flex-wrap items-baseline gap-x-2">
                       {plan.promoPrice !== undefined && <span className="text-lg line-through" style={{ color: C.ash }}>{fmt(plan.price)}</span>}
-                      <span className="text-5xl font-semibold tabular-nums tracking-tight">{price > 0 ? fmt(price) : t('tarifs.free')}</span>
-                      {price > 0 && <span className="text-sm" style={{ color: C.ash }}>{t('tarifs.perMonth')}</span>}
+                      <span className="text-5xl font-semibold tabular-nums tracking-tight">{fmt(price)}</span>
+                      {price > 0 && <span className="text-sm" style={{ color: '#BDB8AF' }}>{t('tarifs.perMonth')}</span>}
                       {plan.promoPrice !== undefined && (
                         <span className="w-full text-xs" style={{ color: C.tungsten }}>{plan.promoLabel ? `${plan.promoLabel} · ` : ''}{t('tarifs.firstYear')}</span>
                       )}
                     </div>
                     <p className="mt-2 text-sm tabular-nums" style={{ color: C.chalk }}>{t('tarifs.credits', { count: plan.credits })}</p>
-                    <ul className="mt-6 flex flex-1 flex-col gap-2.5 border-t pt-6 text-sm" style={{ borderColor: C.steel, color: C.ash }}>
+                    <ul className="mt-5 flex min-h-[6.5rem] flex-1 flex-col gap-2 border-t pt-5 text-sm" style={{ borderColor: C.steel, color: '#BDB8AF' }}>
                       {(t.raw(`tarifs.plans.${plan.id}.features`) as string[]).map(f => (
                         <li key={f} className="flex gap-3"><span aria-hidden="true" style={{ color: C.tungsten }}>—</span>{f}</li>
                       ))}
@@ -214,7 +213,7 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
                       ctaId={`pricing_studio_${plan.id.toLowerCase()}`}
                       label={plan.id === 'FREE' ? t('tarifs.ctaFree') : t('tarifs.ctaPaid')}
                       location="pricing_studio"
-                      className="mt-8 rounded-sm px-4 py-3 text-center text-sm font-semibold transition-colors duration-200"
+                      className="mt-6 rounded-sm px-4 py-3 text-center text-sm font-semibold transition-colors duration-200"
                       style={featured ? { background: C.tungsten, color: C.night } : { border: `1px solid ${C.steel}`, color: C.chalk }}
                     >
                       {plan.id === 'FREE' ? t('tarifs.ctaFree') : t('tarifs.ctaPaid')}
@@ -230,16 +229,17 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
         </section>
 
         {/* 05 — Contact */}
-        <section id="contact" ref={el => { sections.current[4] = el }} className="relative px-4 sm:px-8 lg:px-16 pt-[16vh] pb-[14vh]">
-          <div className="mx-auto max-w-3xl">
+        <section id="contact" ref={el => { sections.current[4] = el }} className="relative px-4 sm:px-8 lg:px-16 xl:pl-32 pt-[16vh] pb-[14vh]">
+          {/* Left column: the pulled-back garage sits on the right, never under the text. */}
+          <div className="max-w-2xl">
             <p className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.tungsten }}>{t('contact.eyebrow')}</p>
             <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}>{t('contact.title')}</h2>
             <Faq items={t.raw('contact.faq') as { q: string; a: string }[]} />
           </div>
-          <div className="mx-auto mt-[14vh] max-w-6xl border-t pt-14 text-center" style={{ borderColor: C.steel }}>
-            <h2 className={cn(DISPLAY, 'font-extrabold leading-[0.88]')} style={{ fontSize: 'clamp(3rem, 9vw, 8rem)' }}>{t('contact.ctaTitle')}</h2>
-            <p className="mt-5 text-base sm:text-lg" style={{ color: C.ash }}>{t('contact.ctaBody')}</p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-[11vh] max-w-2xl">
+            <h2 className={cn(DISPLAY, 'font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(3rem, 7vw, 6.5rem)' }}>{t('contact.ctaTitle')}</h2>
+            <p className="mt-5 text-base sm:text-lg" style={{ color: '#BDB8AF' }}>{t('contact.ctaBody')}</p>
+            <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <TrackedLink href="/signup" ctaId="studio_final" label={t('contact.ctaButton')} location="studio_contact"
                 className="rounded-sm px-8 py-4 text-base font-semibold transition-transform duration-200 hover:-translate-y-0.5"
                 style={{ background: C.tungsten, color: C.night }}>
@@ -308,7 +308,7 @@ function DecorPicker({ decor, onPick }: { decor: DecorSlug; onPick: (slug: Decor
               <img src={`/site-3d/thumb-${slug}.webp`} alt="" width={160} height={120} loading="lazy" className="block aspect-[4/3] w-full object-cover" />
               <span className="block px-2.5 py-2 text-[13px] font-medium leading-tight" style={{ background: C.concrete, color: active ? C.chalk : C.ash }}>
                 {t(`decors.${slug}.name`)}
-                <span className="mt-0.5 block text-[10px] uppercase tracking-[0.14em]" style={{ color: active ? C.tungsten : C.ash }}>
+                <span className="mt-0.5 block text-[11px] uppercase tracking-[0.06em]" style={{ color: active ? C.tungsten : '#C4BFB6' }}>
                   {slug === 'garage-neon' ? t('real') : t('illustration')}
                 </span>
               </span>
@@ -316,7 +316,7 @@ function DecorPicker({ decor, onPick }: { decor: DecorSlug; onPick: (slug: Decor
           )
         })}
       </div>
-      <p className="mt-4 max-w-[32rem] text-xs leading-relaxed" style={{ color: C.ash }}>{t('honesty')}</p>
+      <p className="mt-4 max-w-[26rem] text-xs leading-relaxed" style={{ color: '#BDB8AF' }}>{t('honesty')}</p>
     </div>
   )
 }
@@ -326,7 +326,7 @@ function Faq({ items }: { items: { q: string; a: string }[] }) {
   return (
     <div className="mt-10 border-t" style={{ borderColor: C.steel }}>
       {items.map((item, i) => (
-        <div key={i} className="border-b" style={{ borderColor: C.steel, background: `${C.night}B3` }}>
+        <div key={i} className="border-b" style={{ borderColor: C.steel }}>
           <h3>
             <button
               type="button"
@@ -378,7 +378,8 @@ function ChapterRail({ chapter }: { chapter: ChapterId }) {
 function StudioHeader({ chapter }: { chapter: ChapterId }) {
   const t = useTranslations('studio.nav')
   return (
-    <header className="fixed inset-x-0 top-0 z-30" style={{ background: `linear-gradient(180deg, ${C.night}E6, ${C.night}00)` }}>
+    // A solid band: content scrolling underneath never shows through the links.
+    <header className="fixed inset-x-0 top-0 z-30 border-b" style={{ background: `${C.night}F2`, borderColor: `${C.steel}99` }}>
       <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-16">
         <Link href="/" aria-label={t('home')} className={cn(DISPLAY, 'text-2xl font-extrabold tracking-[0.02em]')}>
           AutoStudio
@@ -390,8 +391,13 @@ function StudioHeader({ chapter }: { chapter: ChapterId }) {
         </nav>
         <div className="flex items-center gap-2 sm:gap-4">
           <RouteLink href="/signin" className="hidden px-2 py-2 text-sm transition-colors hover:text-[#ECE8E1] sm:block" style={{ color: '#CFCAC1' }}>{t('signIn')}</RouteLink>
+          {/* Outlined where the chapter has its own full button (pricing, contact): one filled
+              button on screen at a time. */}
           <TrackedLink href="/signup" ctaId="studio_header" label={t('cta')} location="studio_header"
-            className="rounded-sm px-4 py-2.5 text-sm font-semibold" style={{ background: C.tungsten, color: C.night }}>
+            className={cn('rounded-sm px-4 py-2.5 text-sm font-semibold transition-[colors,opacity] duration-300', chapter === 'contact' && 'pointer-events-none opacity-0')}
+            style={chapter === 'tarifs' || chapter === 'contact'
+              ? { border: `1px solid ${C.steel}`, color: C.chalk }
+              : { background: C.tungsten, color: C.night }}>
             {t('cta')}
           </TrackedLink>
         </div>

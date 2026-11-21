@@ -36,9 +36,11 @@ interface Shot {
 const SHOTS: Record<ChapterId, Shot> = {
   avant:   { box: [80, 140, 1160, 840], text: 0.37, fill: true, maxH: 1.0 },
   studio:  { box: [-60, -20, 1260, 920], text: 0.35, fill: true, maxH: 1.16 },
-  fonds:   { box: [190, 210, 1060, 770], text: 0.36, fill: true, maxH: 1.1 },
-  tarifs:  { box: [260, 0, 1200, 560], text: 0.0, fill: true },
-  contact: { box: [-260, -120, 1460, 1000], text: 0.0 },
+  fonds:   { box: [190, 210, 1060, 770], text: 0.44, fill: true, maxH: 1.14 },
+  // Pricing: the garage's ceiling and lights, high above the car, behind the dimmed columns.
+  tarifs:  { box: [140, -260, 1060, 250], text: 0.0 },
+  // The end: the camera pulls far back, the garage small in the dark, to the right of the text.
+  contact: { box: [-300, -180, 1500, 1080], text: 0.42 },
 }
 
 // The studio's lights, in the order they come on (chapter 2). Positions read on the real render:
@@ -75,6 +77,8 @@ export interface SceneState {
   decorSwap: number
   /** Darkening for text readability (chapters 4 and 5), 0 → 1. */
   dim: number
+  /** 1 when the camera has pulled back (chapter 5): every edge of the picture fades softly. */
+  pull: number
   /** Light on the car itself: in the dark between the two worlds, back to full in the studio. */
   carLight: number
   /** Parallax: how far the background slides against the car, in scene pixels. */
@@ -185,14 +189,16 @@ export function sceneAt(p: number, aspect: number, wide: boolean): SceneState {
   // Chapter 3 onwards: the chosen background takes over the decor.
   const decorSwap = smooth(2.0, 2.25, sx)
   // Chapters 4 and 5: the scene steps back behind the content.
-  const dim = smooth(2.85, 3.15, sx) * 0.62 + smooth(3.85, 4.15, sx) * 0.12
+  // Pricing reads over a scene almost put out; the ending lights it again a little, far away.
+  const dim = smooth(2.85, 3.15, sx) * 0.58 - smooth(3.85, 4.15, sx) * 0.28
+  const pull = smooth(2.85, 3.15, sx)
 
   const parallax: [number, number] = [
     (camera.cx - SCENE_W / 2) * 0.035,
     (camera.cy - SCENE_H / 2) * 0.02,
   ]
 
-  return { camera, studio, lights, ambient, decorSwap, dim, carLight: clamp01(carLight), parallax, chapter, local }
+  return { camera, studio, lights, ambient, decorSwap, dim, pull, carLight: clamp01(carLight), parallax, chapter, local }
 }
 
 /** The still image that stands for a chapter (reduced motion, loading, no WebGL). */

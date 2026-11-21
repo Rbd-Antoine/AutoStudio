@@ -23,6 +23,11 @@ export interface StudioCanvasProps {
 
 const MAX_LIGHTS = 8
 
+// Floors: the garage's resin and the car park's wet concrete reflect, the hangar's concrete and
+// the white room's matt floor barely. Exposure brings the bright decors into the page's night.
+const REFLECT: Record<DecorSlug, number> = { 'garage-neon': 1, 'parking-souterrain': 0.75, 'hangar-industriel': 0.25, 'piece-vide': 0.3 }
+const EXPOSURE: Record<DecorSlug, number> = { 'garage-neon': 1, 'hangar-industriel': 0.82, 'parking-souterrain': 0.92, 'piece-vide': 0.6 }
+
 const VERT = `
 attribute vec2 aPos;
 void main() { gl_Position = vec4(aPos, 0.0, 1.0); }
@@ -34,7 +39,7 @@ uniform vec2 uRes;
 uniform vec4 uCam;          // cx, cy, viewW, viewH (scene pixels)
 uniform vec2 uScene;        // 1200, 900
 uniform sampler2D uBefore, uAfter, uBgA, uBgB, uCar, uShadow;
-uniform float uParA, uParB;   // 1 = this decor slides with the parallax (0 for the real render, which holds the car)
+uniform float uParA, uParB, uPull, uReflect, uExpA, uExpB;   // 1 = this decor slides with the parallax (0 for the real render, which holds the car)
 uniform float uStudio, uAmbient, uBeforeLight, uCarLight, uDecorSwap, uDim, uTime;
 uniform float uBgMix, uSweep;
 uniform vec2 uParallax;
@@ -60,11 +65,11 @@ float segDist(vec2 p, vec2 a, vec2 b) {
 vec2 mirror(vec2 uv) { return vec2(clamp(uv.x, 0.0, 1.0), max(uv.y, 0.0)); }
 float inside(vec2 uv, float glossy) {
   // One long linear fade on the left, under the text column; the other edges are off screen in
-  // the resting shots (full bleed), and only fade when the camera pulls back (chapter 5).
-  float left = smoothstep(-0.04, 0.3, uv.x);
-  float right = 1.0 - smoothstep(0.985, 1.04, uv.x);
-  float top = smoothstep(-0.03, 0.01, uv.y);
-  float bottom = mix(1.0 - smoothstep(0.93, 1.02, uv.y), 1.0 - smoothstep(0.95, 1.2, uv.y), glossy);
+  // the resting shots (full bleed). When the camera pulls back (chapter 5) every edge fades softly.
+  float left = smoothstep(0.0, mix(0.3, 0.38, uPull), uv.x);
+  float right = 1.0 - smoothstep(mix(0.985, 0.72, uPull), 1.0, uv.x);
+  float top = smoothstep(0.0, mix(0.01, 0.25, uPull), uv.y);
+  float bottom = mix(1.0 - smoothstep(0.93, 1.0, uv.y), 1.0 - smoothstep(mix(0.95, 0.8, uPull), 1.2, uv.y), glossy);
   return left * right * top * bottom;
 }
 
@@ -137,8 +142,12 @@ void main() {
   // backgrounds slide with the parallax and take the car's computed shadow.
   vec2 uvA = mix(uvC, bgUvC, uParA);
   vec2 uvB = mix(uvC, bgUvC, uParB);
-  vec3 bgA = floorTap(uBgA, uvA) * (1.0 - 0.86 * sh * uParA);
-  vec3 bgB = floorTap(uBgB, uvB) * (1.0 - 0.86 * sh * uParB);
+  // Each decor at its own exposure (the white room is brought down to the page's dark world).
+  // The editor's backgrounds get the car's computed contact shadow and a slight cool cast, to
+  // sit with the render's car (which keeps its own light: it is never retouched).
+  vec3 cool = vec3(0.93, 0.97, 1.06);
+  vec3 bgA = floorTap(uBgA, uvA) * (1.0 - 0.9 * sh * uParA) * uExpA * mix(vec3(1.0), cool, uParA);
+  vec3 bgB = floorTap(uBgB, uvB) * (1.0 - 0.9 * sh * uParB) * uExpB * mix(vec3(1.0), cool, uParB);
   float wipe = uSweep < 0.0 ? uBgMix : smoothstep(uSweep - 0.06, uSweep + 0.06, 1.0 - bgUv.x);
   vec3 decor = mix(bgA, bgB, wipe);
   if (uSweep >= 0.0) decor += vec3(1.0, 0.86, 0.62) * exp(-pow((1.0 - bgUv.x - uSweep) * 22.0, 2.0)) * 0.35;
@@ -164,7 +173,7 @@ void main() {
     vec2 m = vec2(sp.x, 2.0 * gy - sp.y) / uScene;
     vec4 rc = texture2D(uCar, clamp(m, 0.0, 1.0));
     vec3 rcol = mix(rc.rgb, texture2D(uAfter, clamp(m, 0.0, 1.0)).rgb, glossy);
-    float fade = exp(-(sp.y - gy) / 90.0) * 0.34 * glossy * rc.a;
+    float fade = exp(-(sp.y - gy) / 70.0) * 0.3 * uReflect * glossy * rc.a;
     col = mix(col, rcol * uCarLight, fade);
   }
 
@@ -351,6 +360,12 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       gl.uniform1f(u('uCarLight'), s.carLight)
       gl.uniform1f(u('uDecorSwap'), s.decorSwap)
       gl.uniform1f(u('uDim'), s.dim)
+      gl.uniform1f(u('uPull'), s.pull)
+      // How glossy the floor under the car is, and each decor's exposure.
+      const shown = swapStart >= 0 && mix < 0.5 ? fromDecor : shownDecor
+      gl.uniform1f(u('uReflect'), s.decorSwap < 0.5 ? 1 : REFLECT[shown])
+      gl.uniform1f(u('uExpA'), EXPOSURE[swapStart >= 0 ? fromDecor : shownDecor])
+      gl.uniform1f(u('uExpB'), EXPOSURE[shownDecor])
       gl.uniform2f(u('uParallax'), s.parallax[0], s.parallax[1])
       gl.uniform1f(u('uTime'), now / 1000)
       param.fill(0)

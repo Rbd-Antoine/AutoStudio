@@ -127,3 +127,21 @@ et composition du rendu inchangées).
 - Les juges plafonnent surtout sur ce que la contrainte d'honnêteté interdit de toucher.
 - Prochaine étape : un ou deux tours sur 3, 5, 4, puis phase 4 (mobile, mouvement réduit,
   performance, captures Playwright).
+
+### Chapitres 3, 5 et 4
+
+| Chapitre | Tour | Note | Ce qui a changé avant le tour | Principaux reproches |
+|---|---|---|---|---|
+| 3 Les fonds | 1 | 4/10 | Version de la phase 2 + corrections communes | Reflet faux sur sols mats, pièce blanche surexposée, vignette « Garage néon » tachée, titre sur la voiture |
+| 3 Les fonds | 2 | 4/10 | Reflet et exposition par décor, vignette refaite depuis le fond vide de l'éditeur, colonne décalée | Ombre de contact trop faible sur les fonds de l'éditeur, lumière de la voiture (celle du rendu, non retouchée) |
+| 5 Contact | 1 | 3/10 | Version de la phase 2 | Pas de recul, texte sur la voiture, bords nets, en-tête qui chevauche, deux boutons pleins |
+| 5 Contact | 2 | 3/10 | Recul extrême, colonne à gauche, en-tête plein, bouton d'en-tête en contour | **Logo « CarGlow » dans le pied de page** (le fichier `logo-autostudio.png` porte l'ancienne marque), vignette trop petite, filet orphelin |
+| 4 Tarifs | 1 | 3/10 | Version de la phase 2 | Gros plan du capot sous le titre, cartes coupées, aspect « bento » |
+| 4 Tarifs | 2 | 4/10 | Plafond assombri, colonnes à filets, « 0 € » aligné | Voiture encore sous les colonnes (contrainte « plein cadre »), colonnes non fermées |
+
+Corrections faites après ces tours, non re-notées ici (notes finales en phase 5) : pied de page
+de l'accueil avec le mot-symbole AutoStudio en texte (le logo image reste à remplacer sur le
+reste du site, hors périmètre), bouton d'en-tête masqué au chapitre 5, tarifs cadrés plus haut
+sans « plein cadre » et avec fondus doux, colonnes fermées, « Le plus choisi » au-dessus du nom,
+recul du contact modéré (l'image n'existe pas au-delà de ses bords), ombre de contact plus
+dense et décors de l'éditeur légèrement refroidis.

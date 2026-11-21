@@ -158,10 +158,13 @@ def contact_shadow(alpha: np.ndarray) -> np.ndarray:
     rr = rl + (fr - fl)
     footprint = np.zeros((h, w), np.float32)
     cv2.fillPoly(footprint, [np.int32([rl, fl, fr, rr])], 1.0)
-    core = cv2.GaussianBlur(footprint, (0, 0), 16) * 0.9
+    core = cv2.GaussianBlur(footprint, (0, 0), 12) * 0.95
     soft = cv2.GaussianBlur(cv2.dilate(footprint, np.ones((61, 61), np.uint8)), (0, 0), 45) * 0.45
     spots = np.zeros_like(footprint)
-    for (x, y), (rx, ry) in ((WHEELS["rear_left"], (40, 8)), (WHEELS["front_left"], (62, 11))):
+    # Tight and dense right under each visible tyre (centred a little above the contact line,
+    # so the darkest part sits under the rubber, not in front of it).
+    for (x, y), (rx, ry) in ((WHEELS["rear_left"], (36, 7)), (WHEELS["front_left"], (54, 9))):
+        y -= 3
         cv2.ellipse(spots, (int(x), int(y)), (rx, ry), 0, 0, 360, 1.0, -1)
     spots = cv2.GaussianBlur(spots, (0, 0), 4)
     shadow = np.clip(np.maximum(np.maximum(core, soft), spots), 0, 1)
@@ -239,7 +242,10 @@ def main() -> None:
     write("still-avant", before_al)
     write("still-studio", after)
     write("still-garage-neon", after)
-    decor_plates = {"garage-neon": fill_behind_car(after, alpha)}
+    # The garage thumbnail: the editor's own empty background, fitted like the others (the
+    # render's plate with the car filled out left a dark smudge at the thumbnail's centre).
+    garage_bg = "fond-futuriste-hangar-garage-salle-exposition-atelier-fond-industriel-sous-sol-neons-pour-design-futuriste-fond-industriel-neons-pour-votre-produit-rendu-3d_120871-2683.jpg"
+    decor_plates = {"garage-neon": fit_background(ROOT / "public" / "background" / garage_bg, 0.73, w, h)}
     for slug, (file, frac) in BACKGROUNDS.items():
         plate = fit_background(ROOT / "public" / "background" / file, frac, w, h)
         decor_plates[slug] = plate

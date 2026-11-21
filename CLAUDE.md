@@ -36,7 +36,7 @@ jardins), dont les correctifs génériques ont été repris le 21/11/2026 (branc
 | `node C:\Users\BenoitRibeaud\.florelis-dev-db\start.mjs` | Postgres 17 local (port 54329, base `autostudio`) |
 | `npm run dev` | `next dev --turbopack` ; `.env.local` surcharge `DATABASE_URL`, vide `RESEND_API_KEY` (emails journalisés) |
 | `npm run build`, `npm run lint`, `npx tsc --noEmit` | build, lint, types |
-| `npm run check:watchdog`, `npm run check:vehicle-protection` | tests hors ligne (`node:assert`, sans réseau ni base) |
+| `npm run check:watchdog`, `npm run check:vehicle-protection`, `npm run check:photo-check` | tests hors ligne (`node:assert`, sans réseau ni base) |
 | `python -m pytest services/vehicle-protection/tests -q` | composition du service GPU, sans GPU |
 | `npx tsx scripts/check-production.ts https://<domaine>` | état de la production vu de l'extérieur (lecture seule) |
 
@@ -67,7 +67,8 @@ jardins), dont les correctifs génériques ont été repris le 21/11/2026 (branc
 
 1. L'éditeur envoie une photo (base64, réduite dans le navigateur) avec le décor et la consigne.
 2. Vérifications avant débit : session, membre du workspace, format réel de l'image, email
-   vérifié (un seul rendu gratuit sans vérification).
+   vérifié (un seul rendu gratuit sans vérification), présence d'un véhicule
+   (`photo-check.server.ts`, refus seulement sur un « aucun véhicule » net).
 3. `deductCredits` (UPDATE atomique, 402 si le solde manque ; superutilisateurs non débités),
    `Photo` en `PROCESSING`, débit lié à la photo aussitôt.
 4. `swapBackground` (photo + image du décor, format de la photo imposé), envoi de l'original sur

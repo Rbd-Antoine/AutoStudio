@@ -8,6 +8,7 @@ import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
 import { swapBackground, describeRenderFailure, nearestAspectRatio, IMAGE_MODEL, type AspectRatio } from '@/lib/gemini'
 import { endWithin, type WatchedRun } from '@/lib/watchdog'
 import { protectVehicle, warmVehicleProtection } from '@/lib/vehicle-protection.server'
+import { checkVehiclePhoto } from '@/lib/photo-check.server'
 import { uploadBase64WithFallback } from '@/lib/blob-storage'
 import { deductCredits, refundCredits, getAvailableCredits, InsufficientCreditsError, type DeductResult } from '@/lib/credits'
 import { trackServerEvent, captureServerException } from '@/lib/analytics/server'
@@ -57,7 +58,7 @@ interface SwapResult {
   enhancedUrl?: string
   processingMs?: number
   error?: string
-  code?: 'insufficient_credits'
+  code?: 'insufficient_credits' | 'unsuitable_photo'
   /** HTTP status this photo's failure would have on its own (422 refused, 503 overloaded, 504 timeout). */
   status?: number
   available?: number
@@ -159,6 +160,13 @@ export async function POST(req: NextRequest) {
   const analyticsIdentity = { userId, email: session.user.email ?? null, plan: member.workspace.plan, workspaceId }
 
   const results = await Promise.all(photos.map(async (image, index): Promise<SwapResult> => {
+    // Before any credit: a photo with no vehicle in it is refused, not charged then rendered into
+    // nonsense. Only a clear "no vehicle" refuses; an unanswered check lets the render go ahead.
+    const photoCheck = await checkVehiclePhoto(apiKey, image.base64)
+    if (!photoCheck.ok) {
+      return { index, error: photoCheck.message, code: 'unsuitable_photo', status: 422 }
+    }
+
     let deduction: DeductResult | null = null
     if (!isSuperuser) {
       try {
@@ -242,6 +250,7 @@ export async function POST(req: NextRequest) {
           generationInput: {
             imageModel: IMAGE_MODEL,
             backgroundSlug,
+            photoChecked: photoCheck.checked,
             aspectRatio: aspectRatio ?? null,
             characteristics: characteristics?.trim() || null,
             vehicleProtection: protection.protected

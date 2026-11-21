@@ -239,3 +239,36 @@ export async function generateText(apiKey: string, prompt: string, { timeoutMs =
   if (!text) throw new Error('Gemini n\'a renvoyé aucun texte')
   return text.trim()
 }
+
+// A text-model call constrained to a JSON schema, for structured readings (the photo check).
+// Returns the parsed JSON, or null when the call failed, timed out or answered something
+// unparsable — callers validate the shape themselves, and none of them may fail a render over it.
+// Ported from Florelis, where it reads plans, palettes and render checks.
+export async function generateJson(
+  apiKey: string,
+  parts: Array<{ text: string } | { inline_data: { mime_type: string; data: string } }>,
+  responseSchema: Record<string, unknown>,
+  { timeoutMs = 30_000, temperature = 0, model = TEXT_MODEL }: { timeoutMs?: number; temperature?: number; model?: string } = {},
+): Promise<unknown> {
+  try {
+    const response = await fetch(`${API_BASE}/${model}:generateContent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      signal: AbortSignal.timeout(timeoutMs),
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { responseMimeType: 'application/json', responseSchema, temperature },
+      }),
+    })
+    if (!response.ok) {
+      console.warn(`[gemini] JSON call failed: ${response.status} ${(await response.text()).slice(0, 300)}`)
+      return null
+    }
+    const data = await response.json()
+    const text = (data?.candidates?.[0]?.content?.parts as ResponsePart[] | undefined)?.find(p => p.text && !p.thought)?.text
+    return typeof text === 'string' ? JSON.parse(text) : null
+  } catch (err) {
+    console.warn('[gemini] JSON call failed:', err instanceof Error ? err.message : err)
+    return null
+  }
+}

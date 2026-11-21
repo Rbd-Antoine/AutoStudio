@@ -127,6 +127,9 @@ function frame(shot: Shot, aspect: number, wide: boolean) {
   const screenX = left + usable / 2
   let cx = (x0 + x1) / 2 - (screenX - 0.5) * viewW
   let cy = (y0 + y1) / 2
+  // On a phone the picture takes the upper part of the screen and the text the lower part:
+  // the box's centre sits at a third of the height instead of the middle.
+  if (!wide && aspect < 1) cy = (y0 + y1) / 2 + (0.5 - 0.34) * viewH
   if (shot.fill && wide) {
     // At most a little past the bottom of the picture: the floor then fades into darkness like
     // a studio sweep, and the car keeps a comfortable size.

@@ -37,6 +37,9 @@ for (const vp of viewports) {
   await page.getByRole('button', { name: /Tout refuser|Reject all/ }).click({ timeout: 5000 }).catch(() => {})
   // The Next.js development badge is not part of the page.
   await page.addStyleTag({ content: 'nextjs-portal { display: none !important; }' })
+  // The live scene starts at the first gesture: one small scroll, then time for its textures.
+  await page.mouse.wheel(0, 2)
+  await page.waitForTimeout(3000)
   await page.waitForTimeout(2500)
   for (const id of ['avant', 'studio', 'fonds', 'tarifs', 'contact']) {
     // Each chapter's resting point: the camera holds there (it leaves after 74 %).

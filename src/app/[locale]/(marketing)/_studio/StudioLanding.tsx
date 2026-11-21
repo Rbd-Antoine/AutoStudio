@@ -67,7 +67,29 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
   const small = useMedia('(max-width: 767px)')
   const sections = useRef<(HTMLElement | null)[]>([])
 
-  useEffect(() => setWebgl(hasWebGL()), [])
+  // The live scene starts at the visitor's first gesture (scroll, touch, key) — the scene only
+  // moves with the scroll, and until then the still image shows the very same first chapter — or
+  // after a few idle seconds. Its script, image decoding and texture uploads thus never compete
+  // with the first paint. Not at all for visitors who asked to save data.
+  useEffect(() => {
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    if (conn?.saveData) { setWebgl(false); return }
+    const events = ['scroll', 'wheel', 'pointerdown', 'touchstart', 'keydown'] as const
+    let done = false
+    const start = () => {
+      if (done) return
+      done = true
+      events.forEach(e => window.removeEventListener(e, start))
+      window.clearTimeout(timer)
+      setWebgl(hasWebGL())
+    }
+    events.forEach(e => window.addEventListener(e, start, { passive: true, once: true }))
+    const timer = window.setTimeout(start, 6000)
+    return () => {
+      events.forEach(e => window.removeEventListener(e, start))
+      window.clearTimeout(timer)
+    }
+  }, [])
 
   // The page's only animated value: where the reader is, from 0 (top) to 1 (end of chapter 5).
   useEffect(() => {
@@ -135,9 +157,11 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
           <img
             key={still}
             src={still}
+            srcSet={`${still.replace('.webp', '-sm.webp')} 600w, ${still} 1200w`}
+            sizes="100vw"
             alt=""
             fetchPriority="high"
-            className={cn('absolute inset-0 h-full w-full transition-opacity duration-500', small ? 'object-contain object-[50%_30%]' : 'object-cover object-[70%_50%]')}
+            className={cn('absolute inset-0 h-full w-full transition-opacity duration-500', small ? 'object-contain object-[50%_18%]' : 'object-cover object-[78%_50%]')}
           />
         )}
         {live && (
@@ -291,7 +315,7 @@ function DecorPicker({ decor, onPick }: { decor: DecorSlug; onPick: (slug: Decor
   return (
     <div className="mt-8">
       <p id="decor-label" className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.ash }}>{t('pick')}</p>
-      <div role="radiogroup" aria-labelledby="decor-label" className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div role="radiogroup" aria-labelledby="decor-label" className="mt-3 grid grid-cols-4 gap-1.5 sm:gap-2">
         {DECORS.map(slug => {
           const active = slug === decor
           return (
@@ -306,7 +330,7 @@ function DecorPicker({ decor, onPick }: { decor: DecorSlug; onPick: (slug: Decor
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/site-3d/thumb-${slug}.webp`} alt="" width={160} height={120} loading="lazy" className="block aspect-[4/3] w-full object-cover" />
-              <span className="block px-2.5 py-2 text-[13px] font-medium leading-tight" style={{ background: C.concrete, color: active ? C.chalk : C.ash }}>
+              <span className="block px-1.5 py-1.5 text-[11px] font-medium leading-tight sm:px-2.5 sm:py-2 sm:text-[13px]" style={{ background: C.concrete, color: active ? C.chalk : C.ash }}>
                 {t(`decors.${slug}.name`)}
                 <span className="mt-0.5 block text-[11px] uppercase tracking-[0.06em]" style={{ color: active ? C.tungsten : '#C4BFB6' }}>
                   {slug === 'garage-neon' ? t('real') : t('illustration')}

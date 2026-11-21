@@ -145,3 +145,37 @@ reste du site, hors périmètre), bouton d'en-tête masqué au chapitre 5, tarif
 sans « plein cadre » et avec fondus doux, colonnes fermées, « Le plus choisi » au-dessus du nom,
 recul du contact modéré (l'image n'existe pas au-delà de ses bords), ombre de contact plus
 dense et décors de l'éditeur légèrement refroidis.
+
+## Phase 4 — performance, mobile, accessibilité
+
+- **Mouvement réduit** (`prefers-reduced-motion`) : pas de canvas, pas de caméra ; une image fixe
+  par chapitre (`still-*.webp`, version `-sm` sur mobile via `srcSet`). Vérifié en capture.
+- **Sans WebGL / économie de données** : mêmes images fixes ; le canvas ne démarre pas.
+- **Mobile (< 768 px)** : textures `-sm` (600 px), DPR plafonné à 1,5, image dans le tiers haut et
+  texte en bas, sélecteur de décors sur une seule rangée de 4 vignettes.
+- **Lighthouse mobile** (build de production, `next start`, Lighthouse 12.2.1, mobile simulé) :
+
+  | Mesure | Avant optimisation | Après |
+  |---|---|---|
+  | Performance | 60 | **82** |
+  | Accessibilité | 98 | 98 |
+  | Bonnes pratiques | 96 | 96 |
+  | Total Blocking Time | 1 190 ms | 193 ms |
+  | CLS | 0 | 0 |
+  | LCP | 4,4 s | 4,2 s |
+
+  Gain : le canvas (script, décodage d'images, envoi des textures) démarre au premier geste du
+  visiteur (défilement, toucher, clavier) ou après 6 s, au lieu de concurrencer le premier
+  affichage ; la scène ne bouge qu'au défilement, donc rien n'est perdu.
+- **LCP non atteint (4,2 s, objectif 2,5 s)** : mesuré dans le navigateur (`docs/site-3d/lcp.mjs`),
+  l'élément LCP d'une première visite est le **paragraphe du bandeau cookies**, rendu côté client
+  après hydratation (≈ 3 s sous ralentissement). Le titre de la page s'affiche à 1,7 s ; pour un
+  visiteur qui a déjà répondu au bandeau, le LCP est le titre à 0,4 s. Corriger demande de rendre
+  le bandeau côté serveur (le consentement est dans un cookie, lisible par le serveur) : composant
+  de consentement commun à tout le site, laissé hors de cette mission ; recommandation n° 1.
+- **Lint** : `npm run lint` signalait des milliers d'erreurs dès qu'un build existait (le dossier
+  `.next` n'était pas ignoré) et une erreur dans `next-env.d.ts` (déjà présente sur `main`). Ajout
+  du bloc `ignores` du modèle Next.js dans `eslint.config.mjs` : 0 erreur, 0 avertissement.
+- **Police** : `Big Shoulders` n'a pas de métriques de repli dans next/font (avertissement au build) :
+  repli explicite sur une condensée, `adjustFontFallback: false`.
+- Console : aucune erreur sur toutes les captures (1440 et 390 px, mouvement réduit compris).

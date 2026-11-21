@@ -10,6 +10,9 @@ const compat = new FlatCompat({
 })
 
 const eslintConfig = [
+  // Generated files, as in Next.js's own template: the build output (linted after `next build`,
+  // it reported thousands of issues in compiled chunks) and next-env.d.ts.
+  { ignores: ['.next/**', 'node_modules/**', 'src/generated/**', 'next-env.d.ts'] },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {

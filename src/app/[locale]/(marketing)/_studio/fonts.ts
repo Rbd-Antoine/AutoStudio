@@ -11,6 +11,9 @@ export const display = Big_Shoulders({
   axes: ['opsz'],
   variable: '--font-studio-display',
   display: 'swap',
+  // next/font has no metric overrides for this family: an explicit condensed fallback instead.
+  adjustFontFallback: false,
+  fallback: ['Arial Narrow', 'Roboto Condensed', 'sans-serif'],
 })
 
 export const sans = IBM_Plex_Sans({

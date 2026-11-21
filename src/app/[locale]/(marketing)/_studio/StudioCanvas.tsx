@@ -34,6 +34,7 @@ uniform vec2 uRes;
 uniform vec4 uCam;          // cx, cy, viewW, viewH (scene pixels)
 uniform vec2 uScene;        // 1200, 900
 uniform sampler2D uBefore, uAfter, uBgA, uBgB, uCar, uShadow;
+uniform float uParA, uParB;   // 1 = this decor slides with the parallax (0 for the real render, which holds the car)
 uniform float uStudio, uAmbient, uBeforeLight, uCarLight, uDecorSwap, uDim, uTime;
 uniform float uBgMix, uSweep;
 uniform vec2 uParallax;
@@ -49,11 +50,26 @@ float segDist(vec2 p, vec2 a, vec2 b) {
   return length(p - (a + ab * t));
 }
 
-// 1 inside the frame, fading to 0 across its edge (no hard plate edge, and the clamped edge
-// pixels, which would smear into streaks, are never seen).
+// The picture never shows an edge. Sideways it continues as its own mirror image and fades into
+// darkness (the left dissolves under the text column). At the bottom it is never mirrored (the
+// floor's texture would show a seam): the floor sinks into the dark before the edge, like a
+// studio sweep.
+vec2 mirror(vec2 uv) { return vec2(1.0 - abs(1.0 - abs(uv.x)), clamp(uv.y, 0.0, 1.0)); }
 float inside(vec2 uv) {
-  vec2 d = max(-uv, uv - 1.0);
-  return 1.0 - smoothstep(-0.035, 0.01, max(d.x, d.y));
+  float left = smoothstep(-0.32, 0.04, uv.x);
+  float right = 1.0 - smoothstep(0.98, 1.1, uv.x);
+  float top = smoothstep(-0.08, 0.01, uv.y);
+  float bottom = 1.0 - smoothstep(0.84, 1.02, uv.y);
+  return left * right * top * bottom;
+}
+
+// Where the car's tyres meet the floor (scene pixels): rear-left, front-left, front-right.
+const vec2 W_RL = vec2(272.0, 588.0);
+const vec2 W_FL = vec2(566.0, 744.0);
+const vec2 W_FR = vec2(975.0, 642.0);
+float groundY(float x) {
+  return x < W_FL.x ? mix(W_RL.y, W_FL.y, (x - W_RL.x) / (W_FL.x - W_RL.x))
+                    : mix(W_FL.y, W_FR.y, (x - W_FL.x) / (W_FR.x - W_FL.x));
 }
 
 void main() {
@@ -61,11 +77,12 @@ void main() {
   vec2 sp = uCam.xy + (frag - 0.5 * uRes) * (uCam.z / uRes.x);
   vec2 uv = sp / uScene;
   vec2 bgUv = (sp + uParallax) / uScene;
-  vec2 bgUvC = clamp(bgUv, 0.0, 1.0);
-  vec2 uvC = clamp(uv, 0.0, 1.0);
+  vec2 bgUvC = mirror(bgUv);
+  vec2 uvC = mirror(uv);
 
-  // The studio render under its own lights: dark until each light group strikes.
-  vec3 after = texture2D(uAfter, bgUvC).rgb;
+  // The studio is the real AutoStudio render, car, shadows and floor reflections included. It
+  // holds the car, so it never slides with the parallax (no ghost of the car's edge).
+  vec3 after = texture2D(uAfter, uvC).rgb;
   float mask = uAmbient;
   vec3 glow = vec3(0.0);
   for (int i = 0; i < ${MAX_LIGHTS}; i++) {
@@ -78,25 +95,53 @@ void main() {
     glow += uLightTint[i] * q.y * f * f * 0.22;
   }
   vec3 studio = after * mix(0.05, 1.0, clamp(mask, 0.0, 1.0)) + glow * (1.0 - 0.75 * uAmbient);
+  // A denser contact shadow on the studio floor under the tyres and the body (the floor only:
+  // the car is drawn over it below).
+  studio *= 1.0 - 0.5 * texture2D(uShadow, uvC).r * inside(uv);
 
-  vec3 before = texture2D(uBefore, bgUvC).rgb * uBeforeLight;
+  // The customer's own photo, whole (its car and its real shadow): it holds the car too, so it
+  // does not slide either. Only the editor's backgrounds below move with the parallax.
+  float sh = texture2D(uShadow, uvC).r * inside(uv);
+  vec3 before = texture2D(uBefore, uvC).rgb * uBeforeLight;
   vec3 col = mix(before, studio, uStudio);
 
-  // The chosen background, swapped with a light sweep crossing the frame.
-  vec3 bgA = texture2D(uBgA, bgUvC).rgb;
-  vec3 bgB = texture2D(uBgB, bgUvC).rgb;
+  // The chosen background, swapped with a light sweep crossing the frame. The editor's
+  // backgrounds slide with the parallax and take the car's computed shadow.
+  vec2 uvA = mix(uvC, bgUvC, uParA);
+  vec2 uvB = mix(uvC, bgUvC, uParB);
+  vec3 bgA = texture2D(uBgA, uvA).rgb * (1.0 - 0.86 * sh * uParA);
+  vec3 bgB = texture2D(uBgB, uvB).rgb * (1.0 - 0.86 * sh * uParB);
   float wipe = uSweep < 0.0 ? uBgMix : smoothstep(uSweep - 0.06, uSweep + 0.06, 1.0 - bgUv.x);
   vec3 decor = mix(bgA, bgB, wipe);
   if (uSweep >= 0.0) decor += vec3(1.0, 0.86, 0.62) * exp(-pow((1.0 - bgUv.x - uSweep) * 22.0, 2.0)) * 0.35;
   col = mix(col, decor, uDecorSwap);
 
-  // The car's shadow on whatever floor is there, then the car: the customer's own pixels.
-  float sh = texture2D(uShadow, uvC).r * inside(uv);
-  col *= 1.0 - 0.86 * sh * mix(0.75, 1.0, max(uStudio, uDecorSwap));
+  float glossy = max(uStudio, uDecorSwap);
+  // The decor's grade: deeper blacks, and the ceiling's yellow safety stripes calmed so the page
+  // keeps a single accent. Applied to the decor only, never to the car's pixels.
+  vec3 graded = mix(col, col * col * (3.0 - 2.0 * col), 0.4);
+  graded = graded / (1.0 + 0.12 * pow(max(graded, 0.0), vec3(4.0)));  // the lamps keep a shape
+  float yellow = smoothstep(0.08, 0.25, min(col.r, col.g) - col.b) * smoothstep(0.2, 0.42, col.r);
+  graded = mix(graded, vec3(dot(graded, vec3(0.3, 0.55, 0.15))) * 0.7, yellow);
+  col = mix(col, graded, glossy);
+
+  // A faint reflection of the car on the glossy floors (studio and decors): the car mirrored
+  // about the line where its tyres touch the ground, fading with distance.
+  float gy = groundY(sp.x);
+  if (sp.y > gy && glossy > 0.0) {
+    vec2 m = vec2(sp.x, 2.0 * gy - sp.y) / uScene;
+    vec4 rc = texture2D(uCar, clamp(m, 0.0, 1.0));
+    vec3 rcol = mix(rc.rgb, texture2D(uAfter, clamp(m, 0.0, 1.0)).rgb, glossy);
+    float fade = exp(-(sp.y - gy) / 80.0) * 0.26 * glossy * rc.a;
+    col = mix(col, rcol * uCarLight, fade);
+  }
+
+  // The car, always on top: the customer's photo on the parking, the render's own pixels of the
+  // same car in the studio and on every decor (AutoStudio's real output).
   vec4 car = texture2D(uCar, uvC);
   float carA = car.a * step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
-  vec3 carCol = car.rgb * uCarLight;
-  col = mix(col, carCol, carA);
+  vec3 carSrc = mix(car.rgb, after, glossy);
+  col = mix(col, carSrc * uCarLight, carA);
 
   // Off the frame: darkness, so a pulled-back camera finds the studio's walls in the dark.
   col *= inside(bgUv);
@@ -148,7 +193,7 @@ function texture(gl: WebGLRenderingContext, img: HTMLImageElement, owned: WebGLT
 
 /** The decor's plate: the real render for the garage, a fitted editor background otherwise. */
 function decorSrc(slug: DecorSlug, sm: string) {
-  return slug === 'garage-neon' ? `/site-3d/plate-after-fill${sm}.webp` : `/site-3d/bg-${slug}${sm}.webp`
+  return slug === 'garage-neon' ? `/site-3d/plate-after${sm}.webp` : `/site-3d/bg-${slug}${sm}.webp`
 }
 
 export default function StudioCanvas({ progress, decor, light, onReady }: StudioCanvasProps) {
@@ -279,6 +324,8 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       gl.uniform4fv(u('uLightParam'), param)
       bind(2, decorTex.get(fromDecor)!)
       bind(3, decorTex.get(shownDecor)!)
+      gl.uniform1f(u('uParA'), (swapStart >= 0 ? fromDecor : shownDecor) === 'garage-neon' ? 0 : 1)
+      gl.uniform1f(u('uParB'), shownDecor === 'garage-neon' ? 0 : 1)
       gl.uniform1f(u('uBgMix'), swapStart >= 0 ? mix : 0)
       gl.uniform1f(u('uSweep'), sweep)
       if (swapStart < 0) bind(2, decorTex.get(shownDecor)!)
@@ -288,8 +335,8 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
     ;(async () => {
       try {
         const [before, after, car, shadow] = await Promise.all([
-          loadImage(`/site-3d/plate-before-fill${sm}.webp`),
-          loadImage(`/site-3d/plate-after-fill${sm}.webp`),
+          loadImage(`/site-3d/plate-before${sm}.webp`),
+          loadImage(`/site-3d/plate-after${sm}.webp`),
           loadImage(`/site-3d/car${sm}.webp`),
           loadImage('/site-3d/shadow.webp'),
         ])

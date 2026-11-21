@@ -22,16 +22,19 @@ interface Shot {
   box: [number, number, number, number] // x0, y0, x1, y1 in scene pixels
   /** On wide screens, the share of the width left of the box for the text column (0 = centred). */
   text: number
+  /** The picture fills the screen: the view never leaves it at the top, bottom or right (the
+   *  left, behind the text, may fade into darkness). Off for the pulled-back final shot. */
+  fill?: boolean
 }
 
 // One stop per chapter: the camera rests there while the chapter is read, and glides between.
 // On wide screens the box is fitted into the part of the screen right of the text column, so
 // the car never runs under the words, the chapter rail or off the edge.
 const SHOTS: Record<ChapterId, Shot> = {
-  avant:   { box: [180, 200, 1080, 780], text: 0.36 },
-  studio:  { box: [30, 0, 1170, 880], text: 0.3 },
-  fonds:   { box: [190, 210, 1060, 770], text: 0.38 },
-  tarifs:  { box: [260, -20, 1240, 560], text: 0.0 },
+  avant:   { box: [180, 200, 1080, 780], text: 0.34, fill: true },
+  studio:  { box: [30, 0, 1170, 880], text: 0.32, fill: true },
+  fonds:   { box: [190, 210, 1060, 770], text: 0.36, fill: true },
+  tarifs:  { box: [260, 0, 1200, 560], text: 0.0, fill: true },
   contact: { box: [-260, -120, 1460, 1000], text: 0.0 },
 }
 
@@ -95,7 +98,7 @@ function strike(t: number): number {
 }
 
 /** Share of the screen width kept free on the right for the chapter rail (wide screens). */
-const RAIL = 0.09
+const RAIL = 0.1
 
 /** The view (scene pixels) that keeps `shot.box` in view on a screen of this aspect ratio. */
 function frame(shot: Shot, aspect: number, wide: boolean) {
@@ -115,8 +118,21 @@ function frame(shot: Shot, aspect: number, wide: boolean) {
   }
   // The box's centre lands at the centre of the usable part.
   const screenX = left + usable / 2
-  const cx = (x0 + x1) / 2 - (screenX - 0.5) * viewW
-  const cy = (y0 + y1) / 2
+  let cx = (x0 + x1) / 2 - (screenX - 0.5) * viewW
+  let cy = (y0 + y1) / 2
+  if (shot.fill && wide) {
+    // At most a little past the bottom of the picture: the floor then fades into darkness like
+    // a studio sweep, and the car keeps a comfortable size.
+    const maxH = SCENE_H * 1.05
+    if (viewH > maxH) {
+      viewW *= maxH / viewH
+      viewH = maxH
+    }
+    // The right edge may pass the picture a little (it continues mirrored and fades), so the car
+    // stays centred in its part of the screen instead of being pushed under the chapter rail.
+    cx = Math.min(cx, SCENE_W + 0.07 * viewW - viewW / 2)
+    cy = Math.max(cy, viewH / 2) // the top edge stays inside the picture
+  }
   return { cx, cy, viewW, viewH }
 }
 

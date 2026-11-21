@@ -146,7 +146,9 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
           </div>
         )}
         {/* Readability: a dark band under the text column (left on desktop, bottom on mobile). */}
-        <div className="absolute inset-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${C.night}E6 0%, ${C.night}99 26%, transparent 52%)` }} />
+        <div className="absolute inset-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${C.night}F5 0%, ${C.night}EB 30%, ${C.night}A6 42%, transparent 60%)` }} />
+        {/* The top of the picture (ceiling lights, sky) quietened under the header. */}
+        <div className="absolute inset-x-0 top-0 h-32" style={{ background: `linear-gradient(180deg, ${C.night}C7 0%, ${C.night}66 50%, transparent 100%)` }} />
         <div className="absolute inset-x-0 bottom-0 h-[62%] md:hidden" style={{ background: `linear-gradient(0deg, ${C.night} 0%, ${C.night}F0 38%, transparent 100%)` }} />
       </div>
 
@@ -257,11 +259,11 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
 function ChapterText({ eyebrow, title, body, children, first }: { eyebrow: string; title: string; body: string; children?: React.ReactNode; first?: boolean }) {
   return (
     <div className="sticky top-0 flex h-screen items-end px-4 pb-10 sm:px-8 md:pb-[12vh] lg:px-16">
-      <div className="max-w-[34rem]">
+      <div className="max-w-[31rem]">
         <p className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.tungsten }}>{eyebrow}</p>
         {first
-          ? <h1 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 7vw, 6.5rem)' }}>{title}</h1>
-          : <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 7vw, 6.5rem)' }}>{title}</h2>}
+          ? <h1 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 6vw, 5.5rem)' }}>{title}</h1>
+          : <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.75rem, 6vw, 5.5rem)' }}>{title}</h2>}
         <p className="mt-5 text-base leading-relaxed sm:text-lg" style={{ color: C.ash }}>{body}</p>
         {children}
       </div>
@@ -350,14 +352,14 @@ function Faq({ items }: { items: { q: string; a: string }[] }) {
 function ChapterRail({ chapter }: { chapter: ChapterId }) {
   const t = useTranslations('studio.nav')
   return (
-    <nav aria-label={t('label')} className="fixed right-6 top-1/2 z-20 hidden -translate-y-1/2 lg:block">
-      <ol className="flex flex-col gap-4">
+    <nav aria-label={t('label')} className="fixed right-4 top-1/2 z-20 hidden -translate-y-1/2 lg:block">
+      <ol className="flex flex-col gap-4 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
         {CHAPTERS.map((id, i) => {
           const active = id === chapter
           return (
             <li key={id}>
               <a href={`#${id}`} aria-current={active ? 'step' : undefined} className="group flex items-center justify-end gap-3 text-[11px] uppercase tracking-[0.2em]">
-                <span className={cn('transition-opacity duration-200', active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')} style={{ color: active ? C.chalk : C.ash }}>{t(id)}</span>
+                <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100" style={{ color: active ? C.chalk : C.ash }}>{t(id)}</span>
                 <span className="tabular-nums" style={{ color: active ? C.tungsten : C.ash }}>{String(i + 1).padStart(2, '0')}</span>
                 <span className="block h-px transition-all duration-300" style={{ width: active ? 28 : 12, background: active ? C.tungsten : C.steel }} />
               </a>

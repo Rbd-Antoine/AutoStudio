@@ -35,6 +35,8 @@ for (const vp of viewports) {
   await page.goto(base, { waitUntil: 'networkidle', timeout: 120_000 })
   // The cookie banner is answered first, as a visitor would (it covers the bottom of the view).
   await page.getByRole('button', { name: /Tout refuser|Reject all/ }).click({ timeout: 5000 }).catch(() => {})
+  // The Next.js development badge is not part of the page.
+  await page.addStyleTag({ content: 'nextjs-portal { display: none !important; }' })
   await page.waitForTimeout(2500)
   for (const id of ['avant', 'studio', 'fonds', 'tarifs', 'contact']) {
     const stop = id === 'studio' ? 0.82 : id === 'tarifs' || id === 'contact' ? 0.15 : 0.4

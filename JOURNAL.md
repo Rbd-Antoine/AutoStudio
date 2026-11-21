@@ -77,3 +77,31 @@ Voir DESIGN.md.
   4. Stries en bas de l'image : fondu de bord recalé pour ne jamais montrer les pixels de bord étirés.
 - Un ancien serveur Next resté vivant tenait le port 3000 (TaskStop ne tue pas les petits-enfants) :
   arrêt de tous les processus `node … AutoStudio … next` avant chaque relance.
+
+## Phase 3 — boucle d'amélioration par chapitre
+
+La skill « dream-loop » citée par la mission n'existe pas dans cette session : la boucle est
+reproduite à la main. Cible = description écrite de la vue finie idéale de chaque chapitre
+(`docs/site-3d/targets/targets.md`, aucune génération d'image disponible) ; juge = un sous-agent
+neuf à chaque tour, sans mémoire, qui note composition /3, lumière /3, matériaux /3, détails /1.
+
+**Contrainte d'honnêteté décidée au tour 2 du chapitre 2** : le juge demandait de « rééclairer »
+la voiture (reflets bleus des néons sur la carrosserie). Refusé : la voiture affichée est la sortie
+réelle d'AutoStudio ; l'embellir sur la page montrerait un résultat que le produit ne livre pas.
+Seul le décor est étalonné (contraste, jaunes calmés) ; la voiture n'est jamais retouchée. Les
+juges suivants reçoivent cette contrainte. La note « lumière » du chapitre 2 en est plafonnée.
+
+### Chapitre 2 — Le studio
+
+| Tour | Note | Ce qui a changé avant le tour | Principaux reproches |
+|---|---|---|---|
+| 1 | 3/10 | Première version (voiture de la photo collée sur le rendu rempli) | Rectangle visible (bords flous, bande noire), voiture collée, rail sur la voiture, bandes jaunes concurrentes, badge de dev |
+| 2 | 4/10 | Voiture et ombres du vrai rendu, bords prolongés en miroir, reflet au sol, étalonnage du décor, rail sans libellés, badge masqué | Voiture « éclairée différemment » (refusé, voir ci-dessus), joints du sol en losange (couture du miroir), gauche pas assez sombre, plafonniers brûlés, rail illisible |
+| 3 | … | Plus de miroir en bas (fondu avant le bord), ombre de contact renforcée, voile gauche dense, voile haut, jaunes désaturés, voiture recentrée dans sa zone, titre plus compact | |
+
+### Chapitre 1 — Avant
+
+| Tour | Note | Ce qui a changé avant le tour | Principaux reproches |
+|---|---|---|---|
+| 1 | 6/10 | Photo d'origine entière (plus de remplissage visible autour de la voiture) | « Ligne fantôme » en bas (couture du miroir), rail sur la zone chargée, voile gauche trop court, navigation peu lisible sur le ciel |
+| 2 | … | Mêmes corrections communes que le chapitre 2 (bas sans miroir, voiles, rail) | |

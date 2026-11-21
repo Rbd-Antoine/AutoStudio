@@ -234,7 +234,7 @@ def main() -> None:
     def composite(plate: np.ndarray) -> np.ndarray:
         shaded = plate.astype(np.float32) * (1 - 0.86 * shadow[..., None] / 255.0)
         a = alpha[..., None] / 255.0
-        return np.clip(shaded * (1 - a) + before_al * a, 0, 255).astype(np.uint8)
+        return np.clip(shaded * (1 - a) + after * a, 0, 255).astype(np.uint8)  # the render's own car pixels
 
     write("still-avant", before_al)
     write("still-studio", after)

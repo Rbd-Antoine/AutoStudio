@@ -13,6 +13,7 @@ import {
 import { cn } from '@/lib/utils'
 import { identifyUser, resetAnalyticsIdentity } from '@/lib/analytics/client'
 import { PromoBanner } from './PromoBanner'
+import { CREDITS_CHANGED_EVENT } from '@/lib/credits-events'
 
 const VERIFY_DISMISS_KEY = 'autostudio-verify-reminder-dismissed'
 
@@ -145,6 +146,16 @@ export default function AppLayoutClient({
       .catch(() => {})
     return () => { cancelled = true }
   }, [userId, userEmail])
+
+  // A page that spent or was granted credits says so (credits-events.ts): the balance follows.
+  useEffect(() => {
+    const onChange = (e: Event) => {
+      const total = (e as CustomEvent<number>).detail
+      if (typeof total === 'number') setWs(prev => (prev ? { ...prev, creditsRemaining: total } : prev))
+    }
+    window.addEventListener(CREDITS_CHANGED_EVENT, onChange)
+    return () => window.removeEventListener(CREDITS_CHANGED_EVENT, onChange)
+  }, [])
 
   const nav = ws?.isSuperuser
     ? [

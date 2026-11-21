@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Download, ImageIcon, ArrowRight, X, ChevronLeft, ChevronRight, Play, Clock, Clapperboard } from 'lucide-react'
+import { Download, ImageIcon, ArrowRight, X, ChevronLeft, ChevronRight, Play, Clock, Clapperboard, CheckCircle2, Circle, Loader2 } from 'lucide-react'
+import { bulkDownload, slugForFile } from '@/lib/bulk-download'
 import { cn } from '@/lib/utils'
 import { MarketingKitModal } from '@/components/app/MarketingKitModal'
 
@@ -61,6 +62,54 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
   const [previewIdx, setPreviewIdx] = useState<number | null>(null)
   const [showMarketingKit, setShowMarketingKit] = useState(false)
 
+  // Selection mode: several renders downloaded as one zip (bulk-download.ts).
+  const [selecting, setSelecting] = useState(false)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [zipProgress, setZipProgress] = useState<{ done: number; total: number } | null>(null)
+  const [zipMessage, setZipMessage] = useState<string | null>(null)
+  const downloadable = photos.filter(p => p.status === 'ENHANCED' && p.fullUrl)
+
+  const toggleSelected = useCallback((id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }, [])
+
+  const stopSelecting = useCallback(() => {
+    setSelecting(false)
+    setSelected(new Set())
+  }, [])
+
+  const downloadSelection = useCallback(async () => {
+    const chosen = downloadable.filter(p => selected.has(p.id))
+    if (chosen.length === 0 || zipProgress) return
+    setZipMessage(null)
+    setZipProgress({ done: 0, total: chosen.length })
+    try {
+      const { ok, failed } = await bulkDownload(
+        chosen.map(p => ({
+          id: p.id,
+          url: p.fullUrl!,
+          filename: `${slugForFile(p.vehicleName ?? p.styleUsed ?? 'rendu')}.${p.isVideo ? 'mp4' : 'png'}`,
+        })),
+        (done, total) => setZipProgress({ done, total }),
+      )
+      // A downloaded render is kept past the 30-day purge, as with a single download.
+      chosen.filter(p => !failed.includes(p.id)).forEach(p => markDownloaded(p.id))
+      setZipMessage(failed.length
+        ? `${ok} fichier${ok > 1 ? 's' : ''} téléchargé${ok > 1 ? 's' : ''}, ${failed.length} n’${failed.length > 1 ? 'ont' : 'a'} pas pu être récupéré${failed.length > 1 ? 's' : ''}.`
+        : null)
+      if (!failed.length) stopSelecting()
+    } catch {
+      setZipMessage('Le téléchargement a échoué. Réessayez.')
+    } finally {
+      setZipProgress(null)
+    }
+  }, [downloadable, selected, zipProgress, stopSelecting])
+
   const preview   = previewIdx !== null ? photos[previewIdx] : null
   const hasPrev   = previewIdx !== null && previewIdx > 0
   const hasNext   = previewIdx !== null && previewIdx < photos.length - 1
@@ -114,16 +163,65 @@ export default function PhotoGrid({ photos }: { photos: Photo[] }) {
   return (
     <>
       {/* Grid */}
-      <div className="px-6 lg:px-10 py-8 max-w-[1480px]">
+      <div className="px-4 sm:px-6 lg:px-10 py-8 max-w-[1480px]">
+        {downloadable.length > 1 && (
+          <div className="mb-4 flex flex-wrap items-center gap-2 text-sm">
+            {!selecting ? (
+              <button
+                onClick={() => setSelecting(true)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-accent-200 bg-white px-3 py-1.5 font-medium text-charcoal/80 hover:border-accent-300"
+              >
+                <Download className="w-3.5 h-3.5" strokeWidth={2} /> Télécharger plusieurs rendus
+              </button>
+            ) : (
+              <>
+                <span className="text-charcoal/60">{selected.size} sélectionné{selected.size > 1 ? 's' : ''}</span>
+                <button
+                  onClick={() => setSelected(new Set(downloadable.map(p => p.id)))}
+                  className="rounded-lg px-2 py-1.5 font-medium text-accent-600 hover:text-accent-700"
+                >
+                  Tout sélectionner
+                </button>
+                <button
+                  onClick={downloadSelection}
+                  disabled={selected.size === 0 || !!zipProgress}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 font-semibold text-white hover:bg-accent-600 disabled:opacity-50"
+                >
+                  {zipProgress
+                    ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> {zipProgress.done}/{zipProgress.total}</>
+                    : <><Download className="w-3.5 h-3.5" strokeWidth={2} /> Télécharger (zip)</>}
+                </button>
+                <button onClick={stopSelecting} disabled={!!zipProgress} className="rounded-lg px-2 py-1.5 text-charcoal/50 hover:text-charcoal/80">
+                  Annuler
+                </button>
+              </>
+            )}
+            {zipMessage && <span className="w-full text-amber-700">{zipMessage}</span>}
+          </div>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
           {photos.map((p, idx) => {
             const expiryDays = p.status === 'ENHANCED' ? daysUntilExpiry(p.createdAt) : null
+            const selectable = selecting && p.status === 'ENHANCED' && !!p.fullUrl
+            const isSelected = selected.has(p.id)
             return (
             <button
               key={p.id}
-              onClick={() => setPreviewIdx(idx)}
-              className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-white border border-accent-100 ring-2 ring-transparent hover:ring-accent-300 hover:border-accent-300 shadow-sm hover:shadow-md hover:shadow-accent-500/10 transition-all text-left"
+              onClick={() => (selecting ? selectable && toggleSelected(p.id) : setPreviewIdx(idx))}
+              aria-pressed={selecting ? isSelected : undefined}
+              className={cn(
+                'group relative aspect-[4/3] rounded-xl overflow-hidden bg-white border border-accent-100 ring-2 hover:border-accent-300 shadow-sm hover:shadow-md hover:shadow-accent-500/10 transition-all text-left',
+                isSelected ? 'ring-accent-500' : 'ring-transparent hover:ring-accent-300',
+                selecting && !selectable && 'opacity-40 cursor-not-allowed',
+              )}
             >
+              {selectable && (
+                <span className="absolute z-10 bottom-2 right-2 rounded-full bg-white/90 p-0.5 shadow">
+                  {isSelected
+                    ? <CheckCircle2 className="w-5 h-5 text-accent-600" strokeWidth={2.25} />
+                    : <Circle className="w-5 h-5 text-charcoal/40" strokeWidth={2} />}
+                </span>
+              )}
               {p.thumbnailUrl ? (
                 // Older photos still have a base64 data: URI (pre-fal.ai-storage migration) —
                 // next/image can't optimize those, so they fall back to a plain <img>.

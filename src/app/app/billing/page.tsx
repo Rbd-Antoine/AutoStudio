@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { Check, ExternalLink, Plus, Lock, Zap, X, ArrowUpRight, Clock, ShieldCheck, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { trackEvent } from '@/lib/meta'
+import { announceCredits } from '@/lib/credits-events'
 
 interface PricingPlan {
   id: 'FREE' | 'ESSENTIAL' | 'PRO' | 'BUSINESS'
@@ -164,6 +165,7 @@ export default function BillingPage() {
       .then(r => (r.ok ? r.json() : null))
       .then(d => {
         if (!d?.workspaceId) return
+        announceCredits((d.monthlyCredits ?? 0) + (d.bonusCredits ?? 0))
         setWorkspace(prev => prev && prev.workspaceId === d.workspaceId ? {
           ...prev,
           plan: d.plan ?? prev.plan,

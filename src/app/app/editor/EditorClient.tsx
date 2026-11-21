@@ -13,6 +13,7 @@ import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
 import { downloadUrlAsFile } from '@/lib/download-file'
 import { MarketingKitModal } from '@/components/app/MarketingKitModal'
 import { VerifyEmailModal } from '@/components/app/VerifyEmailModal'
+import { announceCredits } from '@/lib/credits-events'
 
 const MAX_PHOTOS = 5
 const MAX_FILE_SIZE = 20 * 1024 * 1024 // matches the "jusqu'à 20 Mo" copy on the dropzone
@@ -164,6 +165,7 @@ export default function EditorClient() {
       .then(r => r.json())
       .then(d => {
         setCredits((d.monthlyCredits ?? 0) + (d.bonusCredits ?? 0))
+        if (typeof d.creditsRemaining === 'number') announceCredits(d.creditsRemaining)
         setFeedbackCreditGranted(!!d.feedbackCreditGranted)
         if (d.workspaceId) setWorkspaceId(d.workspaceId)
       })

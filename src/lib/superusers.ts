@@ -13,6 +13,14 @@ function isSuperuserEmail(email: string | null | undefined): boolean {
   return !!email && superuserEmails().includes(email.toLowerCase())
 }
 
+// The team's own accounts (superusers plus INTERNAL_EMAILS, comma-separated), flagged
+// `is_internal` in PostHog so test traffic can be filtered out of every dashboard.
+export function isInternalEmail(email: string | null | undefined): boolean {
+  if (!email) return false
+  const extra = (process.env.INTERNAL_EMAILS ?? '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
+  return [...superuserEmails(), ...extra].includes(email.toLowerCase())
+}
+
 // An address on the list only counts once its owner has proven they control it. Signing up
 // doesn't require verification, so without this check anyone could register a superuser
 // address on a fresh database and get the admin APIs. Reads the account from the database

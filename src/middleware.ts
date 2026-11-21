@@ -15,6 +15,10 @@ const LOCALE_PREFIXED_APP_PAGE = new RegExp(
   `^/(?:${routing.locales.join('|')})(/(?:app|signin|signup|forgot-password|reset-password|verify|check-email|auth)(?:/.*)?)$`,
 )
 
+// Editions that existed once but served untranslated French: any address under them is sent
+// for good to the same page without the prefix, so old links and indexed URLs keep working.
+const RETIRED_LOCALES = /^\/(?:en|de|es|pt)(?=\/|$)/
+
 // Pages that authenticated users should not see (redirect them to /app)
 const GUEST_ONLY = ['/signin', '/signup', '/forgot-password', '/reset-password', '/verify']
 // Pages that require auth but don't redirect verified users away
@@ -49,6 +53,11 @@ const authMiddleware = auth(function middleware(req: NextAuthRequest) {
 // straight to locale routing.
 export default function middleware(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl
+  if (RETIRED_LOCALES.test(pathname)) {
+    const url = req.nextUrl.clone()
+    url.pathname = pathname.replace(RETIRED_LOCALES, '') || '/'
+    return NextResponse.redirect(url, 308)
+  }
   const unprefixed = pathname.match(LOCALE_PREFIXED_APP_PAGE)
   if (unprefixed) {
     const url = req.nextUrl.clone()

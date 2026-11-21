@@ -9,7 +9,7 @@ scenes, without touching the vehicle, and turns a render into short social video
 
 | Area | Routes | Notes |
 |---|---|---|
-| Marketing site | `/`, `/pricing`, `/features`, `/about`, `/contact`, `/blog`, `/guide`, `/legal/*` | French at `/`; `/en`, `/de`, `/es`, `/pt` serve the same French content for now |
+| Marketing site | `/`, `/pricing`, `/features`, `/about`, `/contact`, `/blog`, `/guide`, `/legal/*` | French only, at `/`; `/en`, `/de`, `/es`, `/pt` redirect (308) to the French page until an edition is really translated |
 | Auth | `/signin`, `/signup`, `/check-email`, `/forgot-password`, `/reset-password` | Email + password (verification email) or Google |
 | Editor | `/app/editor` | Up to 5 photos per run, one request per photo, 1 credit per render; retouch; marketing kit |
 | Library / dashboard | `/app`, `/app/library` | Renders not downloaded within 30 days are purged |

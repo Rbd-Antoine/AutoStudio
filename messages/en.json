@@ -70,5 +70,142 @@
     "viewPricing": "View pricing",
     "getStarted": "Get started",
     "tryItFree": "Try it free"
+  },
+  "studio": {
+    "meta": {
+      "title": "AutoStudio — Your car stays the same. Its setting doesn't.",
+      "description": "AutoStudio replaces the background of your vehicle photos with a realistic studio setting, without touching the car. First render free, no credit card."
+    },
+    "nav": {
+      "label": "Chapters",
+      "avant": "Before",
+      "studio": "The studio",
+      "fonds": "Backgrounds",
+      "tarifs": "Pricing",
+      "contact": "Contact",
+      "signIn": "Sign in",
+      "cta": "Try it free",
+      "skip": "Skip to content",
+      "home": "AutoStudio, home"
+    },
+    "scrollHint": "Scroll",
+    "avant": {
+      "eyebrow": "01 — Before",
+      "title": "A listing photo like all the others.",
+      "body": "A parking lot, a grey sky, flat light. It's the photo you take every day with your phone, and the one buyers scroll past without stopping."
+    },
+    "studio": {
+      "eyebrow": "02 — The studio",
+      "title": "Your car stays the same. Its setting doesn't.",
+      "body": "AutoStudio replaces the background and keeps the vehicle exactly as you photographed it: bodywork, wheels, windows, plate.",
+      "note": "This studio is a real AutoStudio render of this photo. The car hasn't moved by a pixel: only the setting was replaced."
+    },
+    "fonds": {
+      "eyebrow": "03 — Backgrounds",
+      "title": "Four settings. One click.",
+      "body": "The editor's four backgrounds. Pick one: the setting changes, the car stays.",
+      "pick": "Pick a setting",
+      "real": "Real render",
+      "illustration": "Illustration",
+      "honesty": "\"Neon garage\" is the real render of this photo. For the other three, the car from the photo is placed on the editor's background, as an illustration.",
+      "decors": {
+        "garage-neon": {
+          "name": "Neon garage",
+          "desc": "Industrial hangar, steel structure and neon lighting"
+        },
+        "hangar-industriel": {
+          "name": "Industrial hangar",
+          "desc": "Polished concrete floor, exposed structure, workshop feel"
+        },
+        "parking-souterrain": {
+          "name": "Underground car park",
+          "desc": "Covered shopping-centre car park, artificial lighting"
+        },
+        "piece-vide": {
+          "name": "Modern empty room",
+          "desc": "Clean, minimal interior, soft light"
+        }
+      }
+    },
+    "tarifs": {
+      "eyebrow": "04 — Pricing",
+      "title": "Start for free.",
+      "body": "Every plan includes monthly credits. Extra credits you buy never expire.",
+      "free": "Free",
+      "perMonth": "/month",
+      "credits": "{count, plural, one {# credit} other {# credits}} per month",
+      "firstYear": "for the first year",
+      "popular": "Most chosen",
+      "ctaFree": "Start for free",
+      "ctaPaid": "Create my account",
+      "details": "See full pricing",
+      "plans": {
+        "FREE": {
+          "name": "Discovery",
+          "features": [
+            "All settings",
+            "HD download"
+          ]
+        },
+        "ESSENTIAL": {
+          "name": "Essential",
+          "features": [
+            "All settings",
+            "HD download",
+            "Priority support"
+          ]
+        },
+        "PRO": {
+          "name": "Pro",
+          "features": [
+            "All settings",
+            "HD download",
+            "Dedicated support"
+          ]
+        },
+        "BUSINESS": {
+          "name": "Business",
+          "features": [
+            "All settings",
+            "HD download",
+            "Priority dedicated support"
+          ]
+        }
+      }
+    },
+    "contact": {
+      "eyebrow": "05 — Contact",
+      "title": "A question before you try?",
+      "faq": [
+        {
+          "q": "How does render generation work?",
+          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (neon garage, industrial hangar, underground car park, empty room), and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
+        },
+        {
+          "q": "What photo quality do I need?",
+          "a": "A photo from a recent smartphone is plenty. Shoot in full daylight, from the front three-quarter angle, with the whole body in frame."
+        },
+        {
+          "q": "Can I use the renders in my listings?",
+          "a": "Yes. Renders download in high resolution and can be used freely in your listings, on social media or on your website."
+        },
+        {
+          "q": "Can I post these videos on social media?",
+          "a": "Yes. Any render can become a short presentation video in Reel, Story, landscape or square format, ready for Instagram, Facebook, LinkedIn or TikTok, with no editing."
+        },
+        {
+          "q": "Does the render change the vehicle?",
+          "a": "It shouldn't: only the background is replaced, and the AI is instructed to keep the bodywork, paint, wheels, windows and plate exactly as they are. As with any listing photo, check the render before publishing: if a detail of the vehicle has moved, run the generation again or fix it with a retouch."
+        },
+        {
+          "q": "Is my first render really free?",
+          "a": "Yes, no strings attached. Create your account, upload your photo, pick your setting and generate your first render, with no credit card and no commitment."
+        }
+      ],
+      "ctaTitle": "Your next photo, in the studio.",
+      "ctaBody": "First render free, no credit card.",
+      "ctaButton": "Try it free",
+      "write": "Write to us"
+    }
   }
 }

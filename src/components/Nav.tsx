@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { Menu, X, LayoutDashboard } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import { Link } from '@/i18n/routing'
+import { Link, usePathname } from '@/i18n/routing'
 import RouteLink from 'next/link'
 import { PromoBanner } from './PromoBanner'
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics/client'
@@ -16,6 +16,8 @@ export function Nav() {
   const [scrolled, setScrolled]     = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const headerRef  = useRef<HTMLElement>(null)
+  // The home page is the 3D studio scene, with its own header (_studio/StudioLanding.tsx).
+  const onStudioHome = usePathname() === '/'
   const mobileOpenRef = useRef(mobileOpen)
   mobileOpenRef.current = mobileOpen
 
@@ -56,6 +58,8 @@ export function Nav() {
     if (mobileOpen || !headerRef.current) return
     document.documentElement.style.setProperty('--nav-height', `${headerRef.current.getBoundingClientRect().height}px`)
   }, [mobileOpen])
+
+  if (onStudioHome) return null
 
   return (
     <header ref={headerRef} className={cn(

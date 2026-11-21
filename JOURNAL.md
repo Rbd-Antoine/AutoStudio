@@ -43,3 +43,37 @@ Mission autonome du 21/11/2026. Chaque décision, problème et tour de boucle es
 ## Phase 1 — références et direction
 
 Voir DESIGN.md.
+
+## Phase 2 — support de chaque élément, première version complète
+
+| Élément | Support retenu | Pourquoi |
+|---|---|---|
+| La voiture | Vraie photo du client (`voiture-01`), détourée, en couche | Aucun modèle libre propre ; c'est aussi la preuve du produit : ses pixels ne changent jamais |
+| Le parking (chap. 1) | Vraie photo d'origine, alignée sur le rendu | Le « avant » réel |
+| Le studio (chap. 2) | Vrai rendu AutoStudio (garage néon), éclairé par shader | Les lampes du rendu (repérées automatiquement) s'allument une par une |
+| Les 4 fonds (chap. 3) | Garage néon = vrai rendu ; les 3 autres = fonds de l'éditeur ajustés au cadre (ligne sol/mur derrière la voiture), voiture posée dessus avec ombre | Dit sur la page : « rendu réel » / « illustration » |
+| Ombre de contact | Carte d'ombre calculée : empreinte entre les 4 roues + taches sous les pneus + halo | La voiture ne flotte jamais |
+| Caméra, lumière, décor | Un seul fragment shader WebGL 1 (`_studio/StudioCanvas.tsx`), sans three.js | Une photo n'a rien à modéliser : un quad plein écran suffit, ~10 Ko au lieu de ~150 Ko gzip pour three + fiber |
+| Chargement, reduced-motion, sans WebGL | Images fixes par chapitre (`public/site-3d/still-*.webp`) | Le texte s'affiche avant la 3D ; le canvas (dynamic, ssr:false) apparaît en fondu par-dessus |
+| Tarifs, FAQ | DOM par-dessus la scène assombrie | Données réelles de `PricingConfig` ; textes next-intl |
+
+- Préparation des images : `docs/site-3d/pipeline/prepare_assets.py` (alignement par similitude : la
+  voiture du rendu est la même à 87 px près vers le bas, 382 points concordants ; détourage par
+  différence photo/rendu + GrabCut + corrections manuelles du sol sous la caisse ; logo de calandre
+  effacé ; fonds remplis derrière la voiture pour la parallaxe). Total `public/site-3d` : 1,9 Mo,
+  variantes `-sm` pour mobile.
+- Ancienne page d'accueil déplacée dans `_legacy/HomeLegacy.tsx` (retour en une ligne, noté dans
+  le fichier). La navigation globale s'efface sur l'accueil (la scène a son en-tête), le footer y
+  prend une variante sombre sans bandeau CTA.
+- Polices : `Big_Shoulders` (variable, axe de taille optique : c'est la version Display aux grandes
+  tailles ; `Big_Shoulders_Display` n'existe plus sous ce nom dans next/font) et `IBM_Plex_Sans`.
+- Problèmes rencontrés et corrigés :
+  1. Shader « context lost » : en développement React monte l'effet deux fois et le nettoyage
+     appelait `loseContext()` ; on libère maintenant les ressources sans tuer le contexte.
+  2. Rendu limité à l'ombre : créer une texture la liait sur l'unité active, écrasant la
+     précédente ; création sur une unité de travail dédiée.
+  3. Cadrage trop serré (voiture sous le texte et le rail) : la caméra cadre maintenant chaque
+     plan dans la zone libre à droite de la colonne de texte.
+  4. Stries en bas de l'image : fondu de bord recalé pour ne jamais montrer les pixels de bord étirés.
+- Un ancien serveur Next resté vivant tenait le port 3000 (TaskStop ne tue pas les petits-enfants) :
+  arrêt de tous les processus `node … AutoStudio … next` avant chaque relance.

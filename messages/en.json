@@ -103,11 +103,11 @@
     "fonds": {
       "eyebrow": "03 — Backgrounds",
       "title": "Four settings. One click.",
-      "body": "The editor's four backgrounds. Pick one: the setting changes, the car stays.",
+      "body": "The editor's four backgrounds, as AutoStudio really rendered this photo on each. Pick one: the setting changes, the car stays.",
       "pick": "Pick a setting",
       "real": "Real render",
       "illustration": "Illustration",
-      "honesty": "\"Neon garage\" is the real render of this photo. For the other three, the car from the photo is placed on the editor's background, as an illustration.",
+      "honesty": "All four are real AutoStudio renders of the same photo, aligned on it: the car is not moved, only its setting.",
       "decors": {
         "garage-neon": {
           "name": "Neon garage",

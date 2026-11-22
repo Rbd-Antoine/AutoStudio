@@ -93,14 +93,7 @@ vec3 floorTap(sampler2D t, vec2 uv) {
   return c * mix(1.0, 0.55, smoothstep(0.0, 0.22, k));
 }
 
-// Where the car's tyres meet the floor (scene pixels): rear-left, front-left, front-right.
-const vec2 W_RL = vec2(272.0, 588.0);
-const vec2 W_FL = vec2(566.0, 744.0);
-const vec2 W_FR = vec2(975.0, 642.0);
-float groundY(float x) {
-  return x < W_FL.x ? mix(W_RL.y, W_FL.y, (x - W_RL.x) / (W_FL.x - W_RL.x))
-                    : mix(W_FL.y, W_FR.y, (x - W_FL.x) / (W_FR.x - W_FL.x));
-}
+
 
 void main() {
   vec2 frag = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
@@ -126,9 +119,6 @@ void main() {
     glow += uLightTint[i] * q.y * f * f * 0.22;
   }
   vec3 studio = after * mix(0.05, 1.0, clamp(mask, 0.0, 1.0)) + glow * (1.0 - 0.75 * uAmbient);
-  // A denser contact shadow on the studio floor under the tyres and the body (the floor only:
-  // the car is drawn over it below).
-  studio *= 1.0 - 0.72 * texture2D(uShadow, clamp(uvC, 0.0, 1.0)).r * inside(uv, glossyAll);
 
   // The customer's own photo, whole (its car and its real shadow): it holds the car too, so it
   // does not slide either. Only the editor's backgrounds below move with the parallax.
@@ -143,19 +133,20 @@ void main() {
   vec2 uvA = mix(uvC, bgUvC, uParA);
   vec2 uvB = mix(uvC, bgUvC, uParB);
   // Each decor at its own exposure (the white room is brought down to the page's dark world).
-  // The editor's backgrounds get the car's computed contact shadow and a slight cool cast, to
-  // sit with the render's car (which keeps its own light: it is never retouched).
-  vec3 cool = vec3(0.93, 0.97, 1.06);
-  vec3 bgA = floorTap(uBgA, uvA) * (1.0 - 0.9 * sh * uParA) * uExpA * mix(vec3(1.0), cool, uParA);
-  vec3 bgB = floorTap(uBgB, uvB) * (1.0 - 0.9 * sh * uParB) * uExpB * mix(vec3(1.0), cool, uParB);
+  // Each decor is a whole real render of the same photo (car, shadows, reflections), aligned on
+  // the photo: shown as delivered, never composited.
+  vec3 bgA = floorTap(uBgA, uvA);
+  vec3 bgB = floorTap(uBgB, uvB);
   float wipe = uSweep < 0.0 ? uBgMix : smoothstep(uSweep - 0.06, uSweep + 0.06, 1.0 - bgUv.x);
   vec3 decor = mix(bgA, bgB, wipe);
   if (uSweep >= 0.0) decor += vec3(1.0, 0.86, 0.62) * exp(-pow((1.0 - bgUv.x - uSweep) * 22.0, 2.0)) * 0.35;
   col = mix(col, decor, uDecorSwap);
 
   float glossy = max(uStudio, uDecorSwap);
+  vec4 car = texture2D(uCar, clamp(uvC, 0.0, 1.0));
+  float carA = car.a * step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
   // The decor's grade: deeper blacks, and the ceiling's yellow safety stripes calmed so the page
-  // keeps a single accent. Applied to the decor only, never to the car's pixels.
+  // keeps a single accent. Applied around the car only, never to the car's pixels.
   vec3 graded = mix(col, col * col * (3.0 - 2.0 * col), 0.4);
   graded = graded / (1.0 + 0.12 * pow(max(graded, 0.0), vec3(4.0)));  // the lamps keep a shape
   float yellow = smoothstep(0.03, 0.14, min(col.r, col.g) - col.b) * smoothstep(0.12, 0.3, col.r);
@@ -164,29 +155,16 @@ void main() {
   float luma = dot(graded, vec3(0.3, 0.55, 0.15));
   float blue = smoothstep(0.05, 0.25, graded.b - max(graded.r, graded.g));
   graded = mix(graded, mix(vec3(luma), graded, 0.62), blue);
-  col = mix(col, graded, glossy);
-
-  // A faint reflection of the car on the glossy floors (studio and decors): the car mirrored
-  // about the line where its tyres touch the ground, fading with distance.
-  float gy = groundY(sp.x);
-  if (sp.y > gy && glossy > 0.0) {
-    vec2 m = vec2(sp.x, 2.0 * gy - sp.y) / uScene;
-    vec4 rc = texture2D(uCar, clamp(m, 0.0, 1.0));
-    vec3 rcol = mix(rc.rgb, texture2D(uAfter, clamp(m, 0.0, 1.0)).rgb, glossy);
-    float fade = exp(-(sp.y - gy) / 70.0) * 0.3 * uReflect * glossy * rc.a;
-    col = mix(col, rcol * uCarLight, fade);
-  }
+  col = mix(col, graded, glossy * (1.0 - carA));
 
   // The decor fades towards the dark edges; the car, drawn after, never does (a fade over it would
   // change the car on the page).
   col *= inside(bgUv, glossyAll);
 
-  // The car, always on top: the customer's photo on the parking, the render's own pixels of the
-  // same car in the studio and on every decor (AutoStudio's real output).
-  vec4 car = texture2D(uCar, clamp(uvC, 0.0, 1.0));
-  float carA = car.a * step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
-  vec3 carSrc = mix(car.rgb, after, glossy);
-  col = mix(col, carSrc * uCarLight, carA);
+  // The car layer carries the passage from the photo to the studio (it stays lit while the studio
+  // is dark). On the decors each render shows its own car: no layer over it.
+  vec3 carSrc = mix(texture2D(uBefore, clamp(uvC, 0.0, 1.0)).rgb, after, uStudio);
+  col = mix(col, carSrc * uCarLight, carA * (1.0 - uDecorSwap));
 
   col *= 1.0 - uDim;
 
@@ -236,7 +214,7 @@ function texture(gl: WebGLRenderingContext, img: HTMLImageElement, owned: WebGLT
 
 /** The decor's plate: the real render for the garage, a fitted editor background otherwise. */
 function decorSrc(slug: DecorSlug, sm: string) {
-  return slug === 'garage-neon' ? `/site-3d/plate-after${sm}.webp` : `/site-3d/bg-${slug}${sm}.webp`
+  return `/site-3d/decor-${slug}${sm}.webp`
 }
 
 export default function StudioCanvas({ progress, decor, light, onReady }: StudioCanvasProps) {
@@ -373,8 +351,9 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       gl.uniform4fv(u('uLightParam'), param)
       bind(2, decorTex.get(fromDecor)!)
       bind(3, decorTex.get(shownDecor)!)
-      gl.uniform1f(u('uParA'), (swapStart >= 0 ? fromDecor : shownDecor) === 'garage-neon' ? 0 : 1)
-      gl.uniform1f(u('uParB'), shownDecor === 'garage-neon' ? 0 : 1)
+      // Every decor holds the car: none slides with the parallax.
+      gl.uniform1f(u('uParA'), 0)
+      gl.uniform1f(u('uParB'), 0)
       gl.uniform1f(u('uBgMix'), swapStart >= 0 ? mix : 0)
       gl.uniform1f(u('uSweep'), sweep)
       if (swapStart < 0) bind(2, decorTex.get(shownDecor)!)
@@ -385,7 +364,7 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       try {
         const [before, after, car, shadow] = await Promise.all([
           loadImage(`/site-3d/plate-before${sm}.webp`),
-          loadImage(`/site-3d/plate-after${sm}.webp`),
+          loadImage(`/site-3d/decor-garage-neon${sm}.webp`),
           loadImage(`/site-3d/car${sm}.webp`),
           loadImage('/site-3d/shadow.webp'),
         ])

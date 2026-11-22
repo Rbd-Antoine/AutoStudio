@@ -49,11 +49,11 @@
     "fonds": {
       "eyebrow": "03 — Les fonds",
       "title": "Quatre décors. Un clic.",
-      "body": "Les quatre fonds de l'éditeur. Choisissez-en un : le décor change, la voiture reste.",
+      "body": "Les quatre fonds de l'éditeur, tels qu'AutoStudio a vraiment rendu cette photo sur chacun. Choisissez-en un : le décor change, la voiture reste.",
       "pick": "Choisir un décor",
       "real": "Rendu réel",
       "illustration": "Illustration",
-      "honesty": "« Garage néon » est le vrai rendu de cette photo. Pour les trois autres, la voiture de la photo est posée sur le fond de l'éditeur, à titre d'illustration.",
+      "honesty": "Les quatre sont de vrais rendus AutoStudio de la même photo, alignés sur elle : la voiture n'est pas déplacée, seul son décor change.",
       "decors": {
         "garage-neon": {
           "name": "Garage néon",

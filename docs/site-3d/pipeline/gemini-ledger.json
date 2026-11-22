@@ -1,0 +1,238 @@
+[
+  {
+    "at": "2026-11-22T10:54:46.525Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "hangar-industriel",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2331,
+      "totalTokenCount": 5115,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 58,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 28 s"
+  },
+  {
+    "at": "2026-11-22T10:55:43.484Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "garage-neon",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 1998,
+      "totalTokenCount": 5036,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 312,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 20 s"
+  },
+  {
+    "at": "2026-11-22T10:56:08.035Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "parking-souterrain",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2392,
+      "totalTokenCount": 5419,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 301,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 41 s"
+  },
+  {
+    "at": "2026-11-22T10:56:55.208Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "piece-vide",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2050,
+      "totalTokenCount": 5314,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 538,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 25 s"
+  },
+  {
+    "at": "2026-11-22T10:57:28.156Z",
+    "model": "gemini-3.1-flash-image",
+    "size": "1K",
+    "car": "voiture-01",
+    "decor": "hangar-industriel",
+    "tag": "cmp",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 1002,
+      "candidatesTokenCount": 1410,
+      "totalTokenCount": 2412,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 516
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1120
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "note": "1200x896, 9 s"
+  },
+  {
+    "at": "2026-11-22T10:59:08.825Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "piece-vide",
+    "tag": "b",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2426,
+      "totalTokenCount": 5152,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 32 s"
+  },
+  {
+    "at": "2026-11-22T10:59:46.047Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-01",
+    "decor": "parking-souterrain",
+    "tag": "b",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2030,
+      "totalTokenCount": 5076,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 320,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 26 s"
+  }
+]

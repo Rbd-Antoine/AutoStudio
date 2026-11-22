@@ -10,6 +10,40 @@ en bout, mais il plafonne à **5/10 en moyenne** selon les juges, loin des 8/10 
 principales : l'absence de modèle 3D libre utilisable, et la règle que je me suis imposée de ne
 jamais embellir la voiture (voir « Décisions importantes »).
 
+## Mise à jour du 22/11/2026 : vrais rendus Gemini et guides SEO
+
+Budget donné : 3 € de clé Gemini. **Dépense estimée : 0,65 €** (13 appels, tous réussis, registre
+`docs/site-3d/pipeline/gemini-ledger.json`, estimation prudente à 0,05 € l'image).
+
+- **Chapitre 3 en vrais rendus.** `docs/site-3d/pipeline/render.ts` appelle Gemini comme le produit
+  (même prompt `buildBackgroundSwapPrompt`, même modèle `gemini-nano-banana-2.1`, 2K) et refuse tout
+  appel au-delà de 2,90 €. La voiture-01 a été rendue sur les 4 fonds de l'éditeur. Mesure : chaque
+  rendu est exactement la photo à l'échelle 2, décalée d'environ 2 px, donc **la voiture reste au même
+  pixel d'un décor à l'autre**. Les quatre décors de l'accueil sont maintenant de vrais rendus
+  (`prepare_v2.py`), plus aucune illustration composée. Deux tirages (pièce vide a, parking b) avaient
+  déplacé la voiture : écartés.
+- **Comparaison de modèles** : `gemini-3.1-flash-image` (1K) donne un rendu très proche mais deux fois
+  moins défini ; NB2.1 reste le bon choix, comme sur Florelis.
+- **16 guides SEO** (`content/guides/`, `/guides`), sur le modèle de Florelis : une requête réelle
+  de l'autocomplétion Google par guide (photographier une voiture pour la vendre, meilleur angle,
+  intérieur, nettoyage, éclairage, smartphone, fond blanc, fond noir, studio, concession, changer le
+  fond, enlever l'arrière-plan, logiciel, IA, nombre de photos, photo d'annonce). 550 à 930 mots,
+  FAQ (JSON-LD FAQPage), Article et fil d'Ariane, maillage vers les 10 articles du blog sans les
+  doublonner. **6 publiés** (17 au 22/11), **10 programmés** deux à trois par semaine jusqu'au
+  16/12 : un guide apparaît à sa date sans déploiement (ISR d'une heure), et un lien vers un guide
+  pas encore publié s'affiche en texte simple. Aucun chiffre de plateforme inventé (« vérifiez la
+  limite actuelle »).
+- **Images des guides** (`guide_images.py`) : photos d'origine ou vrais rendus des voitures 01 à 04,
+  dont 6 nouveaux rendus. Les images « avant / après » coupent l'image au milieu : la voiture
+  traverse la ligne sans bouger. Chaque légende dit ce qui est photo et ce qui est rendu.
+- **Interface** : les guides prennent le look sombre de l'accueil (barre `StudioBar`, corps
+  `GuideBody`, pied de page sombre), lien « Guides » dans l'en-tête de l'accueil et le pied de page
+  (édition française seulement, les guides n'existent qu'en français), `/guides` et les guides
+  publiés dans le sitemap.
+- Vérifié : `tsc`, `lint`, `build` (219 pages), captures 1440 et 390 px sans erreur console.
+- Hors périmètre initial, assumé pour les guides : `src/lib/guides.ts`, `src/lib/blog.ts`
+  (validation des liens partagée) et `src/app/sitemap.ts`.
+
 ## Ce qui a été fait
 
 - **Scène unique** (`src/app/[locale]/(marketing)/_studio/`) : une progression 0 → 1 calculée sur
@@ -115,10 +149,8 @@ Mesuré sur le build de production avec Lighthouse 12.2.1 en mobile simulé
 
 ## Les 5 prochaines améliorations recommandées
 
-1. **Produire le même véhicule sur les 4 décors avec AutoStudio lui-même**, en 2K, à partir d'une
-   photo plus nette et sans logo. Cela supprime les illustrations du chapitre 3 et fournit une
-   matière nette. C'est le plus gros gain. Il faut un budget Gemini, de l'ordre de 0,20 € pour 4
-   rendus, plus quelques essais.
+1. ~~Produire le même véhicule sur les 4 décors avec AutoStudio lui-même~~ : **fait le 22/11**
+   (voir plus haut). Reste à faire juger de nouveau les chapitres 2 et 3 sur cette matière.
 2. **Afficher le bandeau cookies dès le rendu serveur.** Le consentement est dans un cookie, que le
    serveur peut lire. Le LCP passerait sous 2 s en première visite.
 3. **Remplacer `logo-autostudio.png`** (actuellement le logo CarGlow) dans tout le site.

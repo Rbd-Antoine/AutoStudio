@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { Link, usePathname } from '@/i18n/routing'
 import RouteLink from 'next/link'
@@ -12,7 +12,10 @@ export function Footer() {
   const { openBanner } = useConsent()
   // On the 3D studio home page the footer continues the dark scene, and its call to action is
   // already the scene's last chapter.
-  const dark = usePathname() === '/'
+  const pathname = usePathname()
+  const dark = pathname === '/' || pathname === '/guides' || pathname.startsWith('/guides/')
+  // The photo guides are written in French only.
+  const showGuides = useLocale() === 'fr'
   const k = (light: string, onDark: string) => (dark ? onDark : light)
 
   return (
@@ -75,6 +78,7 @@ export function Footer() {
                 <li><Link href="/#comment-ca-marche" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Comment ça marche</Link></li>
                 <li><Link href="/#tarifs" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Tarifs</Link></li>
                 <li><Link href="/guide" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guide utilisateur</Link></li>
+                {showGuides && <li><Link href="/guides" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guides photo</Link></li>}
               </ul>
             </div>
             <div>

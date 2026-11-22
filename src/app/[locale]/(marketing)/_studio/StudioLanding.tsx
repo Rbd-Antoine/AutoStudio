@@ -401,6 +401,8 @@ function ChapterRail({ chapter }: { chapter: ChapterId }) {
 
 function StudioHeader({ chapter }: { chapter: ChapterId }) {
   const t = useTranslations('studio.nav')
+  // The photo guides are written in French only.
+  const showGuides = useLocale() === 'fr'
   return (
     // A solid band: content scrolling underneath never shows through the links.
     <header className="fixed inset-x-0 top-0 z-30 border-b" style={{ background: C.night, borderColor: `${C.steel}99` }}>
@@ -412,6 +414,9 @@ function StudioHeader({ chapter }: { chapter: ChapterId }) {
           {CHAPTERS.slice(1).map(id => (
             <a key={id} href={`#${id}`} className="text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: chapter === id ? C.chalk : '#B5B0A7' }}>{t(id)}</a>
           ))}
+          {showGuides && (
+            <Link href="/guides" className="border-l pl-6 text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: '#B5B0A7', borderColor: C.steel }}>{t('guides')}</Link>
+          )}
         </nav>
         <div className="flex items-center gap-2 sm:gap-4">
           <RouteLink href="/signin" className="hidden px-2 py-2 text-sm transition-colors hover:text-[#ECE8E1] sm:block" style={{ color: '#CFCAC1' }}>{t('signIn')}</RouteLink>

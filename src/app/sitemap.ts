@@ -1,10 +1,12 @@
 import type { MetadataRoute } from 'next'
 import { getAllArticles, SITE_URL } from '@/lib/blog'
 import { getGuide } from '@/lib/guide'
+import { getPublishedGuides } from '@/lib/guides'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const articles = getAllArticles()
   const guide = getGuide()
+  const guides = getPublishedGuides()
 
   const marketingPages: { path: string; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
     { path: '/pricing', changeFrequency: 'weekly', priority: 0.9 },
@@ -25,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: SITE_URL, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/blog`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/guides`, changeFrequency: 'weekly', priority: 0.8 },
     {
       url: `${SITE_URL}${guide.frontmatter.canonical}`,
       lastModified: guide.frontmatter.updated,
@@ -41,6 +44,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: article.frontmatter.updated,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
+    })),
+    ...guides.map((g) => ({
+      url: `${SITE_URL}/guides/${g.frontmatter.slug}`,
+      lastModified: g.frontmatter.date,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
     })),
   ]
 }

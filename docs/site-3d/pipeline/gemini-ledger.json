@@ -234,5 +234,208 @@
       "serviceTier": "standard"
     },
     "note": "2400x1792, 26 s"
+  },
+  {
+    "at": "2026-11-22T11:07:41.031Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-02",
+    "decor": "garage-neon",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2013,
+      "totalTokenCount": 5243,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 504,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 21 s"
+  },
+  {
+    "at": "2026-11-22T11:08:06.306Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-02",
+    "decor": "piece-vide",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 1990,
+      "totalTokenCount": 4716,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 18 s"
+  },
+  {
+    "at": "2026-11-22T11:08:28.122Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-03",
+    "decor": "garage-neon",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2057,
+      "totalTokenCount": 5355,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 572,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 24 s"
+  },
+  {
+    "at": "2026-11-22T11:08:56.537Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-03",
+    "decor": "hangar-industriel",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 1988,
+      "totalTokenCount": 4815,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 101,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 20 s"
+  },
+  {
+    "at": "2026-11-22T11:09:20.776Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-04",
+    "decor": "garage-neon",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2334,
+      "totalTokenCount": 5197,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 137,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 33 s"
+  },
+  {
+    "at": "2026-11-22T11:09:58.386Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "voiture-04",
+    "decor": "parking-souterrain",
+    "tag": "g",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2483,
+      "totalTokenCount": 5757,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 548,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 35 s"
   }
 ]

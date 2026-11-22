@@ -20,3 +20,14 @@ d'images déjà présentes dans le dépôt (voir JOURNAL.md, « Décision struct
 - Poly Haven (CC0) : aucune voiture visible dans le catalogue de modèles.
 
 Aucun crédit CC-BY n'est donc nécessaire dans le footer pour l'instant.
+
+## Rendus Gemini du 22/11/2026 (accueil et guides)
+
+- `public/site-3d/decor-*`, `still-*`, `thumb-*`, `car` : vrais rendus AutoStudio de la photo
+  voiture-01 sur les 4 fonds de l'éditeur (`render.ts`, `gemini-nano-banana-2.1`), alignés sur la
+  photo par `prepare_v2.py`, logo de calandre effacé.
+- `public/guides/images/*` : photos d'origine de `public/showcase/voitures/` et vrais rendus des
+  voitures 01 à 04 (`guide_images.py`), logo de calandre de la voiture-04 effacé sur ses rendus.
+- Ces rendus contiennent les fonds de `public/background/` redessinés par le modèle : la réserve de
+  licence Freepik notée plus haut s'applique aussi à eux.
+

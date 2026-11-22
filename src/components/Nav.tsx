@@ -16,8 +16,10 @@ export function Nav() {
   const [scrolled, setScrolled]     = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const headerRef  = useRef<HTMLElement>(null)
-  // The home page is the 3D studio scene, with its own header (_studio/StudioLanding.tsx).
-  const onStudioHome = usePathname() === '/'
+  // The home page is the 3D studio scene, with its own header (_studio/StudioLanding.tsx); the
+  // guides continue its dark look with the same band (_studio/StudioBar.tsx).
+  const pathname = usePathname()
+  const onStudioHome = pathname === '/' || pathname === '/guides' || pathname.startsWith('/guides/')
   const mobileOpenRef = useRef(mobileOpen)
   mobileOpenRef.current = mobileOpen
 

@@ -34,6 +34,12 @@ const EST_EUR_PER_IMAGE = 0.05
 // Empty scenes generated from text, standing in for a dealer's own background photo in the demo.
 // Generic on purpose: no brand, no sign, no car.
 const SCENES: Record<string, string> = {
+  // Sample "before" photos of premium cars (2026-11-23), standing in for a dealer's phone photos on
+  // the home page: generic designs, no brand, no plate text. Shown as generated examples.
+  coupe: 'A sleek modern two-door grand tourer coupe in metallic graphite grey with large dark alloy wheels, generic design not resembling any specific manufacturer. Realistic smartphone photo taken by a car dealer on his used-car lot, overcast soft daylight, the car seen in three-quarter front view from headlight height, the whole car in frame with some margin, slightly cluttered lot behind it (other cars out of focus, a fence, a low building), wet asphalt. Strictly no brand: no logo, no emblem, no badge, no model name anywhere on the car (smooth grille centre, plain wheel centre caps), plain blank white licence plate with no characters, no text or signs anywhere. Sharp, natural colours, 4:3.',
+  suv: 'A large modern luxury SUV in glossy black with chrome window trim and 21-inch alloy wheels, generic design not resembling any specific manufacturer. Realistic smartphone photo taken by a car dealer on his used-car lot, overcast soft daylight, the car seen in three-quarter front view from headlight height, the whole car in frame with some margin, slightly cluttered lot behind it (other cars out of focus, a fence, a low building), wet asphalt. Strictly no brand: no logo, no emblem, no badge, no model name anywhere on the car (smooth grille centre, plain wheel centre caps), plain blank white licence plate with no characters, no text or signs anywhere. Sharp, natural colours, 4:3.',
+  berline: 'A modern electric luxury fastback sedan in pearl white with flush door handles and aerodynamic alloy wheels, generic design not resembling any specific manufacturer. Realistic smartphone photo taken by a car dealer on his used-car lot, overcast soft daylight, the car seen in three-quarter front view from headlight height, the whole car in frame with some margin, slightly cluttered lot behind it (other cars out of focus, a fence, a low building), wet asphalt. Strictly no brand: no logo, no emblem, no badge, no model name anywhere on the car (smooth grille centre, plain wheel centre caps), plain blank white licence plate with no characters, no text or signs anywhere. Sharp, natural colours, 4:3.',
+  sportive: 'A modern compact premium sports hatchback in deep metallic red with black alloy wheels and red brake calipers, generic design not resembling any specific manufacturer. Realistic smartphone photo taken by a car dealer on his used-car lot, overcast soft daylight, the car seen in three-quarter front view from headlight height, the whole car in frame with some margin, slightly cluttered lot behind it (other cars out of focus, a fence, a low building), wet asphalt. Strictly no brand: no logo, no emblem, no badge, no model name anywhere on the car (smooth grille centre, plain wheel centre caps), plain blank white licence plate with no characters, no text or signs anywhere. Sharp, natural colours, 4:3.',
   showroom: 'A photograph of an empty, modern independent car dealership showroom in France, shot at eye level from the entrance: large glass front on the left with soft daylight, light grey polished concrete floor, white walls with warm wood slat panels on the back wall, a small reception desk far in the background, recessed ceiling lights. No cars, no people, no logos, no text, no signs, no brand names anywhere. Realistic photo, 4:3, natural colours, sharp, wide empty floor space in the centre where a car could be parked.',
 }
 
@@ -62,7 +68,9 @@ async function main() {
   const model = opt('model', 'gemini-nano-banana-2.1')
   const size = opt('size', '2K')
   const tag = opt('tag', '1')
-  const bg = CAR_BACKGROUNDS.find(b => b.slug === decor)
+  // --decor-file=<photo>: a dealer's own background (the editor's "Votre propre fond"), named by <decor>.
+  const decorFile = opt('decor-file', '')
+  const bg = decorFile ? { slug: decor, image: '' } : CAR_BACKGROUNDS.find(b => b.slug === decor)
   if (scene && !SCENES[scene]) throw new Error(`scène inconnue : ${scene}`)
   if (!scene && (!car || !bg)) throw new Error('usage: render.ts <car> <decor> [--model=] [--size=] [--tag=]')
   if (spent() + EST_EUR_PER_IMAGE > STOP_AT_EUR) throw new Error(`budget atteint : ${spent().toFixed(2)} EUR estimés`)
@@ -74,7 +82,7 @@ async function main() {
   const parts = scene ? [{ text: SCENES[scene] }] : [
     { text: buildBackgroundSwapPrompt() },
     { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(carFile) } },
-    { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(path.join(ROOT, 'public', bg!.image)) } },
+    { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(decorFile || path.join(ROOT, 'public', bg!.image)) } },
   ]
   const generationConfig: Record<string, unknown> = { responseModalities: ['IMAGE', 'TEXT'], imageConfig: { aspectRatio: '4:3', ...(size ? { imageSize: size } : {}) } }
 

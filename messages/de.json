@@ -46,7 +46,7 @@
       "eyebrow": "02 — Le studio",
       "title": "Votre voiture ne change pas. Son décor, si.",
       "body": "AutoStudio remplace l'arrière-plan et garde le véhicule tel que vous l'avez photographié : carrosserie, jantes, vitres, plaque.",
-      "note": "Ce studio est un vrai rendu AutoStudio de cette photo. La voiture n'a pas bougé d'un pixel : seul le décor a été remplacé."
+      "note": "Ce studio est un vrai rendu AutoStudio de cette photo. La voiture n'a pas bougé d'un pixel : seul le décor a été remplacé. (La photo de départ est un exemple généré, prise comme un garagiste le ferait.)"
     },
     "fonds": {
       "eyebrow": "03 — Les fonds",
@@ -58,14 +58,14 @@
       "after": "Rendu AutoStudio",
       "handle": "Comparer la photo et le rendu",
       "handleValue": "{percent} % de photo d'origine visible",
-      "beforeAlt": "Photo d'origine : {car} sur un parking",
+      "beforeAlt": "Photo d'origine : {car} sur un parc de véhicules d'occasion",
       "afterAlt": "Rendu AutoStudio : {car} dans le décor {decor}",
-      "honesty": "Seize vrais rendus AutoStudio, montrés entiers et sans retouche : quatre photos de clients, chacune sur les quatre fonds de l'éditeur.",
+      "honesty": "Vrais rendus AutoStudio en haute définition, montrés entiers et sans retouche. Les photos de départ sont des exemples générés, prises comme un garagiste le ferait sur son parc ; les voitures ne portent aucune marque.",
       "cars": {
-        "voiture-01": "SUV blanc",
-        "voiture-02": "Break noir",
-        "voiture-03": "SUV vert",
-        "voiture-04": "Citadine rouge"
+        "coupe": "Coupé GT",
+        "suv": "SUV de luxe",
+        "berline": "Berline électrique",
+        "sportive": "Compacte sportive"
       },
       "decors": {
         "garage-neon": {
@@ -183,9 +183,9 @@
       "car": "Votre voiture",
       "result": "Le rendu, avec votre logo",
       "placeAlt": "Photo d'un showroom vide, importée comme fond personnalisé",
-      "carAlt": "Photo d'origine d'un break noir sur un parking",
-      "resultAlt": "Rendu AutoStudio : le break noir dans le showroom, avec un logo en bas à droite",
-      "honesty": "Exemple réel produit par l'éditeur. Pour la démonstration, le showroom a été généré et le logo « Votre garage » est fictif : avec votre photo et votre logo, le rendu est le vôtre."
+      "carAlt": "Photo de départ d'un coupé GT gris sur un parc de véhicules d'occasion",
+      "resultAlt": "Rendu AutoStudio : le coupé GT dans le showroom, avec un logo en bas à droite",
+      "honesty": "Vrai rendu AutoStudio, logo posé par le même code que l'éditeur. Pour la démonstration, le showroom et la photo du coupé ont été générés et le logo « Votre garage » est fictif : avec votre photo et votre logo, le rendu est le vôtre."
     }
   }
 }

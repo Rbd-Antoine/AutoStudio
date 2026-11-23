@@ -9,18 +9,22 @@ import { DECORS, type DecorSlug } from './scene'
 // handle to drag between them. Both pictures are shown whole, as delivered: nothing is cropped,
 // relit or composited by the page. Every render was checked to keep the car exactly in place
 // (docs/site-3d/pipeline/compare_assets.py), so the car runs across the line without moving.
-export const CARS = ['voiture-01', 'voiture-02', 'voiture-03', 'voiture-04'] as const
+export const CARS = ['coupe', 'suv', 'berline', 'sportive'] as const
 export type CarId = (typeof CARS)[number]
+// Combinations with no render that kept the car exactly as photographed (the model reframed the
+// car, or added a badge): not offered rather than shown wrong.
+const MISSING: Partial<Record<CarId, DecorSlug[]>> = { coupe: ['piece-vide'] }
+const available = (car: CarId) => DECORS.filter(d => !MISSING[car]?.includes(d))
 
 const C = { night: '#0C0D0F', concrete: '#1A1C1F', steel: '#2A2D31', chalk: '#ECE8E1', ash: '#9A968E', tungsten: '#F2A93B' }
 
 const src = (car: CarId, name: string) => `/compare/${car}/${name}.webp`
-const srcSet = (car: CarId, name: string) => `/compare/${car}/${name}-sm.webp 800w, /compare/${car}/${name}.webp 1600w`
+const srcSet = (car: CarId, name: string) => `/compare/${car}/${name}-sm.webp 1000w, /compare/${car}/${name}.webp 2000w`
 const SIZES = '(min-width: 1024px) 62vw, 100vw'
 
 export function Comparator() {
   const t = useTranslations('studio.fonds')
-  const [car, setCar] = useState<CarId>('voiture-01')
+  const [car, setCar] = useState<CarId>('coupe')
   const [decor, setDecor] = useState<DecorSlug>('garage-neon')
   const [pos, setPos] = useState(0.5)
   const frame = useRef<HTMLDivElement>(null)
@@ -60,7 +64,7 @@ export function Comparator() {
   // Warm the cache with the other renders of the chosen car, so a click shows at once.
   useEffect(() => {
     const id = window.setTimeout(() => {
-      for (const d of DECORS) { const img = new Image(); img.srcset = srcSet(car, d); img.sizes = SIZES }
+      for (const d of available(car)) { const img = new Image(); img.srcset = srcSet(car, d); img.sizes = SIZES }
     }, 400)
     return () => window.clearTimeout(id)
   }, [car])
@@ -133,7 +137,7 @@ export function Comparator() {
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <Picker
           label={t('pick')}
-          items={DECORS.map(d => ({ id: d, thumb: `/compare/${car}/thumb-${d}.webp`, name: t(`decors.${d}.name`) }))}
+          items={available(car).map(d => ({ id: d, thumb: `/compare/${car}/thumb-${d}.webp`, name: t(`decors.${d}.name`) }))}
           value={decor}
           onPick={id => setDecor(id as DecorSlug)}
         />
@@ -141,7 +145,11 @@ export function Comparator() {
           label={t('pickCar')}
           items={CARS.map(c => ({ id: c, thumb: `/compare/${c}/thumb-before.webp`, name: t(`cars.${c}`) }))}
           value={car}
-          onPick={id => setCar(id as CarId)}
+          onPick={id => {
+            const next = id as CarId
+            setCar(next)
+            if (!available(next).includes(decor)) setDecor('garage-neon')
+          }}
         />
       </div>
     </div>

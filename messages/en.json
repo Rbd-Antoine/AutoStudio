@@ -100,7 +100,7 @@
       "eyebrow": "02 — The studio",
       "title": "Your car stays the same. Its setting doesn't.",
       "body": "AutoStudio replaces the background and keeps the vehicle exactly as you photographed it: bodywork, wheels, windows, plate.",
-      "note": "This studio is a real AutoStudio render of this photo. The car hasn't moved by a pixel: only the setting was replaced."
+      "note": "This studio is a real AutoStudio render of this photo. The car hasn't moved by a pixel: only the setting was replaced. (The starting photo is a generated example, shot the way a dealer would.)"
     },
     "fonds": {
       "eyebrow": "03 — Backgrounds",
@@ -112,14 +112,14 @@
       "after": "AutoStudio render",
       "handle": "Compare the photo and the render",
       "handleValue": "{percent}% of the original photo visible",
-      "beforeAlt": "Original photo: {car} in a car park",
+      "beforeAlt": "Original photo: {car} on a used-car lot",
       "afterAlt": "AutoStudio render: {car} in the {decor} setting",
-      "honesty": "Sixteen real AutoStudio renders, shown whole and untouched: four customer photos, each on the editor's four backgrounds.",
+      "honesty": "Real AutoStudio renders in high definition, shown whole and untouched. The \"before\" photos are generated examples, shot the way a dealer would on his lot; the cars carry no brand.",
       "cars": {
-        "voiture-01": "White SUV",
-        "voiture-02": "Black estate",
-        "voiture-03": "Green SUV",
-        "voiture-04": "Red city car"
+        "coupe": "GT coupé",
+        "suv": "Luxury SUV",
+        "berline": "Electric saloon",
+        "sportive": "Hot hatch"
       },
       "decors": {
         "garage-neon": {
@@ -237,9 +237,9 @@
       "car": "Your car",
       "result": "The render, with your logo",
       "placeAlt": "Photo of an empty showroom, imported as a custom background",
-      "carAlt": "Original photo of a black estate in a car park",
-      "resultAlt": "AutoStudio render: the black estate in the showroom, with a logo bottom right",
-      "honesty": "A real result from the editor. For this demo the showroom was generated and the \"Votre garage\" logo is fictitious: with your photo and your logo, the render is yours."
+      "carAlt": "Starting photo of a grey GT coupé on a used-car lot",
+      "resultAlt": "AutoStudio render: the GT coupé in the showroom, with a logo bottom right",
+      "honesty": "A real AutoStudio render, the logo placed by the same code as the editor. For this demo the showroom and the coupé photo were generated and the \"Votre garage\" logo is fictitious: with your photo and your logo, the render is yours."
     }
   }
 }

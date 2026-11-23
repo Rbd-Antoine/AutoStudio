@@ -31,3 +31,11 @@ Aucun crédit CC-BY n'est donc nécessaire dans le footer pour l'instant.
 - Ces rendus contiennent les fonds de `public/background/` redessinés par le modèle : la réserve de
   licence Freepik notée plus haut s'applique aussi à eux.
 
+## Voitures premium du 23/11/2026
+
+- `public/showcase/premium/*/before.webp` : photos « avant » générées par Gemini pour la démonstration
+  (voitures génériques, sans logo ni plaque lisible ; leurs silhouettes rappellent des modèles réels).
+- `public/compare/<coupe|suv|berline|sportive>/`, `public/site-3d/*`, `public/compare/custom/*`,
+  `public/features/*` : vrais rendus AutoStudio de ces photos (prompt et modèle du produit), le showroom
+  généré, le logo fictif « Votre garage » posé par le code de l'éditeur.
+

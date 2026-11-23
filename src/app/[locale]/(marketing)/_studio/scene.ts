@@ -3,9 +3,10 @@
 // readability — through the pure function sceneAt(). The canvas renders it, the reduced-motion
 // fallback picks its still images from it, and the text never computes anything of its own.
 //
-// Scene coordinates are the pixels of the customer photo's frame (1200 × 900). Every layer is aligned
-// on it: the photo, and four real AutoStudio renders of that photo, one per editor background
-// (public/site-3d, made by docs/site-3d/pipeline/prepare_v2.py; the textures are 1600 × 1200).
+// Scene coordinates are the pixels of the "before" photo's frame (1200 × 900). Every layer is
+// aligned on it: the photo (a premium coupe on a dealer's lot, a generated example) and AutoStudio's
+// real renders of that photo (public/site-3d, made by docs/site-3d/pipeline/prepare_v3.py; the
+// textures are 1600 × 1200).
 
 export const SCENE_W = 1200
 export const SCENE_H = 900
@@ -34,7 +35,8 @@ interface Shot {
 // On wide screens the box is fitted into the part of the screen right of the text column, so
 // the car never runs under the words, the chapter rail or off the edge.
 const SHOTS: Record<ChapterId, Shot> = {
-  avant:   { box: [80, 53, 1160, 753], text: 0.37, fill: true, maxH: 1.0 },
+  // The coupe fills more of its photo than the former SUV: the first shot frames it whole.
+  avant:   { box: [20, 90, 1190, 800], text: 0.37, fill: true, maxH: 1.0 },
   studio:  { box: [-60, -107, 1260, 833], text: 0.35, fill: true, maxH: 1.16 },
   fonds:   { box: [190, 123, 1060, 683], text: 0.44, fill: true, maxH: 1.14 },
   // Pricing: the garage's ceiling and lights, high above the car, behind the dimmed columns.
@@ -43,28 +45,28 @@ const SHOTS: Record<ChapterId, Shot> = {
   contact: { box: [-300, -267, 1500, 993], text: 0.42 },
 }
 
-// The studio's lights, in the order they come on (chapter 2), read on the real render (garage néon,
-// aligned on the photo's frame): the two outer neons, the back ceiling pair, the front ceiling
-// pair at the top edge, then the two inner neons.
+// The studio's lights, in the order they come on (chapter 2), read on the real render of the
+// coupe (garage néon, aligned on the photo's frame, version 3): the two outer neons, the ceiling
+// pair, the glow of the back wall, then the two neons behind the car on the right.
 export type Light =
   | { kind: 'segment'; a: [number, number]; b: [number, number]; radius: number; tint: [number, number, number] }
   | { kind: 'point'; at: [number, number]; radius: number; tint: [number, number, number] }
 
 const NEON: [number, number, number] = [0.62, 0.7, 1.0]
 export const LIGHTS: Light[][] = [
-  [{ kind: 'segment', a: [43, 24], b: [43, 516], radius: 200, tint: NEON }],
-  [{ kind: 'segment', a: [1164, 24], b: [1164, 516], radius: 200, tint: NEON }],
+  [{ kind: 'segment', a: [62, 60], b: [62, 600], radius: 200, tint: NEON }],
+  [{ kind: 'segment', a: [1135, 60], b: [1135, 600], radius: 200, tint: NEON }],
   [
-    { kind: 'point', at: [456, 96], radius: 240, tint: [1, 1, 1] },
-    { kind: 'point', at: [672, 96], radius: 240, tint: [1, 1, 1] },
+    { kind: 'point', at: [445, 88], radius: 260, tint: [1, 0.98, 0.95] },
+    { kind: 'point', at: [755, 88], radius: 260, tint: [1, 0.98, 0.95] },
   ],
   [
-    { kind: 'point', at: [360, 8], radius: 320, tint: [1, 0.98, 0.95] },
-    { kind: 'point', at: [768, 8], radius: 320, tint: [1, 0.98, 0.95] },
+    { kind: 'point', at: [450, 152], radius: 200, tint: [1, 1, 1] },
+    { kind: 'point', at: [750, 152], radius: 200, tint: [1, 1, 1] },
   ],
   [
-    { kind: 'segment', a: [269, 190], b: [269, 480], radius: 150, tint: NEON },
-    { kind: 'segment', a: [977, 190], b: [977, 480], radius: 150, tint: NEON },
+    { kind: 'segment', a: [877, 200], b: [877, 320], radius: 140, tint: NEON },
+    { kind: 'segment', a: [950, 230], b: [950, 335], radius: 120, tint: NEON },
   ],
 ]
 

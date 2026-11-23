@@ -10,6 +10,23 @@ en bout, mais il plafonne à **5/10 en moyenne** selon les juges, loin des 8/10 
 principales : l'absence de modèle 3D libre utilisable, et la règle que je me suis imposée de ne
 jamais embellir la voiture (voir « Décisions importantes »).
 
+## Mise à jour du 23/11/2026 (3) : voitures premium en HD
+
+- Quatre photos « avant » de voitures premium générées (`render.ts --scene=coupe|suv|berline|sportive`) :
+  coupé GT, grand SUV, berline électrique, compacte sportive, prises comme un garagiste sur son parc,
+  sans logo ni plaque lisible (vérifié au zoom). Elles ressemblent à des modèles réels, comme les
+  photos de la vitrine d'origine, sans aucune marque. Le site dit que ce sont des exemples générés.
+- 16 vrais rendus 2K par le prompt du produit ; `compare_assets.py` refuse tout rendu où la voiture a
+  bougé (7 refus, 4 nouveaux tirages). **Un rendu aligné a été refusé à l'œil : l'IA avait ajouté un
+  emblème de marque sur le capot du coupé** (liste `REJECTED`). Le coupé n'a donc pas de « pièce vide »
+  dans le comparateur (15 combinaisons). Leçon produit : un rendu peut ajouter un logo absent de la
+  photo, il faut relire chaque rendu (le guide utilisateur le dit déjà).
+- Accueil : le coupé remplace le SUV blanc dans la scène 3D (`prepare_v3.py`, détourage auto + coupe du
+  sol, lampes relevées sur le nouveau rendu) ; comparateur en 2000 px ; bloc « Votre showroom » et page
+  Fonctionnalités avec le coupé (logo posé par `applyLogo`, le code de l'éditeur) et une vraie retouche
+  sur le SUV.
+- Dépense Gemini cumulée estimée : **2,60 € sur 3 €** (plafond du script 2,90 €). Plus aucune dépense prévue.
+
 ## Mise à jour du 23/11/2026 (2) : votre fond, votre logo, site fini pour la présentation
 
 - **Produit (éditeur)** : 5e choix « Votre propre fond » (photo de showroom ou d'atelier importée,

@@ -7,7 +7,8 @@ import RouteLink from 'next/link'
 import { Link } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
 import { TrackedLink } from '../_components/TrackedLink'
-import { CHAPTERS, DECORS, stillFor, type ChapterId, type DecorSlug } from './scene'
+import { CHAPTERS, stillFor, type ChapterId, type DecorSlug } from './scene'
+import { Comparator } from './Comparator'
 import { display, sans } from './fonts'
 
 // The 3D scene loads after the text: the page reads before a single texture arrives.
@@ -58,8 +59,10 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
   const t = useTranslations('studio')
   const locale = useLocale()
   const progress = useRef(0)
+  // The scene keeps the studio render throughout; the four backgrounds are shown by the
+  // comparator of chapter 3, whole and as delivered.
   const decorRef = useRef<DecorSlug>('garage-neon')
-  const [decor, setDecor] = useState<DecorSlug>('garage-neon')
+  const decor: DecorSlug = 'garage-neon'
   const [chapter, setChapter] = useState<ChapterId>('avant')
   const [canvasReady, setCanvasReady] = useState(false)
   const [webgl, setWebgl] = useState<boolean | null>(null)
@@ -128,10 +131,6 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
     }
   }, [])
 
-  const pickDecor = useCallback((slug: DecorSlug) => {
-    decorRef.current = slug
-    setDecor(slug)
-  }, [])
   const onReady = useCallback(() => setCanvasReady(true), [])
 
   const live = webgl === true && !reduced
@@ -195,11 +194,20 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
           </ChapterText>
         </section>
 
-        {/* 03 — Les fonds */}
-        <section id="fonds" ref={el => { sections.current[2] = el }} className="relative" style={{ height: '210vh' }}>
-          <ChapterText eyebrow={t('fonds.eyebrow')} title={t('fonds.title')} body={t('fonds.body')} active={chapter === 'fonds'}>
-            <DecorPicker decor={decor} onPick={pickDecor} />
-          </ChapterText>
+        {/* 03 — Les fonds: the photo and its real render, compared with a handle, on the scene
+            put out behind (scene.ts dims it for this chapter). */}
+        <section id="fonds" ref={el => { sections.current[2] = el }} className="relative px-4 pb-[16vh] pt-[16vh] sm:px-8 lg:px-16 xl:pl-32" style={{ minHeight: small ? '115vh' : '160vh' }}>
+          <div className="mx-auto grid max-w-7xl items-start gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:sticky lg:top-32 lg:col-span-4">
+              <p className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.tungsten }}>{t('fonds.eyebrow')}</p>
+              <h2 className={cn(DISPLAY, 'mt-4 font-extrabold leading-[0.9]')} style={{ fontSize: 'clamp(2.5rem, 5vw, 4.75rem)' }}>{t('fonds.title')}</h2>
+              <p className="mt-5 text-base leading-relaxed sm:text-lg" style={{ color: '#BDB8AF' }}>{t('fonds.body')}</p>
+              <p className="mt-6 border-l-2 pl-4 text-sm leading-relaxed" style={{ borderColor: C.steel, color: '#BDB8AF' }}>{t('fonds.honesty')}</p>
+            </div>
+            <div className="lg:col-span-8">
+              <Comparator />
+            </div>
+          </div>
         </section>
 
         {/* 04 — Tarifs */}
@@ -306,41 +314,6 @@ function ScrollHint({ label }: { label: string }) {
       </span>
       {label}
       <style>{`@keyframes studio-scroll { 0% { transform: translateY(-100%) } 100% { transform: translateY(200%) } }`}</style>
-    </div>
-  )
-}
-
-function DecorPicker({ decor, onPick }: { decor: DecorSlug; onPick: (slug: DecorSlug) => void }) {
-  const t = useTranslations('studio.fonds')
-  return (
-    <div className="mt-8">
-      <p id="decor-label" className="text-xs font-medium uppercase tracking-[0.22em]" style={{ color: C.ash }}>{t('pick')}</p>
-      <div role="radiogroup" aria-labelledby="decor-label" className="mt-3 grid grid-cols-4 gap-1.5 sm:gap-2">
-        {DECORS.map(slug => {
-          const active = slug === decor
-          return (
-            <button
-              key={slug}
-              type="button"
-              role="radio"
-              aria-checked={active}
-              onClick={() => onPick(slug)}
-              className="group relative overflow-hidden rounded-sm text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ outlineColor: C.tungsten, boxShadow: active ? `0 0 0 2px ${C.tungsten}` : `0 0 0 1px ${C.steel}` }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/site-3d/thumb-${slug}.webp`} alt="" width={160} height={120} loading="lazy" className="block aspect-[4/3] w-full object-cover" />
-              <span className="block px-1.5 py-1.5 text-[11px] font-medium leading-tight sm:px-2.5 sm:py-2 sm:text-[13px]" style={{ background: C.concrete, color: active ? C.chalk : C.ash }}>
-                {t(`decors.${slug}.name`)}
-                <span className="mt-0.5 block text-[11px] uppercase tracking-[0.06em]" style={{ color: active ? C.tungsten : '#C4BFB6' }}>
-                  {t('real')}
-                </span>
-              </span>
-            </button>
-          )
-        })}
-      </div>
-      <p className="mt-4 max-w-[26rem] text-xs leading-relaxed" style={{ color: '#BDB8AF' }}>{t('honesty')}</p>
     </div>
   )
 }

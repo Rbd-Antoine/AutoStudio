@@ -49,12 +49,23 @@
     },
     "fonds": {
       "eyebrow": "03 — Les fonds",
-      "title": "Quatre décors. Un clic.",
-      "body": "Les quatre fonds de l'éditeur, tels qu'AutoStudio a vraiment rendu cette photo sur chacun. Choisissez-en un : le décor change, la voiture reste.",
-      "pick": "Choisir un décor",
-      "real": "Rendu réel",
-      "illustration": "Illustration",
-      "honesty": "Les quatre sont de vrais rendus AutoStudio de la même photo, alignés sur elle : la voiture n'est pas déplacée, seul son décor change.",
+      "title": "Glissez. Comparez.",
+      "body": "À gauche, la photo prise sur le parc. À droite, ce qu'AutoStudio en a fait. Faites glisser le curseur, changez de décor ou de voiture : la voiture ne bouge pas, seul le décor change.",
+      "pick": "Décor",
+      "pickCar": "Voiture",
+      "before": "Photo d'origine",
+      "after": "Rendu AutoStudio",
+      "handle": "Comparer la photo et le rendu",
+      "handleValue": "{percent} % de photo d'origine visible",
+      "beforeAlt": "Photo d'origine : {car} sur un parking",
+      "afterAlt": "Rendu AutoStudio : {car} dans le décor {decor}",
+      "honesty": "Seize vrais rendus AutoStudio, montrés entiers et sans retouche : quatre photos de clients, chacune sur les quatre fonds de l'éditeur.",
+      "cars": {
+        "voiture-01": "SUV blanc",
+        "voiture-02": "Break noir",
+        "voiture-03": "SUV vert",
+        "voiture-04": "Citadine rouge"
+      },
       "decors": {
         "garage-neon": {
           "name": "Garage néon",

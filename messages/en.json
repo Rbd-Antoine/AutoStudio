@@ -103,12 +103,23 @@
     },
     "fonds": {
       "eyebrow": "03 — Backgrounds",
-      "title": "Four settings. One click.",
-      "body": "The editor's four backgrounds, as AutoStudio really rendered this photo on each. Pick one: the setting changes, the car stays.",
-      "pick": "Pick a setting",
-      "real": "Real render",
-      "illustration": "Illustration",
-      "honesty": "All four are real AutoStudio renders of the same photo, aligned on it: the car is not moved, only its setting.",
+      "title": "Drag. Compare.",
+      "body": "On the left, the photo taken on the lot. On the right, what AutoStudio made of it. Drag the handle, switch background or car: the car never moves, only its setting changes.",
+      "pick": "Background",
+      "pickCar": "Car",
+      "before": "Original photo",
+      "after": "AutoStudio render",
+      "handle": "Compare the photo and the render",
+      "handleValue": "{percent}% of the original photo visible",
+      "beforeAlt": "Original photo: {car} in a car park",
+      "afterAlt": "AutoStudio render: {car} in the {decor} setting",
+      "honesty": "Sixteen real AutoStudio renders, shown whole and untouched: four customer photos, each on the editor's four backgrounds.",
+      "cars": {
+        "voiture-01": "White SUV",
+        "voiture-02": "Black estate",
+        "voiture-03": "Green SUV",
+        "voiture-04": "Red city car"
+      },
       "decors": {
         "garage-neon": {
           "name": "Neon garage",

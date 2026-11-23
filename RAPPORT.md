@@ -10,6 +10,17 @@ en bout, mais il plafonne à **5/10 en moyenne** selon les juges, loin des 8/10 
 principales : l'absence de modèle 3D libre utilisable, et la règle que je me suis imposée de ne
 jamais embellir la voiture (voir « Décisions importantes »).
 
+## Mise à jour du 23/11/2026 : chapitre 3 en comparateur avant/après
+
+Retour de Benoit : l'intégration de la photo dans les fonds ne fonctionnait pas parfaitement (la
+caméra zoomait sur la voiture et un dégradé mangeait le décor : la voiture paraissait collée).
+Inspiration spyne.ai : le chapitre « Les fonds » est désormais un **comparateur** (`_studio/Comparator.tsx`),
+avec la photo et son rendu entiers dans un cadre, un curseur à faire glisser (souris, toucher, clavier,
+rôle `slider`), le choix entre 4 décors et 4 voitures, et un balayage du curseur à la première apparition.
+La scène 3D reste pour les chapitres 1, 2, 4 et 5 et s'éteint derrière le comparateur.
+16 vrais rendus (`public/compare/`, `compare_assets.py`), dont 7 nouveaux. Chaque rendu est refusé si la
+voiture a bougé (l'échelle doit valoir exactement 0,5) : aucun refus. Dépense cumulée estimée : **1,00 € sur 3 €**.
+
 ## Mise à jour du 22/11/2026 : vrais rendus Gemini et guides SEO
 
 Budget donné : 3 € de clé Gemini. **Dépense estimée : 0,65 €** (13 appels, tous réussis, registre

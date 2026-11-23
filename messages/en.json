@@ -70,5 +70,176 @@
     "viewPricing": "View pricing",
     "getStarted": "Get started",
     "tryItFree": "Try it free"
+  },
+  "studio": {
+    "meta": {
+      "title": "AutoStudio — Your car stays the same. Its setting doesn't.",
+      "description": "AutoStudio replaces the background of your vehicle photos with a realistic studio setting, without touching the car. First render free, no credit card."
+    },
+    "nav": {
+      "label": "Chapters",
+      "avant": "Before",
+      "studio": "The studio",
+      "fonds": "Backgrounds",
+      "tarifs": "Pricing",
+      "contact": "Contact",
+      "signIn": "Sign in",
+      "cta": "Try it free",
+      "skip": "Skip to content",
+      "home": "AutoStudio, home",
+      "guides": "Guides",
+      "features": "Features"
+    },
+    "scrollHint": "Scroll",
+    "avant": {
+      "eyebrow": "01 — Before",
+      "title": "A listing photo like all the others.",
+      "body": "A parking lot, a grey sky, flat light. It's the photo you take every day with your phone, and the one buyers scroll past without stopping."
+    },
+    "studio": {
+      "eyebrow": "02 — The studio",
+      "title": "Your car stays the same. Its setting doesn't.",
+      "body": "AutoStudio replaces the background and keeps the vehicle exactly as you photographed it: bodywork, wheels, windows, plate.",
+      "note": "This studio is a real AutoStudio render of this photo. The car hasn't moved by a pixel: only the setting was replaced. (The starting photo is a generated example, shot the way a dealer would.)"
+    },
+    "fonds": {
+      "eyebrow": "03 — Backgrounds",
+      "title": "Drag. Compare.",
+      "body": "On the left, the photo taken on the lot. On the right, what AutoStudio made of it. Drag the handle, switch background or car: the car never moves, only its setting changes.",
+      "pick": "Background",
+      "pickCar": "Car",
+      "before": "Original photo",
+      "after": "AutoStudio render",
+      "handle": "Compare the photo and the render",
+      "handleValue": "{percent}% of the original photo visible",
+      "beforeAlt": "Original photo: {car} on a used-car lot",
+      "afterAlt": "AutoStudio render: {car} in the {decor} setting",
+      "honesty": "Real AutoStudio renders in high definition, shown whole and untouched. The \"before\" photos are generated examples, shot the way a dealer would on his lot; the cars carry no brand.",
+      "cars": {
+        "coupe": "GT coupé",
+        "suv": "Luxury SUV",
+        "berline": "Electric saloon",
+        "sportive": "Hot hatch"
+      },
+      "decors": {
+        "garage-neon": {
+          "name": "Neon garage",
+          "desc": "Industrial hangar, steel structure and neon lighting"
+        },
+        "hangar-industriel": {
+          "name": "Industrial hangar",
+          "desc": "Polished concrete floor, exposed structure, workshop feel"
+        },
+        "parking-souterrain": {
+          "name": "Underground car park",
+          "desc": "Covered shopping-centre car park, artificial lighting"
+        },
+        "piece-vide": {
+          "name": "Modern empty room",
+          "desc": "Clean, minimal interior, soft light"
+        }
+      }
+    },
+    "tarifs": {
+      "eyebrow": "04 — Pricing",
+      "title": "Start for free.",
+      "body": "Every plan includes monthly credits. Extra credits you buy never expire.",
+      "free": "Free",
+      "perMonth": "/month",
+      "credits": "{count, plural, one {# credit} other {# credits}} per month",
+      "firstYear": "for the first year",
+      "popular": "Most chosen",
+      "ctaFree": "Start for free",
+      "ctaPaid": "Create my account",
+      "details": "See full pricing",
+      "plans": {
+        "FREE": {
+          "name": "Discovery",
+          "features": [
+            "All settings",
+            "HD download"
+          ]
+        },
+        "ESSENTIAL": {
+          "name": "Essential",
+          "features": [
+            "All settings",
+            "HD download",
+            "Priority support"
+          ]
+        },
+        "PRO": {
+          "name": "Pro",
+          "features": [
+            "All settings",
+            "HD download",
+            "Dedicated support"
+          ]
+        },
+        "BUSINESS": {
+          "name": "Business",
+          "features": [
+            "All settings",
+            "HD download",
+            "Priority dedicated support"
+          ]
+        }
+      }
+    },
+    "contact": {
+      "eyebrow": "05 — Contact",
+      "title": "A question before you try?",
+      "faq": [
+        {
+          "q": "How does render generation work?",
+          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (neon garage, industrial hangar, underground car park, empty room) or your own background, and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
+        },
+        {
+          "q": "Can I use my own background and logo?",
+          "a": "Yes. In the editor, choose \"Your own background\" and import a photo of your showroom or workshop: it is remembered. Your logo, added once in the brand kit, can be placed on every render, in the corner you choose."
+        },
+        {
+          "q": "What photo quality do I need?",
+          "a": "A photo from a recent smartphone is plenty. Shoot in full daylight, from the front three-quarter angle, with the whole body in frame."
+        },
+        {
+          "q": "Can I use the renders in my listings?",
+          "a": "Yes. Renders download in high resolution and can be used freely in your listings, on social media or on your website."
+        },
+        {
+          "q": "Can I post these videos on social media?",
+          "a": "Yes. Any render can become a short presentation video in Reel, Story, landscape or square format, ready for Instagram, Facebook, LinkedIn or TikTok, with no editing."
+        },
+        {
+          "q": "Does the render change the vehicle?",
+          "a": "It shouldn't: only the background is replaced, and the AI is instructed to keep the bodywork, paint, wheels, windows and plate exactly as they are. As with any listing photo, check the render before publishing: if a detail of the vehicle has moved, run the generation again or fix it with a retouch."
+        },
+        {
+          "q": "Is my first render really free?",
+          "a": "Yes, no strings attached. Create your account, upload your photo, pick your setting and generate your first render, with no credit card and no commitment."
+        }
+      ],
+      "ctaTitle": "Your next photo, in the studio.",
+      "ctaBody": "First render free, no credit card.",
+      "ctaButton": "Try it free",
+      "write": "Write to us"
+    },
+    "own": {
+      "eyebrow": "Your setting, your logo",
+      "title": "Your showroom. Your brand.",
+      "body": "The four settings don't look like you? Import a photo of your showroom, workshop or forecourt: AutoStudio places every car in it, with the light and shadows of the place.",
+      "points": [
+        "Your background photo is remembered: upload it once, then one click per car.",
+        "Your logo, saved in the brand kit, is placed as is in the corner you choose, never redrawn by the AI.",
+        "Every listing carries your place and your brand, like a shop window."
+      ],
+      "place": "Your place",
+      "car": "Your car",
+      "result": "The render, with your logo",
+      "placeAlt": "Photo of an empty showroom, imported as a custom background",
+      "carAlt": "Starting photo of a grey GT coupé on a used-car lot",
+      "resultAlt": "AutoStudio render: the GT coupé in the showroom, with a logo bottom right",
+      "honesty": "A real AutoStudio render, the logo placed by the same code as the editor. For this demo the showroom and the coupé photo were generated and the \"Votre garage\" logo is fictitious: with your photo and your logo, the render is yours."
+    }
   }
 }

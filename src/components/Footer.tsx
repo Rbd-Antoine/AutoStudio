@@ -1,8 +1,9 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { Link } from '@/i18n/routing'
+import { Link, usePathname } from '@/i18n/routing'
+import { isStudioPath } from '@/lib/studio-paths'
 import RouteLink from 'next/link'
 import { useConsent } from '@/components/consent/ConsentProvider'
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics/client'
@@ -10,11 +11,17 @@ import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics/client'
 export function Footer() {
   const t = useTranslations('footer')
   const { openBanner } = useConsent()
+  // On the 3D studio home page the footer continues the dark scene, and its call to action is
+  // already the scene's last chapter.
+  const dark = isStudioPath(usePathname())
+  // The photo guides are written in French only.
+  const showGuides = useLocale() === 'fr'
+  const k = (light: string, onDark: string) => (dark ? onDark : light)
 
   return (
-    <footer className="bg-offwhite border-t border-charcoal/[0.06]">
+    <footer className={k('bg-offwhite border-t border-charcoal/[0.06]', 'relative z-10 border-t border-[#2A2D31] bg-[#0C0D0F] text-[#ECE8E1]')}>
       {/* CTA band */}
-      <div className="border-b border-charcoal/[0.06]">
+      {!dark && <div className="border-b border-charcoal/[0.06]">
         <div className="page-container py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-lg font-display font-semibold text-charcoal">
@@ -36,7 +43,7 @@ export function Footer() {
             </RouteLink>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Main footer */}
       <div className="page-container py-12">
@@ -44,15 +51,21 @@ export function Footer() {
           {/* Brand */}
           <div className="shrink-0">
             <Link href="/" className="inline-flex mb-4">
-              <Image
-                src="/logo-autostudio.png"
-                alt="AutoStudio"
-                width={500}
-                height={500}
-                className="h-20 w-auto object-contain rounded-xl"
-              />
+              {/* The dark home page shows the wordmark: the logo file still carries the former
+                  CarGlow brand (to replace site-wide). */}
+              {dark ? (
+                <span className="font-[family-name:var(--font-studio-display)] text-3xl font-extrabold uppercase text-[#ECE8E1]">AutoStudio</span>
+              ) : (
+                <Image
+                  src="/logo-autostudio.png"
+                  alt="AutoStudio"
+                  width={500}
+                  height={500}
+                  className="h-20 w-auto object-contain rounded-xl"
+                />
+              )}
             </Link>
-            <p className="text-xs text-charcoal/40 leading-relaxed max-w-[200px]">
+            <p className={k('text-xs text-charcoal/40 leading-relaxed max-w-[200px]', 'text-xs text-[#9A968E] leading-relaxed max-w-[200px]')}>
               {t('tagline')}
             </p>
           </div>
@@ -60,30 +73,31 @@ export function Footer() {
           {/* Links */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4">Produit</h4>
+              <h4 className={k('text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4', 'text-xs font-semibold uppercase tracking-widest text-[#9A968E] mb-4')}>Produit</h4>
               <ul className="flex flex-col gap-2.5">
-                <li><Link href="/#comment-ca-marche" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Comment ça marche</Link></li>
-                <li><Link href="/#tarifs" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Tarifs</Link></li>
-                <li><Link href="/guide" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Guide utilisateur</Link></li>
+                <li><Link href="/features" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Fonctionnalités</Link></li>
+                <li><Link href="/#tarifs" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Tarifs</Link></li>
+                <li><Link href="/guide" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guide utilisateur</Link></li>
+                {showGuides && <li><Link href="/guides" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guides photo</Link></li>}
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4">Entreprise</h4>
+              <h4 className={k('text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4', 'text-xs font-semibold uppercase tracking-widest text-[#9A968E] mb-4')}>Entreprise</h4>
               <ul className="flex flex-col gap-2.5">
-                <li><Link href="/about" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">À propos</Link></li>
-                <li><Link href="/blog" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Blog</Link></li>
-                <li><Link href="/contact" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Contact</Link></li>
+                <li><Link href="/about" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>À propos</Link></li>
+                <li><Link href="/blog" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Blog</Link></li>
+                <li><Link href="/contact" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Contact</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4">Légal</h4>
+              <h4 className={k('text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4', 'text-xs font-semibold uppercase tracking-widest text-[#9A968E] mb-4')}>Légal</h4>
               <ul className="flex flex-col gap-2.5">
-                <li><Link href="/legal/terms" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Conditions générales</Link></li>
-                <li><Link href="/legal/privacy" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Confidentialité</Link></li>
-                <li><Link href="/legal/cookies" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Cookies</Link></li>
-                <li><Link href="/legal/mentions" className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors">Mentions légales</Link></li>
+                <li><Link href="/legal/terms" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Conditions générales</Link></li>
+                <li><Link href="/legal/privacy" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Confidentialité</Link></li>
+                <li><Link href="/legal/cookies" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Cookies</Link></li>
+                <li><Link href="/legal/mentions" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Mentions légales</Link></li>
                 <li>
-                  <button onClick={openBanner} className="text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors text-left">
+                  <button onClick={openBanner} className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors text-left', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors text-left')}>
                     Gérer les cookies
                   </button>
                 </li>
@@ -94,13 +108,13 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-charcoal/[0.06]">
+      <div className={k('border-t border-charcoal/[0.06]', 'border-t border-[#2A2D31]')}>
         <div className="page-container pt-5 pb-24 lg:pb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-charcoal/30">
+          <p className={k('text-xs text-charcoal/30', 'text-xs text-[#9A968E]')}>
             © {new Date().getFullYear()} AutoStudio. {t('copyright')}
           </p>
-          <p className="text-xs text-charcoal/20">
-            🇫🇷 {t('builtInEurope')}
+          <p className={k('text-xs text-charcoal/20', 'text-xs text-[#9A968E]')}>
+            {!dark && '🇫🇷 '}{t('builtInEurope')}
           </p>
         </div>
       </div>

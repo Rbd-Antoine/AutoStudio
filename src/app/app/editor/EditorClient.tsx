@@ -7,6 +7,7 @@ import Image from 'next/image'
 import {
   Upload, Loader2, Download, ArrowLeft, Sparkles,
   PenLine, Wand2, RefreshCw, Palette, Send, AlertTriangle, X, Clapperboard, Check, Star, Plus,
+  ImagePlus, BadgeCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CAR_BACKGROUNDS } from '@/lib/carBackgrounds'
@@ -109,6 +110,20 @@ function splitDataUrl(dataUrl: string): { base64: string; mimeType: string } {
   return { mimeType: match[1], base64: match[2] }
 }
 
+// The dealer's own background (showroom, workshop) is kept on this device so it is there at the
+// next visit. A downscaled JPEG data URI fits easily in localStorage; if the browser refuses
+// (private window, full storage) the background simply lasts for the session.
+const CUSTOM_BG_KEY = 'autostudio-custom-background'
+const LOGO_PREF_KEY = 'autostudio-logo-on-renders'
+type BackgroundChoice = typeof CAR_BACKGROUNDS[number]['slug'] | 'custom'
+type LogoCorner = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+const LOGO_CORNERS: { id: LogoCorner; label: string }[] = [
+  { id: 'top-left', label: 'En haut à gauche' },
+  { id: 'top-right', label: 'En haut à droite' },
+  { id: 'bottom-left', label: 'En bas à gauche' },
+  { id: 'bottom-right', label: 'En bas à droite' },
+]
+
 function focusAndScroll(ref: React.RefObject<HTMLElement | null>) {
   ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   if (ref.current instanceof HTMLInputElement || ref.current instanceof HTMLTextAreaElement) {
@@ -119,7 +134,13 @@ function focusAndScroll(ref: React.RefObject<HTMLElement | null>) {
 export default function EditorClient() {
   const [files, setFiles]                    = useState<File[]>([])
   const [previews, setPreviews]              = useState<string[]>([])
-  const [backgroundSlug, setBackgroundSlug]  = useState<typeof CAR_BACKGROUNDS[number]['slug']>(CAR_BACKGROUNDS[0].slug)
+  const [backgroundSlug, setBackgroundSlug]  = useState<BackgroundChoice>(CAR_BACKGROUNDS[0].slug)
+  const [customBg, setCustomBg]              = useState<string | null>(null)
+  const [customBgError, setCustomBgError]    = useState<string | null>(null)
+  const customBgInputRef                     = useRef<HTMLInputElement>(null)
+  const [brandLogo, setBrandLogo]            = useState<string | null | undefined>(undefined)
+  const [logoOn, setLogoOn]                  = useState(false)
+  const [logoCorner, setLogoCorner]          = useState<LogoCorner>('bottom-right')
   const [characteristics, setCharacteristics] = useState('')
   const [gen, setGen]                        = useState<GenState>({ status: 'idle' })
   const [partialError, setPartialError]      = useState<string | null>(null)
@@ -173,6 +194,38 @@ export default function EditorClient() {
   }, [])
 
   useEffect(() => { refreshCredits() }, [refreshCredits])
+
+  // The dealer's saved background and logo preferences, and the brand kit's logo.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CUSTOM_BG_KEY)
+      if (saved?.startsWith('data:image/')) setCustomBg(saved)
+      const pref = JSON.parse(localStorage.getItem(LOGO_PREF_KEY) ?? 'null') as { on?: boolean; corner?: LogoCorner } | null
+      if (pref?.corner && LOGO_CORNERS.some(c => c.id === pref.corner)) setLogoCorner(pref.corner)
+      if (pref?.on) setLogoOn(true)
+    } catch { /* storage unavailable: defaults */ }
+    fetch('/api/brand-kit/default')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => setBrandLogo(d?.logoUrl ?? null))
+      .catch(() => setBrandLogo(null))
+  }, [])
+
+  const saveLogoPref = useCallback((on: boolean, corner: LogoCorner) => {
+    setLogoOn(on)
+    setLogoCorner(corner)
+    try { localStorage.setItem(LOGO_PREF_KEY, JSON.stringify({ on, corner })) } catch { /* session only */ }
+  }, [])
+
+  const pickCustomBackground = useCallback(async (file: File) => {
+    const error = validateImageFile(file)
+    if (error) { setCustomBgError(error); return }
+    setCustomBgError(null)
+    const prepared = await prepareImageForUpload(file)
+    const dataUrl = `data:${prepared.mimeType};base64,${prepared.base64}`
+    setCustomBg(dataUrl)
+    setBackgroundSlug('custom')
+    try { localStorage.setItem(CUSTOM_BG_KEY, dataUrl) } catch { /* too big or blocked: session only */ }
+  }, [])
   useEffect(() => { setMarketingKitSeen(localStorage.getItem('autostudio-marketing-kit-seen') === '1') }, [])
 
   const selected = selectedIdx !== null ? versions[selectedIdx] : null
@@ -243,6 +296,12 @@ export default function EditorClient() {
       setGen({ status: 'error', error: 'Session non chargée — rechargez la page et réessayez.' })
       return
     }
+    if (backgroundSlug === 'custom' && !customBg) {
+      setGen({ status: 'error', error: 'Importez la photo de votre fond, ou choisissez un des décors proposés.' })
+      focusAndScroll(styleSectionRef)
+      return
+    }
+    const withLogo = logoOn && !!brandLogo
     setGen({ status: 'loading' })
     setPartialError(null)
     try {
@@ -262,6 +321,8 @@ export default function EditorClient() {
               backgroundSlug,
               characteristics: characteristics.trim() || undefined,
               workspaceId,
+              ...(backgroundSlug === 'custom' && customBg ? { customBackground: splitDataUrl(customBg) } : {}),
+              ...(withLogo ? { logo: { corner: logoCorner } } : {}),
             }),
           })
           // A non-JSON body means the request never reached our route handler at all (e.g. the
@@ -277,6 +338,7 @@ export default function EditorClient() {
             return { error: 'Crédits insuffisants', code: 'insufficient_credits', available: data.available, required: data.required }
           }
           if (data.error === 'email_not_verified') return { error: data.message, code: 'email_not_verified' }
+          if (data.error === 'no_logo') return { error: data.message }
           if (!res.ok) return { error: data.error ?? 'Erreur inconnue' }
           return (data.results as SwapResult[])[0] ?? { error: 'La génération a échoué.' }
         } catch {
@@ -318,7 +380,7 @@ export default function EditorClient() {
     } catch (err) {
       setGen({ status: 'error', error: err instanceof Error ? err.message : 'Erreur inconnue' })
     }
-  }, [files, workspaceId, backgroundSlug, characteristics, refreshCredits])
+  }, [files, workspaceId, backgroundSlug, characteristics, refreshCredits, customBg, logoOn, brandLogo, logoCorner])
 
   const handleRetouch = useCallback(async () => {
     if (!retouchText.trim() || !selected) return
@@ -808,6 +870,135 @@ export default function EditorClient() {
                   </div>
                 </button>
               ))}
+
+              {/* The dealer's own background: a photo of the showroom, the workshop, the forecourt. */}
+              <button
+                onClick={() => (customBg ? setBackgroundSlug('custom') : customBgInputRef.current?.click())}
+                aria-pressed={backgroundSlug === 'custom'}
+                className={cn(
+                  'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
+                  backgroundSlug === 'custom'
+                    ? 'bg-accent-50 border border-accent-300'
+                    : 'border border-dashed border-accent-200 hover:bg-charcoal/[0.06] hover:border-accent-300',
+                )}
+              >
+                {customBg ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={customBg} alt="" className="w-11 h-11 rounded-lg object-cover shrink-0" />
+                ) : (
+                  <span className="w-11 h-11 rounded-lg bg-accent-50 border border-accent-200 flex items-center justify-center shrink-0">
+                    <ImagePlus className="w-5 h-5 text-accent-500" strokeWidth={1.75} />
+                  </span>
+                )}
+                <div>
+                  <p className={cn('text-sm font-semibold', backgroundSlug === 'custom' ? 'text-accent-700' : 'text-charcoal/75')}>
+                    Votre propre fond
+                  </p>
+                  <p className="text-xs text-charcoal/40">
+                    {customBg ? 'Votre photo, mémorisée sur cet appareil' : 'Importez une photo de votre showroom ou de votre atelier'}
+                  </p>
+                </div>
+              </button>
+              {customBg && (
+                <button
+                  onClick={() => customBgInputRef.current?.click()}
+                  className="self-start ml-4 mt-0.5 text-xs font-medium text-accent-600 hover:text-accent-700 underline underline-offset-2"
+                >
+                  Remplacer la photo du fond
+                </button>
+              )}
+              {customBgError && <p className="ml-4 text-xs text-rose-600">{customBgError}</p>}
+              <input
+                ref={customBgInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+                className="hidden"
+                onChange={e => {
+                  const picked = e.target.files?.[0]
+                  if (picked) void pickCustomBackground(picked)
+                  e.target.value = ''
+                }}
+              />
+            </div>
+            {backgroundSlug === 'custom' && (
+              <p className="px-5 pb-4 -mt-1 text-xs leading-relaxed text-charcoal/45">
+                Conseil : une photo prise de face ou de trois quarts, sans voiture au centre, avec un sol bien visible. L&apos;IA y place votre véhicule avec la lumière et les ombres du lieu.
+              </p>
+            )}
+          </div>
+
+          {/* The dealer's logo, placed on the render by the server exactly as uploaded. */}
+          <div className="order-5 lg:order-none rounded-2xl border border-accent-100 bg-white overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-accent-100 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="font-display font-semibold text-[15px] text-charcoal">Votre logo</h2>
+                <p className="text-xs text-charcoal/40 mt-0.5">Apposé sur chaque rendu, sans être redessiné</p>
+              </div>
+              {brandLogo && (
+                <button
+                  role="switch"
+                  aria-checked={logoOn}
+                  aria-label="Ajouter mon logo sur les rendus"
+                  onClick={() => saveLogoPref(!logoOn, logoCorner)}
+                  className={cn(
+                    'relative w-11 h-6 rounded-full transition-colors shrink-0',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
+                    logoOn ? 'bg-accent-500' : 'bg-charcoal/15',
+                  )}
+                >
+                  <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform', logoOn && 'translate-x-5')} />
+                </button>
+              )}
+            </div>
+            <div className="p-4">
+              {brandLogo === undefined ? (
+                <p className="text-xs text-charcoal/35">Chargement…</p>
+              ) : brandLogo === null ? (
+                <div className="flex items-start gap-3">
+                  <BadgeCheck className="w-5 h-5 text-accent-400 shrink-0 mt-0.5" strokeWidth={1.75} />
+                  <p className="text-xs leading-relaxed text-charcoal/50">
+                    Ajoutez votre logo une fois dans le{' '}
+                    <Link href="/app/brand-kit" className="font-semibold text-accent-600 hover:text-accent-700 underline underline-offset-2">kit de marque</Link>
+                    {' '}: il pourra ensuite figurer sur tous vos rendus.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  {/* A miniature of the render frame: pick the corner where the logo goes. */}
+                  <div className={cn('relative w-28 aspect-[4/3] rounded-lg border bg-offwhite shrink-0 transition-opacity', logoOn ? 'border-accent-200' : 'border-accent-100 opacity-50')}>
+                    {LOGO_CORNERS.map(c => {
+                      const active = logoOn && logoCorner === c.id
+                      return (
+                        <button
+                          key={c.id}
+                          aria-label={c.label}
+                          aria-pressed={logoCorner === c.id}
+                          onClick={() => saveLogoPref(true, c.id)}
+                          className={cn(
+                            'absolute w-9 h-6 rounded-md flex items-center justify-center transition-all',
+                            c.id.startsWith('top') ? 'top-1.5' : 'bottom-1.5',
+                            c.id.endsWith('left') ? 'left-1.5' : 'right-1.5',
+                            active ? 'bg-white ring-2 ring-accent-500 shadow-sm' : 'hover:bg-white/80',
+                          )}
+                        >
+                          {active ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={brandLogo} alt="" className="max-w-[30px] max-h-[18px] object-contain" />
+                          ) : (
+                            <span className="w-4 h-1.5 rounded-full bg-charcoal/15" />
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <p className="text-xs leading-relaxed text-charcoal/50">
+                    {logoOn
+                      ? `Logo ${LOGO_CORNERS.find(c => c.id === logoCorner)?.label.toLowerCase()}. Cliquez un autre coin pour le déplacer.`
+                      : 'Activez pour placer votre logo sur les prochains rendus.'}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

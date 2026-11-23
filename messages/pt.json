@@ -16,5 +16,176 @@
   },
   "home": {},
   "pricing": {},
-  "common": {}
+  "common": {},
+  "studio": {
+    "meta": {
+      "title": "AutoStudio — Votre voiture ne change pas. Son décor, si.",
+      "description": "AutoStudio remplace le fond de vos photos de véhicules par un décor de studio réaliste, sans toucher à la voiture. Premier rendu offert, sans carte bancaire."
+    },
+    "nav": {
+      "label": "Chapitres",
+      "avant": "Avant",
+      "studio": "Le studio",
+      "fonds": "Les fonds",
+      "tarifs": "Tarifs",
+      "contact": "Contact",
+      "signIn": "Connexion",
+      "cta": "Essayer gratuitement",
+      "skip": "Aller au contenu",
+      "home": "AutoStudio, accueil",
+      "guides": "Guias",
+      "features": "Funcionalidades"
+    },
+    "scrollHint": "Faites défiler",
+    "avant": {
+      "eyebrow": "01 — Avant",
+      "title": "Une photo d'annonce comme les autres.",
+      "body": "Un parking, un ciel gris, une lumière plate. C'est la photo que vous prenez chaque jour avec votre téléphone, et celle que vos acheteurs font défiler sans s'arrêter."
+    },
+    "studio": {
+      "eyebrow": "02 — Le studio",
+      "title": "Votre voiture ne change pas. Son décor, si.",
+      "body": "AutoStudio remplace l'arrière-plan et garde le véhicule tel que vous l'avez photographié : carrosserie, jantes, vitres, plaque.",
+      "note": "Ce studio est un vrai rendu AutoStudio de cette photo. La voiture n'a pas bougé d'un pixel : seul le décor a été remplacé. (La photo de départ est un exemple généré, prise comme un garagiste le ferait.)"
+    },
+    "fonds": {
+      "eyebrow": "03 — Les fonds",
+      "title": "Glissez. Comparez.",
+      "body": "À gauche, la photo prise sur le parc. À droite, ce qu'AutoStudio en a fait. Faites glisser le curseur, changez de décor ou de voiture : la voiture ne bouge pas, seul le décor change.",
+      "pick": "Décor",
+      "pickCar": "Voiture",
+      "before": "Photo d'origine",
+      "after": "Rendu AutoStudio",
+      "handle": "Comparer la photo et le rendu",
+      "handleValue": "{percent} % de photo d'origine visible",
+      "beforeAlt": "Photo d'origine : {car} sur un parc de véhicules d'occasion",
+      "afterAlt": "Rendu AutoStudio : {car} dans le décor {decor}",
+      "honesty": "Vrais rendus AutoStudio en haute définition, montrés entiers et sans retouche. Les photos de départ sont des exemples générés, prises comme un garagiste le ferait sur son parc ; les voitures ne portent aucune marque.",
+      "cars": {
+        "coupe": "Coupé GT",
+        "suv": "SUV de luxe",
+        "berline": "Berline électrique",
+        "sportive": "Compacte sportive"
+      },
+      "decors": {
+        "garage-neon": {
+          "name": "Garage néon",
+          "desc": "Hangar industriel, structure métallique et éclairage néon"
+        },
+        "hangar-industriel": {
+          "name": "Hangar industriel",
+          "desc": "Sol en béton poli, structure apparente, ambiance atelier"
+        },
+        "parking-souterrain": {
+          "name": "Parking souterrain",
+          "desc": "Parking couvert de centre commercial, éclairage artificiel"
+        },
+        "piece-vide": {
+          "name": "Pièce vide moderne",
+          "desc": "Intérieur épuré et minimaliste, lumière douce"
+        }
+      }
+    },
+    "tarifs": {
+      "eyebrow": "04 — Tarifs",
+      "title": "Commencez gratuitement.",
+      "body": "Chaque formule inclut des crédits mensuels. Les crédits achetés en plus n'expirent jamais.",
+      "free": "Gratuit",
+      "perMonth": "/mois",
+      "credits": "{count, plural, one {# crédit} other {# crédits}} par mois",
+      "firstYear": "la première année",
+      "popular": "Le plus choisi",
+      "ctaFree": "Commencer gratuitement",
+      "ctaPaid": "Créer mon compte",
+      "details": "Voir le détail des tarifs",
+      "plans": {
+        "FREE": {
+          "name": "Découverte",
+          "features": [
+            "Tous les décors",
+            "Téléchargement HD"
+          ]
+        },
+        "ESSENTIAL": {
+          "name": "Essentiel",
+          "features": [
+            "Tous les décors",
+            "Téléchargement HD",
+            "Support prioritaire"
+          ]
+        },
+        "PRO": {
+          "name": "Pro",
+          "features": [
+            "Tous les décors",
+            "Téléchargement HD",
+            "Support dédié"
+          ]
+        },
+        "BUSINESS": {
+          "name": "Business",
+          "features": [
+            "Tous les décors",
+            "Téléchargement HD",
+            "Support dédié prioritaire"
+          ]
+        }
+      }
+    },
+    "contact": {
+      "eyebrow": "05 — Contact",
+      "title": "Une question avant d'essayer ?",
+      "faq": [
+        {
+          "q": "Comment fonctionne la génération de rendu ?",
+          "a": "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors (garage néon, hangar industriel, parking souterrain, pièce vide) ou votre propre fond, et l'IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque."
+        },
+        {
+          "q": "Puis-je utiliser mon propre fond et mon logo ?",
+          "a": "Oui. Dans l'éditeur, choisissez « Votre propre fond » et importez une photo de votre showroom ou de votre atelier : elle reste mémorisée. Votre logo, ajouté une fois dans le kit de marque, peut être apposé sur chaque rendu, dans le coin de votre choix."
+        },
+        {
+          "q": "Quelle qualité de photo est nécessaire ?",
+          "a": "Une photo prise avec un smartphone récent suffit largement. Photographiez en pleine lumière naturelle, de trois quarts avant, avec la carrosserie entière visible."
+        },
+        {
+          "q": "Puis-je utiliser les rendus dans mes annonces ?",
+          "a": "Oui. Les rendus se téléchargent en haute résolution et s'utilisent librement dans vos annonces, sur vos réseaux sociaux ou votre site."
+        },
+        {
+          "q": "Puis-je publier ces vidéos sur mes réseaux ?",
+          "a": "Oui. Chaque rendu peut devenir une courte vidéo de présentation au format Reel, Story, paysage ou carré, prête à publier sur Instagram, Facebook, LinkedIn ou TikTok, sans montage."
+        },
+        {
+          "q": "Le rendu modifie-t-il le véhicule ?",
+          "a": "Il ne doit pas : seul l'arrière-plan est remplacé, et l'IA a pour consigne de conserver à l'identique la carrosserie, la peinture, les jantes, les vitres et la plaque. Comme pour toute photo d'annonce, relisez le rendu avant de le publier : si un détail du véhicule a bougé, relancez la génération ou corrigez-le avec la retouche."
+        },
+        {
+          "q": "Mon premier rendu est-il vraiment gratuit ?",
+          "a": "Oui, sans condition. Créez votre compte, importez votre photo, choisissez votre décor et générez votre premier rendu, sans carte bancaire ni engagement."
+        }
+      ],
+      "ctaTitle": "Votre prochaine photo, en studio.",
+      "ctaBody": "Premier rendu offert, sans carte bancaire.",
+      "ctaButton": "Essayer gratuitement",
+      "write": "Nous écrire"
+    },
+    "own": {
+      "eyebrow": "Votre décor, votre logo",
+      "title": "Votre showroom. Votre marque.",
+      "body": "Les quatre décors ne vous ressemblent pas ? Importez une photo de votre showroom, de votre atelier ou de votre cour : AutoStudio y installe chaque voiture, avec la lumière et les ombres du lieu.",
+      "points": [
+        "Votre photo de fond est mémorisée : une seule fois, puis un clic pour chaque voiture.",
+        "Votre logo, enregistré dans le kit de marque, est apposé tel quel dans le coin de votre choix, jamais redessiné par l'IA.",
+        "Toutes vos annonces portent votre lieu et votre marque, comme une vitrine."
+      ],
+      "place": "Votre lieu",
+      "car": "Votre voiture",
+      "result": "Le rendu, avec votre logo",
+      "placeAlt": "Photo d'un showroom vide, importée comme fond personnalisé",
+      "carAlt": "Photo de départ d'un coupé GT gris sur un parc de véhicules d'occasion",
+      "resultAlt": "Rendu AutoStudio : le coupé GT dans le showroom, avec un logo en bas à droite",
+      "honesty": "Vrai rendu AutoStudio, logo posé par le même code que l'éditeur. Pour la démonstration, le showroom et la photo du coupé ont été générés et le logo « Votre garage » est fictif : avec votre photo et votre logo, le rendu est le vôtre."
+    }
+  }
 }

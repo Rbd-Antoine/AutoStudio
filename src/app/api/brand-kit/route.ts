@@ -34,7 +34,12 @@ export async function POST(req: NextRequest) {
       throw err
     }
     try {
-      logoUrl = await uploadBuffer(normalized.buffer, normalized.mimeType, `brand-logo-${summary.workspaceId}-${Date.now()}`)
+      // Local development has no Blob store: the logo is kept as a data URI so the brand kit and
+      // the logo on renders can be tried. Never in production, where a logo always goes to Blob.
+      const devWithoutBlob = process.env.NODE_ENV !== 'production' && !process.env.BLOB_READ_WRITE_TOKEN
+      logoUrl = devWithoutBlob
+        ? `data:${normalized.mimeType};base64,${normalized.buffer.toString('base64')}`
+        : await uploadBuffer(normalized.buffer, normalized.mimeType, `brand-logo-${summary.workspaceId}-${Date.now()}`)
     } catch (err) {
       // Most often a missing BLOB_READ_WRITE_TOKEN: answer in JSON so the page can show it
       // instead of failing to parse a bare 500.

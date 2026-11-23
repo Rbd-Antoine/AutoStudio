@@ -103,24 +103,33 @@ function assertNoTopLevelH1(nodes: RootContent[], file: string) {
   }
 }
 
-function assertInternalLinksResolve(nodes: RootContent[], file: string, knownSlugs: Set<string>) {
+/** Internal links that must resolve: for each path prefix ("/blog/", "/guides/"), the known slugs. */
+export type LinkTargets = Record<string, Set<string>>
+
+function assertInternalLinksResolve(nodes: RootContent[], file: string, targets: LinkTargets) {
   const links: string[] = []
   for (const node of nodes) collectLinks(node, links)
   for (const url of links) {
-    if (!url.startsWith('/blog/')) continue
-    const slug = url.replace('/blog/', '').replace(/\/$/, '')
-    if (!knownSlugs.has(slug)) {
-      throw new Error(`[blog] ${file}: lien interne mort vers "${url}" (slug inconnu: "${slug}")`)
+    const prefix = Object.keys(targets).find(p => url.startsWith(p))
+    if (!prefix) continue
+    const slug = url.slice(prefix.length).replace(/[/#?].*$/, '')
+    if (!targets[prefix].has(slug)) {
+      throw new Error(`[content] ${file}: lien interne mort vers "${url}" (slug inconnu: "${slug}")`)
     }
   }
 }
 
-function parseBody(body: string, file: string, knownSlugs: Set<string>): { segments: BlogSegment[]; faqItems: FaqItem[] } {
+/**
+ * Long-form Markdown → segments for <ArticleBody>: HTML runs, "Retour de terrain" callouts, the
+ * "Questions fréquentes" block (also returned as FAQ items for the JSON-LD) and the closing CTA.
+ * Shared by the blog and the guides (src/lib/guides.ts).
+ */
+export function parseArticleBody(body: string, file: string, targets: LinkTargets): { segments: BlogSegment[]; faqItems: FaqItem[] } {
   const tree = parseMarkdown(body)
   const nodes = tree.children
 
   assertNoTopLevelH1(nodes, file)
-  assertInternalLinksResolve(nodes, file, knownSlugs)
+  assertInternalLinksResolve(nodes, file, targets)
 
   const segments: BlogSegment[] = []
   const allFaqItems: FaqItem[] = []
@@ -199,7 +208,7 @@ export function getAllArticlesUnfiltered(): BlogArticle[] {
   const knownSlugs = new Set(parsed.map((p) => p.frontmatter.slug))
 
   const articles = parsed.map(({ file, frontmatter, content }) => {
-    const { segments, faqItems } = parseBody(content, file, knownSlugs)
+    const { segments, faqItems } = parseArticleBody(content, file, { '/blog/': knownSlugs })
     return { frontmatter, segments, faqItems }
   })
 

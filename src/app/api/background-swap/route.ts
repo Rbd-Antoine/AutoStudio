@@ -17,6 +17,8 @@ import { isEmailVerified } from '@/lib/auth-guards'
 import { isSuperuserAccount } from '@/lib/superusers'
 import { sendWelcomeEmail, sendReviewRequestEmail } from '@/lib/email'
 import { base64PhotoType, InvalidImageError, type PhotoMimeType } from '@/lib/image-validation'
+import { getDefaultBrandKit } from '@/lib/brand-kit'
+import { applyLogo, isLogoCorner, type LogoCorner } from '@/lib/logo-overlay.server'
 
 export const maxDuration = 300
 
@@ -45,6 +47,12 @@ async function photoAspectRatio(base64: string): Promise<AspectRatio | undefined
     return undefined
   }
 }
+/** The dealer's own background photo (showroom, workshop) sent with the request instead of a preset. */
+const CUSTOM_BACKGROUND = 'custom'
+/** What the library shows for a render made on the dealer's own background. */
+const CUSTOM_BACKGROUND_LABEL = 'Fond personnalisé'
+/** A background photo is downscaled by the editor (2000 px); this bounds what a client can send. */
+const MAX_BACKGROUND_BYTES = 6 * 1024 * 1024
 
 interface ImagePayload {
   base64: string
@@ -100,27 +108,40 @@ export async function POST(req: NextRequest) {
   const userId = session.user.id
 
   const body = await req.json()
-  const { images, backgroundSlug, workspaceId, characteristics } = body as {
+  const { images, backgroundSlug, workspaceId, characteristics, customBackground, logo } = body as {
     images: ImagePayload[]
     backgroundSlug: string
     workspaceId: string
     characteristics?: string
+    customBackground?: ImagePayload
+    logo?: { corner?: string }
   }
+  const isCustom = backgroundSlug === CUSTOM_BACKGROUND
 
   if (!Array.isArray(images) || images.length === 0 || images.length > MAX_PHOTOS) {
     return NextResponse.json({ error: `Envoyez entre 1 et ${MAX_PHOTOS} photos.` }, { status: 400 })
   }
-  if (!backgroundSlug || !CAR_BACKGROUNDS.some(b => b.slug === backgroundSlug)) {
+  if (!backgroundSlug || (!isCustom && !CAR_BACKGROUNDS.some(b => b.slug === backgroundSlug))) {
     return NextResponse.json({ error: 'Fond invalide.' }, { status: 400 })
+  }
+  let logoCorner: LogoCorner | null = null
+  if (logo) {
+    if (!isLogoCorner(logo.corner)) return NextResponse.json({ error: 'Position du logo invalide.' }, { status: 400 })
+    logoCorner = logo.corner
   }
   if (!workspaceId) {
     return NextResponse.json({ error: 'workspaceId requis' }, { status: 400 })
   }
 
-  // Each photo is retyped from its own bytes before anything is charged or stored.
+  // Each photo is retyped from its own bytes before anything is charged or stored, and so is the
+  // dealer's own background photo.
   let photos: { base64: string; mimeType: PhotoMimeType }[]
+  let ownBackground: { base64: string; mimeType: PhotoMimeType } | null = null
   try {
     photos = images.map(image => ({ base64: image?.base64, mimeType: base64PhotoType(image?.base64) }))
+    if (isCustom) {
+      ownBackground = { base64: customBackground?.base64 as string, mimeType: base64PhotoType(customBackground?.base64, MAX_BACKGROUND_BYTES) }
+    }
   } catch (err) {
     if (err instanceof InvalidImageError) return NextResponse.json({ error: err.message }, { status: 400 })
     throw err
@@ -154,7 +175,18 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'GEMINI_API_KEY absent' }, { status: 500 })
 
-  const background = await loadBackgroundReference(backgroundSlug)
+  // The logo comes from the workspace's brand kit, never from the request: checked before any
+  // credit is taken, so asking for a logo without one costs nothing.
+  let logoUrl: string | null = null
+  if (logoCorner) {
+    logoUrl = (await getDefaultBrandKit(workspaceId)).logoUrl
+    if (!logoUrl) {
+      return NextResponse.json({ error: 'no_logo', message: 'Ajoutez votre logo dans le kit de marque pour l\'afficher sur vos rendus.' }, { status: 400 })
+    }
+  }
+
+  const background = ownBackground ?? await loadBackgroundReference(backgroundSlug)
+  const styleLabel = isCustom ? CUSTOM_BACKGROUND_LABEL : backgroundSlug
   // The GPU container wakes while Gemini draws, so its cold start is mostly hidden.
   warmVehicleProtection()
   const analyticsIdentity = { userId, email: session.user.email ?? null, plan: member.workspace.plan, workspaceId }
@@ -204,8 +236,8 @@ export async function POST(req: NextRequest) {
           workspaceId,
           originalUrl: 'car-direct-upload',
           status: 'PROCESSING',
-          styleUsed: backgroundSlug,
-          toolsUsed: ['gemini_background_swap'],
+          styleUsed: styleLabel,
+          toolsUsed: ['gemini_background_swap', ...(isCustom ? ['custom_background'] : []), ...(logoUrl ? ['logo_overlay'] : [])],
           createdById: userId,
         },
       })
@@ -240,7 +272,12 @@ export async function POST(req: NextRequest) {
       if (run.abandoned) return { index, error: RENDER_FAILED_MESSAGE }
       run.finishing = true
 
-      const enhancedUrl = await uploadBase64WithFallback(protection.image.toString('base64'), protection.mimeType, `enhanced-${photo.id}.png`)
+      // The dealer's logo goes on last, over the protected render, exactly as uploaded. A logo that
+      // cannot be placed fails the render (and refunds it): the dealer asked for it.
+      const final = logoUrl && logoCorner
+        ? await applyLogo(protection.image.toString('base64'), logoUrl, logoCorner)
+        : { base64: protection.image.toString('base64'), mimeType: protection.mimeType }
+      const enhancedUrl = await uploadBase64WithFallback(final.base64, final.mimeType, `enhanced-${photo.id}.png`)
       const processingMs = Date.now() - startMs
       await db.photo.update({
         where: { id: photo.id },
@@ -250,6 +287,8 @@ export async function POST(req: NextRequest) {
           generationInput: {
             imageModel: IMAGE_MODEL,
             backgroundSlug,
+            customBackground: isCustom,
+            logoCorner: logoUrl ? logoCorner : null,
             photoChecked: photoCheck.checked,
             aspectRatio: aspectRatio ?? null,
             characteristics: characteristics?.trim() || null,

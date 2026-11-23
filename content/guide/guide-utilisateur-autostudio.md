@@ -4,7 +4,7 @@ description: "Guide complet pour utiliser AutoStudio : photographier le véhicul
 slug: guide
 canonical: /guide
 ogDescription: "Tout ce qu'il faut savoir pour transformer les photos de votre parc en photos d'annonce au décor professionnel, de la prise de vue au téléchargement."
-updated: 2026-10-07
+updated: 2026-11-23
 readingTime: 10
 toc:
   - { id: premiers-pas, label: "Premiers pas" }
@@ -82,6 +82,12 @@ AutoStudio propose quatre décors, chacun issu d'une vraie photo de référence 
 | **Parking souterrain** | Parking couvert, éclairage artificiel | Citadines, berlines, gros volumes |
 | **Pièce vide moderne** | Intérieur clair et épuré | Annonces façon catalogue |
 
+### Votre propre fond
+
+Les quatre décors ne correspondent pas à votre établissement ? Choisissez **Votre propre fond** et importez une photo de votre showroom, de votre atelier ou de votre cour. AutoStudio y installe le véhicule, avec la lumière et les ombres du lieu. La photo reste mémorisée sur votre appareil : vous n'avez à l'importer qu'une fois.
+
+Pour un bon résultat, prenez le lieu de face ou de trois quarts, **sans voiture au centre**, avec un sol bien visible et une lumière homogène.
+
 **Conseil :** choisissez un décor par famille de véhicules et tenez-vous-y. Des annonces cohérentes d'un véhicule à l'autre font davantage professionnel qu'un décor différent à chaque fois. Plus de détails dans [quel décor pour quelle voiture](/blog/choisir-fond-photo-voiture).
 
 ---
@@ -146,6 +152,10 @@ La page **Kit de marque** enregistre l'identité de votre établissement :
 - le **logo** (PNG, JPG, WebP ou SVG, 5 Mo maximum).
 
 Ces éléments sont utilisés automatiquement dans le kit marketing, pour que toutes vos vidéos portent votre identité.
+
+### Votre logo sur les rendus
+
+Dans l'éditeur, la carte **Votre logo** ajoute le logo de votre kit de marque sur chaque rendu. Choisissez le coin (en haut ou en bas, à gauche ou à droite) : le logo est apposé tel quel, sans être redessiné par l'IA, et votre préférence est retenue pour les rendus suivants.
 
 ---
 

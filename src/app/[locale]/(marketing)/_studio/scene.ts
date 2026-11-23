@@ -196,8 +196,9 @@ export function sceneAt(p: number, aspect: number, wide: boolean): SceneState {
   // Chapter 3 onwards: the chosen background takes over the decor.
   const decorSwap = smooth(2.0, 2.25, sx)
   // Chapters 3 to 5: the scene steps back behind the content. The comparator (chapter 3) reads
-  // over a scene almost put out, pricing a little less, and the ending lights it again, far away.
-  const dim = smooth(1.8, 2.1, sx) * 0.88 - smooth(2.85, 3.15, sx) * 0.3 - smooth(3.85, 4.15, sx) * 0.28
+  // and pricing read over a scene almost put out (the car must not show behind them while the
+  // camera glides), and the ending lights it again a little, far away.
+  const dim = smooth(1.8, 2.1, sx) * 0.88 - smooth(3.85, 4.15, sx) * 0.4
   const pull = smooth(2.85, 3.15, sx)
 
   const parallax: [number, number] = [

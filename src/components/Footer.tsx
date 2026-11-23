@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { Link, usePathname } from '@/i18n/routing'
+import { isStudioPath } from '@/lib/studio-paths'
 import RouteLink from 'next/link'
 import { useConsent } from '@/components/consent/ConsentProvider'
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics/client'
@@ -12,8 +13,7 @@ export function Footer() {
   const { openBanner } = useConsent()
   // On the 3D studio home page the footer continues the dark scene, and its call to action is
   // already the scene's last chapter.
-  const pathname = usePathname()
-  const dark = pathname === '/' || pathname === '/guides' || pathname.startsWith('/guides/')
+  const dark = isStudioPath(usePathname())
   // The photo guides are written in French only.
   const showGuides = useLocale() === 'fr'
   const k = (light: string, onDark: string) => (dark ? onDark : light)
@@ -75,7 +75,7 @@ export function Footer() {
             <div>
               <h4 className={k('text-xs font-semibold uppercase tracking-widest text-charcoal/30 mb-4', 'text-xs font-semibold uppercase tracking-widest text-[#9A968E] mb-4')}>Produit</h4>
               <ul className="flex flex-col gap-2.5">
-                <li><Link href="/#comment-ca-marche" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Comment ça marche</Link></li>
+                <li><Link href="/features" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Fonctionnalités</Link></li>
                 <li><Link href="/#tarifs" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Tarifs</Link></li>
                 <li><Link href="/guide" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guide utilisateur</Link></li>
                 {showGuides && <li><Link href="/guides" className={k('text-sm text-charcoal/50 hover:text-charcoal/90 transition-colors', 'text-sm text-[#CFCAC1] hover:text-[#F2A93B] transition-colors')}>Guides photo</Link></li>}

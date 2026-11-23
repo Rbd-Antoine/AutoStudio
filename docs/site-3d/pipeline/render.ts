@@ -5,6 +5,8 @@
 //
 //   npx tsx docs/site-3d/pipeline/render.ts <car> <decor> [--model=<id>] [--size=1K|2K] [--tag=x]
 //   npx tsx docs/site-3d/pipeline/render.ts --spent
+//   npx tsx docs/site-3d/pipeline/render.ts --scene=<name> [--tag=x]   (an empty scene from SCENES,
+//     text only: the sample "own background" of a dealer, for the custom-background demo)
 //
 // <car>: voiture-01..04 (public/showcase/voitures/<car>/before.webp) or a path to a photo.
 // <decor>: garage-neon | hangar-industriel | parking-souterrain | piece-vide
@@ -29,6 +31,12 @@ const STOP_AT_EUR = 2.9
 /** Cautious: Florelis measured about 0.05 EUR per image with the previous model; the newer one is cheaper. */
 const EST_EUR_PER_IMAGE = 0.05
 
+// Empty scenes generated from text, standing in for a dealer's own background photo in the demo.
+// Generic on purpose: no brand, no sign, no car.
+const SCENES: Record<string, string> = {
+  showroom: 'A photograph of an empty, modern independent car dealership showroom in France, shot at eye level from the entrance: large glass front on the left with soft daylight, light grey polished concrete floor, white walls with warm wood slat panels on the back wall, a small reception desk far in the background, recessed ceiling lights. No cars, no people, no logos, no text, no signs, no brand names anywhere. Realistic photo, 4:3, natural colours, sharp, wide empty floor space in the centre where a car could be parked.',
+}
+
 interface Entry { at: string; model: string; size: string; car: string; decor: string; tag: string; ok: boolean; estEur: number; usage?: unknown; note?: string }
 
 function ledger(): Entry[] {
@@ -48,23 +56,25 @@ async function main() {
     console.log(`${l.length} appels, ${spent().toFixed(3)} EUR estimés sur ${BUDGET_EUR} EUR (réussis : ${l.filter(e => e.ok).length})`)
     return
   }
-  const [car, decor] = args.filter(a => !a.startsWith('--'))
   const opt = (k: string, d: string) => args.find(a => a.startsWith(`--${k}=`))?.split('=')[1] ?? d
+  const scene = opt('scene', '')
+  const [car, decor] = scene ? ['scene', scene] : args.filter(a => !a.startsWith('--'))
   const model = opt('model', 'gemini-nano-banana-2.1')
   const size = opt('size', '2K')
   const tag = opt('tag', '1')
   const bg = CAR_BACKGROUNDS.find(b => b.slug === decor)
-  if (!car || !bg) throw new Error('usage: render.ts <car> <decor> [--model=] [--size=] [--tag=]')
+  if (scene && !SCENES[scene]) throw new Error(`scène inconnue : ${scene}`)
+  if (!scene && (!car || !bg)) throw new Error('usage: render.ts <car> <decor> [--model=] [--size=] [--tag=]')
   if (spent() + EST_EUR_PER_IMAGE > STOP_AT_EUR) throw new Error(`budget atteint : ${spent().toFixed(2)} EUR estimés`)
   const key = process.env.GEMINI_API_KEY
   if (!key) throw new Error('GEMINI_API_KEY absent de .env')
 
   const carFile = car.includes('/') || car.includes('\\') ? car : path.join(ROOT, 'public/showcase/voitures', car, 'before.webp')
-  const carName = path.basename(car.includes('/') ? path.dirname(carFile) : car)
-  const parts = [
+  const carName = scene ? 'scene' : path.basename(car.includes('/') ? path.dirname(carFile) : car)
+  const parts = scene ? [{ text: SCENES[scene] }] : [
     { text: buildBackgroundSwapPrompt() },
     { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(carFile) } },
-    { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(path.join(ROOT, 'public', bg.image)) } },
+    { inline_data: { mime_type: 'image/jpeg', data: await jpegBase64(path.join(ROOT, 'public', bg!.image)) } },
   ]
   const generationConfig: Record<string, unknown> = { responseModalities: ['IMAGE', 'TEXT'], imageConfig: { aspectRatio: '4:3', ...(size ? { imageSize: size } : {}) } }
 

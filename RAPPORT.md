@@ -10,6 +10,24 @@ en bout, mais il plafonne à **5/10 en moyenne** selon les juges, loin des 8/10 
 principales : l'absence de modèle 3D libre utilisable, et la règle que je me suis imposée de ne
 jamais embellir la voiture (voir « Décisions importantes »).
 
+## Mise à jour du 23/11/2026 (2) : votre fond, votre logo, site fini pour la présentation
+
+- **Produit (éditeur)** : 5e choix « Votre propre fond » (photo de showroom ou d'atelier importée,
+  mémorisée sur l'appareil, envoyée à Gemini comme fond de référence) et carte « Votre logo » (logo du
+  kit de marque, coin au choix, apposé par le serveur avec sharp, jamais redessiné par l'IA). Route
+  `background-swap` : `backgroundSlug: 'custom'` + `customBackground`, `logo: { corner }` ; logo lu
+  dans le kit de marque, absent → 400 avant tout débit ; échec du logo → rendu remboursé.
+  `src/lib/logo-overlay.server.ts`. En dev sans Blob, le logo du kit est gardé en data URI.
+- **Testé de bout en bout** dans le vrai éditeur (`docs/site-3d/pipeline/demo/e2e-custom-background.mjs`) :
+  logo enregistré, photo + fond + logo, rendu en 18 s. Retouche réelle testée aussi.
+- **Site** : bloc « Votre showroom. Votre marque. » sous le comparateur ; page Fonctionnalités refaite
+  dans le look sombre avec 4 vraies illustrations (elle n'avait que des cases vides) ; logo CarGlow
+  remplacé partout (logo et icônes) ; accent bleu remplacé par l'ambre de l'accueil sur tout le site et
+  l'application ; menus corrigés (ancres de l'ancienne accueil) ; FAQ et guide utilisateur à jour.
+- Hors périmètre de la mission initiale, sur demande explicite de Benoit (23/11) : `src/app/api/background-swap`,
+  `src/app/api/brand-kit`, `src/app/app/editor`, `tailwind.config.ts`, `globals.css`, icônes.
+- Dépense Gemini cumulée estimée : **1,15 € sur 3 €**.
+
 ## Mise à jour du 23/11/2026 : chapitre 3 en comparateur avant/après
 
 Retour de Benoit : l'intégration de la photo dans les fonds ne fonctionnait pas parfaitement (la

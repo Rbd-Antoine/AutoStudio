@@ -674,5 +674,57 @@
       "serviceTier": "standard"
     },
     "note": "2400x1792, 35 s"
+  },
+  {
+    "at": "2026-11-23T21:18:08.385Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "scene",
+    "decor": "showroom",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 110,
+      "candidatesTokenCount": 2040,
+      "totalTokenCount": 2557,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 110
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 407,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 20 s"
+  },
+  {
+    "at": "2026-11-23T21:33:05.646101+00:00",
+    "model": "app:/api/retouch",
+    "size": "app",
+    "car": "voiture-03",
+    "decor": "hangar-industriel",
+    "tag": "retouche-demo",
+    "ok": true,
+    "estEur": 0.05,
+    "note": "retouche r\u00e9elle via la route locale, pour la page Fonctionnalit\u00e9s"
+  },
+  {
+    "at": "2026-11-23T21:33:05.646101+00:00",
+    "model": "app:/api/background-swap",
+    "size": "app",
+    "car": "voiture-02",
+    "decor": "custom-showroom",
+    "tag": "e2e",
+    "ok": true,
+    "estEur": 0.05,
+    "note": "test de bout en bout fond personnalis\u00e9 + logo"
   }
 ]

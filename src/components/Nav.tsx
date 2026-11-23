@@ -6,6 +6,7 @@ import { Menu, X, LayoutDashboard } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { Link, usePathname } from '@/i18n/routing'
+import { isStudioPath } from '@/lib/studio-paths'
 import RouteLink from 'next/link'
 import { PromoBanner } from './PromoBanner'
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics/client'
@@ -18,8 +19,7 @@ export function Nav() {
   const headerRef  = useRef<HTMLElement>(null)
   // The home page is the 3D studio scene, with its own header (_studio/StudioLanding.tsx); the
   // guides continue its dark look with the same band (_studio/StudioBar.tsx).
-  const pathname = usePathname()
-  const onStudioHome = pathname === '/' || pathname === '/guides' || pathname.startsWith('/guides/')
+  const onStudioHome = isStudioPath(usePathname())
   const mobileOpenRef = useRef(mobileOpen)
   mobileOpenRef.current = mobileOpen
 
@@ -92,8 +92,8 @@ export function Nav() {
         {/* Desktop links */}
         <ul className="hidden lg:flex items-center gap-1">
           {[
-            { label: 'Comment ça marche', href: '/#comment-ca-marche' },
-            { label: 'Kit marketing',     href: '/#kit-marketing' },
+            { label: 'Le studio',         href: '/#studio' },
+            { label: 'Fonctionnalités',   href: '/features' },
             { label: 'Tarifs',            href: '/#tarifs' },
             { label: 'Guide',             href: '/guide' },
             { label: 'Blog',              href: '/blog' },
@@ -140,8 +140,8 @@ export function Nav() {
         <div className="lg:hidden bg-offwhite border-t border-charcoal/[0.08]">
           <div className="page-container py-6 flex flex-col gap-2">
             {[
-              { label: 'Comment ça marche', href: '/#comment-ca-marche' },
-              { label: 'Kit marketing',     href: '/#kit-marketing' },
+              { label: 'Le studio',         href: '/#studio' },
+              { label: 'Fonctionnalités',   href: '/features' },
               { label: 'Tarifs',            href: '/#tarifs' },
               { label: 'Guide',             href: '/guide' },
               { label: 'Blog',              href: '/blog' },

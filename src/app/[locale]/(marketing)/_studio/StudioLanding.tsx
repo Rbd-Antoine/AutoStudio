@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { TrackedLink } from '../_components/TrackedLink'
 import { CHAPTERS, stillFor, type ChapterId, type DecorSlug } from './scene'
 import { Comparator } from './Comparator'
+import { OwnDecor } from './OwnDecor'
 import { display, sans } from './fonts'
 
 // The 3D scene loads after the text: the page reads before a single texture arrives.
@@ -208,6 +209,7 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
               <Comparator />
             </div>
           </div>
+          <OwnDecor />
         </section>
 
         {/* 04 — Tarifs */}
@@ -388,7 +390,10 @@ function StudioHeader({ chapter }: { chapter: ChapterId }) {
             <a key={id} href={`#${id}`} className="text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: chapter === id ? C.chalk : '#B5B0A7' }}>{t(id)}</a>
           ))}
           {showGuides && (
-            <Link href="/guides" className="border-l pl-6 text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: '#B5B0A7', borderColor: C.steel }}>{t('guides')}</Link>
+            <>
+              <Link href="/features" className="border-l pl-6 text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: '#B5B0A7', borderColor: C.steel }}>{t('features')}</Link>
+              <Link href="/guides" className="text-sm transition-colors hover:text-[#ECE8E1]" style={{ color: '#B5B0A7' }}>{t('guides')}</Link>
+            </>
           )}
         </nav>
         <div className="flex items-center gap-2 sm:gap-4">

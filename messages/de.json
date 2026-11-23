@@ -33,7 +33,8 @@
       "cta": "Essayer gratuitement",
       "skip": "Aller au contenu",
       "home": "AutoStudio, accueil",
-      "guides": "Ratgeber"
+      "guides": "Ratgeber",
+      "features": "Funktionen"
     },
     "scrollHint": "Faites défiler",
     "avant": {
@@ -137,7 +138,11 @@
       "faq": [
         {
           "q": "Comment fonctionne la génération de rendu ?",
-          "a": "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors (garage néon, hangar industriel, parking souterrain, pièce vide), et l'IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque."
+          "a": "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors (garage néon, hangar industriel, parking souterrain, pièce vide) ou votre propre fond, et l'IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque."
+        },
+        {
+          "q": "Puis-je utiliser mon propre fond et mon logo ?",
+          "a": "Oui. Dans l'éditeur, choisissez « Votre propre fond » et importez une photo de votre showroom ou de votre atelier : elle reste mémorisée. Votre logo, ajouté une fois dans le kit de marque, peut être apposé sur chaque rendu, dans le coin de votre choix."
         },
         {
           "q": "Quelle qualité de photo est nécessaire ?",
@@ -164,6 +169,23 @@
       "ctaBody": "Premier rendu offert, sans carte bancaire.",
       "ctaButton": "Essayer gratuitement",
       "write": "Nous écrire"
+    },
+    "own": {
+      "eyebrow": "Votre décor, votre logo",
+      "title": "Votre showroom. Votre marque.",
+      "body": "Les quatre décors ne vous ressemblent pas ? Importez une photo de votre showroom, de votre atelier ou de votre cour : AutoStudio y installe chaque voiture, avec la lumière et les ombres du lieu.",
+      "points": [
+        "Votre photo de fond est mémorisée : une seule fois, puis un clic pour chaque voiture.",
+        "Votre logo, enregistré dans le kit de marque, est apposé tel quel dans le coin de votre choix, jamais redessiné par l'IA.",
+        "Toutes vos annonces portent votre lieu et votre marque, comme une vitrine."
+      ],
+      "place": "Votre lieu",
+      "car": "Votre voiture",
+      "result": "Le rendu, avec votre logo",
+      "placeAlt": "Photo d'un showroom vide, importée comme fond personnalisé",
+      "carAlt": "Photo d'origine d'un break noir sur un parking",
+      "resultAlt": "Rendu AutoStudio : le break noir dans le showroom, avec un logo en bas à droite",
+      "honesty": "Exemple réel produit par l'éditeur. Pour la démonstration, le showroom a été généré et le logo « Votre garage » est fictif : avec votre photo et votre logo, le rendu est le vôtre."
     }
   }
 }

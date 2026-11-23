@@ -9,11 +9,12 @@ import { TrackedLink } from '../_components/TrackedLink'
 const LINKS = [
   { href: '/#studio', label: 'Le studio' },
   { href: '/#fonds', label: 'Les fonds' },
+  { href: '/features', label: 'Fonctionnalités' },
   { href: '/#tarifs', label: 'Tarifs' },
   { href: '/guides', label: 'Guides' },
 ] as const
 
-export function StudioBar({ active }: { active?: '/guides' }) {
+export function StudioBar({ active }: { active?: '/guides' | '/features' }) {
   return (
     <header className="fixed inset-x-0 top-0 z-30 border-b border-[#2A2D3199] bg-[#0C0D0F]">
       <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-16">

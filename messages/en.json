@@ -87,7 +87,8 @@
       "cta": "Try it free",
       "skip": "Skip to content",
       "home": "AutoStudio, home",
-      "guides": "Guides"
+      "guides": "Guides",
+      "features": "Features"
     },
     "scrollHint": "Scroll",
     "avant": {
@@ -191,7 +192,11 @@
       "faq": [
         {
           "q": "How does render generation work?",
-          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (neon garage, industrial hangar, underground car park, empty room), and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
+          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (neon garage, industrial hangar, underground car park, empty room) or your own background, and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
+        },
+        {
+          "q": "Can I use my own background and logo?",
+          "a": "Yes. In the editor, choose \"Your own background\" and import a photo of your showroom or workshop: it is remembered. Your logo, added once in the brand kit, can be placed on every render, in the corner you choose."
         },
         {
           "q": "What photo quality do I need?",
@@ -218,6 +223,23 @@
       "ctaBody": "First render free, no credit card.",
       "ctaButton": "Try it free",
       "write": "Write to us"
+    },
+    "own": {
+      "eyebrow": "Your setting, your logo",
+      "title": "Your showroom. Your brand.",
+      "body": "The four settings don't look like you? Import a photo of your showroom, workshop or forecourt: AutoStudio places every car in it, with the light and shadows of the place.",
+      "points": [
+        "Your background photo is remembered: upload it once, then one click per car.",
+        "Your logo, saved in the brand kit, is placed as is in the corner you choose, never redrawn by the AI.",
+        "Every listing carries your place and your brand, like a shop window."
+      ],
+      "place": "Your place",
+      "car": "Your car",
+      "result": "The render, with your logo",
+      "placeAlt": "Photo of an empty showroom, imported as a custom background",
+      "carAlt": "Original photo of a black estate in a car park",
+      "resultAlt": "AutoStudio render: the black estate in the showroom, with a logo bottom right",
+      "honesty": "A real result from the editor. For this demo the showroom was generated and the \"Votre garage\" logo is fictitious: with your photo and your logo, the render is yours."
     }
   }
 }

@@ -230,27 +230,28 @@ export default function EditorClient() {
 
   const selected = selectedIdx !== null ? versions[selectedIdx] : null
 
+  // The choice of files is made here, outside any state updater: an updater must stay pure (React
+  // runs it twice in development, which used to add every preview twice).
   const addFiles = useCallback((incoming: File[]) => {
-    setFiles(prev => {
-      const room = MAX_PHOTOS - prev.length
-      if (room <= 0) {
-        setUploadError(`Vous pouvez importer jusqu'à ${MAX_PHOTOS} photos.`)
-        return prev
-      }
-      const accepted: File[] = []
-      for (const f of incoming) {
-        if (accepted.length >= room) break
-        const error = validateImageFile(f)
-        if (error) { setUploadError(error); continue }
-        accepted.push(f)
-      }
-      if (accepted.length === 0) return prev
-      setUploadError(null)
-      setPreviews(p => [...p, ...accepted.map(f => URL.createObjectURL(f))])
-      setGen({ status: 'idle' })
-      return [...prev, ...accepted]
-    })
-  }, [])
+    const room = MAX_PHOTOS - files.length
+    if (room <= 0) {
+      setUploadError(`Vous pouvez importer jusqu'à ${MAX_PHOTOS} photos.`)
+      return
+    }
+    const accepted: File[] = []
+    for (const f of incoming) {
+      if (accepted.length >= room) break
+      const error = validateImageFile(f)
+      if (error) { setUploadError(error); continue }
+      accepted.push(f)
+    }
+    if (accepted.length === 0) return
+    setUploadError(null)
+    const urls = accepted.map(f => URL.createObjectURL(f))
+    setFiles(prev => [...prev, ...accepted])
+    setPreviews(prev => [...prev, ...urls])
+    setGen({ status: 'idle' })
+  }, [files.length])
 
   const removeFile = useCallback((idx: number) => {
     setFiles(prev => prev.filter((_, i) => i !== idx))

@@ -12,7 +12,7 @@ import { createRequire } from 'node:module'
 
 const require = createRequire(path.resolve('package.json'))
 const { chromium } = require('playwright')
-const [car, background, logo, out] = process.argv.slice(2)
+const [car, background, logo, out, car2] = process.argv.slice(2)
 fs.mkdirSync(out, { recursive: true })
 
 const browser = await chromium.launch({ channel: 'chrome' })
@@ -32,7 +32,7 @@ console.log('1. logo enregistré dans le kit de marque')
 
 // 2. Editor: car photo, own background, logo on.
 await page.goto('http://localhost:3000/app/editor', { waitUntil: 'networkidle', timeout: 120000 })
-await page.locator('input[type=file][multiple]').setInputFiles(car)
+await page.locator('input[type=file][multiple]').setInputFiles(car2 ? [car, car2] : car)
 const bgInput = page.locator('input[type=file]:not([multiple])')
 await bgInput.setInputFiles(background)
 await page.getByRole('button', { name: /Votre propre fond/ }).waitFor()
@@ -46,18 +46,26 @@ await page.screenshot({ path: `${out}/editor-before.png`, fullPage: true })
 
 // 3. Generate and wait for the render.
 const started = Date.now()
-const response = page.waitForResponse(r => r.url().includes('/api/background-swap'), { timeout: 300000 })
-await page.getByRole('button', { name: /Générer mon rendu/ }).click()
-const res = await response
-const body = await res.json()
-console.log(`4. réponse ${res.status()} en ${((Date.now() - started) / 1000).toFixed(0)} s`, body.error ?? '')
-const result = body.results?.[0]
-if (!result?.enhancedUrl) throw new Error('pas de rendu : ' + JSON.stringify(body).slice(0, 300))
+// One request per photo, sent in parallel by the editor: wait for all of them.
+const expected = car2 ? 2 : 1
+const responses = []
+page.on('response', r => { if (r.url().includes('/api/background-swap')) responses.push(r) })
+await page.getByRole('button', { name: /Générer (mon rendu|mes \d+ rendus)/ }).click()
+while (responses.length < expected && Date.now() - started < 300000) await page.waitForTimeout(500)
+const bodies = await Promise.all(responses.map(r => r.json()))
+console.log(`4. ${responses.length} réponse(s) ${responses.map(r => r.status()).join(', ')} en ${((Date.now() - started) / 1000).toFixed(0)} s`)
+const results = bodies.map(b => b.results?.[0]).filter(Boolean)
+for (const b of bodies) if (!b.results?.[0]?.enhancedUrl) console.log('   échec :', JSON.stringify(b).slice(0, 300))
+const result = results.find(r => r.enhancedUrl)
+if (!result) throw new Error('pas de rendu')
 await page.getByAltText('Véhicule généré').waitFor({ timeout: 60000 })
 await page.screenshot({ path: `${out}/editor-after.png`, fullPage: true })
-const url = result.enhancedUrl
-const buf = url.startsWith('data:') ? Buffer.from(url.split(',')[1], 'base64') : Buffer.from(await (await fetch(url)).arrayBuffer())
-fs.writeFileSync(`${out}/render.png`, buf)
-console.log('5. rendu enregistré :', `${out}/render.png`)
+for (const [i, r] of results.entries()) {
+  if (!r.enhancedUrl) continue
+  const url = r.enhancedUrl
+  const buf = url.startsWith('data:') ? Buffer.from(url.split(',')[1], 'base64') : Buffer.from(await (await fetch(url)).arrayBuffer())
+  fs.writeFileSync(`${out}/render-${i + 1}.png`, buf)
+  console.log(`5. rendu ${i + 1} enregistré : ${out}/render-${i + 1}.png (${(r.processingMs / 1000).toFixed(0)} s)`)
+}
 console.log(errors.length ? 'erreurs page : ' + errors.join(' | ') : 'aucune erreur de page')
 await browser.close()

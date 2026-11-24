@@ -10,8 +10,8 @@ date: 2026-12-16
 temps_lecture: 6
 auteur: Antoine R.
 image: /guides/images/photo-annonce-voiture.webp
-image_alt: "SUV blanc dans une pièce claire aux murs blancs, sol gris clair"
-image_legende: "Un rendu AutoStudio dans le décor pièce vide, à partir d'une photo prise au téléphone sur un parking."
+image_alt: "Coupé GT gris dans un showroom vitré baigné de lumière du jour"
+image_legende: "Un rendu AutoStudio dans le décor showroom lumière (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 Dans une liste de résultats, l'acheteur voit des dizaines de vignettes. Il en ouvre quelques-unes. La photo principale de votre annonce a une fraction de seconde pour faire partie de celles-là. Voici dix règles pour qu'elle y arrive, puis pour que le reste de l'annonce transforme le clic en appel.
@@ -38,7 +38,7 @@ La photo grossit tout : traces d'eau, jantes sales, poussière. Le guide du [net
 
 ## 6. Un fond qui ne distrait pas
 
-Le regard doit aller à la voiture, pas à la benne ni aux chariots derrière elle. Si le décor du parc ne convient pas, il peut être remplacé : l'image en tête de ce guide est un rendu AutoStudio, la voiture a été photographiée sur un parking. Voir notre guide pour [changer le fond d'une photo de voiture](/guides/changer-fond-photo-voiture).
+Le regard doit aller à la voiture, pas à la benne ni aux chariots derrière elle. Si le décor du parc ne convient pas, il peut être remplacé : l'image en tête de ce guide est un rendu AutoStudio, la voiture a été photographiée sur un parc. Voir notre guide pour [changer le fond d'une photo de voiture](/guides/changer-fond-photo-voiture).
 
 ## 7. Nette, droite, en paysage
 

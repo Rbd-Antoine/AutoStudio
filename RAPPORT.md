@@ -10,6 +10,26 @@ en bout, mais il plafonne à **5/10 en moyenne** selon les juges, loin des 8/10 
 principales : l'absence de modèle 3D libre utilisable, et la règle que je me suis imposée de ne
 jamais embellir la voiture (voir « Décisions importantes »).
 
+## Mise à jour du 24/11/2026 : fonds showroom, qualité, plusieurs photos d'un coup
+
+Retour de Benoit : les fonds font « cheap ». Budget accordé : +1,50 € (total 4,50 €).
+- **Nouveaux fonds de l'éditeur** (produit) : Showroom lumière, Studio noir, Studio blanc, Showroom du
+  soir, générés pour AutoStudio (`render.ts --scene=fond-*`, `public/background/*.jpg`) : plus de réserve
+  de licence Freepik. `src/lib/carBackgrounds.ts` remplace les quatre anciens ; vérifié de bout en bout
+  par un vrai rendu via la route locale (17 s).
+- **Rendus HD** des 4 voitures premium sur ces fonds. Dans ces vrais intérieurs, le modèle réduit souvent
+  la voiture pour l'accorder à la pièce : `compare_assets.py` recadre alors le vrai rendu sur la photo (un
+  zoom, rien de redessiné) pour le comparateur, et garde le rendu entier dans `public/renders/`.
+  Refus : inclinaison > 1,5° (le coupé en studio noir, 2 tirages : indisponible, 15 combinaisons sur 16).
+  Aucun emblème ajouté (vérifié au zoom).
+- **Accueil** : la scène 3D allume le Showroom du soir (bandeau LED, lattes de bois, corniche du plafond) ;
+  nouvelle section « Cinq photos. Une minute. » (lot de 4 voitures, un même décor) et calculateur de temps
+  gagné sur les chiffres du garagiste, hypothèse affichée (2 min par véhicule avec AutoStudio).
+- Guides : les 12 images de rendus refaites sur les nouveaux fonds, légendes réécrites. Le guide utilisateur
+  et la FAQ présentent les nouveaux fonds. L'article de blog « quel fond pour quelle voiture » décrit
+  encore les décors en général (hangar, pièce vide, néon) : à reprendre si besoin.
+- Dépense Gemini cumulée estimée : **3,70 € sur 4,50 €**.
+
 ## Mise à jour du 23/11/2026 (3) : voitures premium en HD
 
 - Quatre photos « avant » de voitures premium générées (`render.ts --scene=coupe|suv|berline|sportive`) :

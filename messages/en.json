@@ -122,21 +122,21 @@
         "sportive": "Hot hatch"
       },
       "decors": {
-        "garage-neon": {
-          "name": "Neon garage",
-          "desc": "Industrial hangar, steel structure and neon lighting"
+        "showroom-nuit": {
+          "name": "Evening showroom",
+          "desc": "Polished concrete, wood and warm LED lighting"
         },
-        "hangar-industriel": {
-          "name": "Industrial hangar",
-          "desc": "Polished concrete floor, exposed structure, workshop feel"
+        "studio-noir": {
+          "name": "Black studio",
+          "desc": "Photo studio, black infinity cove, large softbox"
         },
-        "parking-souterrain": {
-          "name": "Underground car park",
-          "desc": "Covered shopping-centre car park, artificial lighting"
+        "showroom-lumiere": {
+          "name": "Daylight showroom",
+          "desc": "Glass showroom, light stone floor, daylight"
         },
-        "piece-vide": {
-          "name": "Modern empty room",
-          "desc": "Clean, minimal interior, soft light"
+        "studio-blanc": {
+          "name": "White studio",
+          "desc": "White cyclorama, soft light, catalogue look"
         }
       }
     },
@@ -192,7 +192,7 @@
       "faq": [
         {
           "q": "How does render generation work?",
-          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (neon garage, industrial hangar, underground car park, empty room) or your own background, and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
+          "a": "You upload up to 5 photos of the vehicle, pick one of the 4 settings (daylight showroom, black studio, white studio, evening showroom) or your own background, and the AI replaces the background in seconds. It is strictly instructed not to touch the bodywork, windows, wheels or plate."
         },
         {
           "q": "Can I use my own background and logo?",
@@ -240,6 +240,32 @@
       "carAlt": "Starting photo of a grey GT coupé on a used-car lot",
       "resultAlt": "AutoStudio render: the GT coupé in the showroom, with a logo bottom right",
       "honesty": "A real AutoStudio render, the logo placed by the same code as the editor. For this demo the showroom and the coupé photo were generated and the \"Votre garage\" logo is fictitious: with your photo and your logo, the render is yours."
+    },
+    "batch": {
+      "eyebrow": "Several photos at once",
+      "title": "Five photos. One minute.",
+      "body": "Drop every exterior view of a vehicle, or five different cars, in one go. They are rendered at the same time, in the same setting: allow 30 to 90 seconds for the whole batch. Meanwhile, you get on with something else.",
+      "points": [
+        "Up to 5 photos per batch: JPG, PNG or iPhone HEIC, up to 20 MB each",
+        "All rendered in parallel, in the same setting: a consistent shop window",
+        "No car to move, no cut-out by hand"
+      ],
+      "dropped": "4 photos uploaded",
+      "rendered": "4 renders, one setting",
+      "renderAlt": "Render {n} of the batch, in the daylight showroom",
+      "caption": "Real AutoStudio renders of four photos (generated examples), processed in one batch in the daylight showroom. The one-by-one reveal illustrates the processing.",
+      "calcTitle": "Your time saved",
+      "calcBody": "Enter your numbers: the calculation compares the time you spend on photos today (moving the car, cutting out, retouching) with an AutoStudio batch.",
+      "vehicles": "Vehicles photographed",
+      "photos": "Exterior photos",
+      "minutes": "Your time today",
+      "perMonth": "per month",
+      "perVehicle": "per vehicle",
+      "perPhoto": "min per photo",
+      "today": "Today",
+      "withUs": "With AutoStudio",
+      "saved": "Time saved every month",
+      "assumption": "Assumption: {min} minutes of your time per vehicle with AutoStudio (upload the batch, check the renders). An indicative calculation on your numbers, not a promise."
     }
   }
 }

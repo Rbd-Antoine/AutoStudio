@@ -1,27 +1,31 @@
+// The editor's four backgrounds. Since 2026-11-24, premium empty showrooms and studios generated
+// for AutoStudio (docs/site-3d/pipeline/render.ts --scene=fond-*), so their rights are clear; the
+// former ones (neon garage, hangar, car park, empty room) looked cheap. Each image is sent to the
+// model as the scene to put the car in (buildBackgroundSwapPrompt).
 export const CAR_BACKGROUNDS = [
   {
-    slug: 'garage-neon',
-    name: 'Garage néon',
-    desc: 'Hangar industriel, structure métallique et éclairage néon',
-    image: '/background/fond-futuriste-hangar-garage-salle-exposition-atelier-fond-industriel-sous-sol-neons-pour-design-futuriste-fond-industriel-neons-pour-votre-produit-rendu-3d_120871-2683.jpg',
+    slug: 'showroom-lumiere',
+    name: 'Showroom lumière',
+    desc: 'Showroom vitré, sol de pierre clair, lumière du jour',
+    image: '/background/showroom-lumiere.jpg',
   },
   {
-    slug: 'hangar-industriel',
-    name: 'Hangar industriel',
-    desc: 'Sol en béton poli, structure apparente, ambiance atelier',
-    image: '/background/cb187f9b69244990a901aa51287240a3.jpeg',
+    slug: 'studio-noir',
+    name: 'Studio noir',
+    desc: 'Studio photo, fond noir infini, grande boîte à lumière',
+    image: '/background/studio-noir.jpg',
   },
   {
-    slug: 'parking-souterrain',
-    name: 'Parking souterrain',
-    desc: 'Parking couvert de centre commercial, éclairage artificiel',
-    image: '/background/parking-souterrain-dans-centre-commercial_93675-134900.jpg',
+    slug: 'studio-blanc',
+    name: 'Studio blanc',
+    desc: 'Cyclorama blanc, lumière douce, rendu catalogue',
+    image: '/background/studio-blanc.jpg',
   },
   {
-    slug: 'piece-vide',
-    name: 'Pièce vide moderne',
-    desc: 'Intérieur épuré et minimaliste, lumière douce',
-    image: '/background/chambre-moderne-vide_23-2150528603.jpg',
+    slug: 'showroom-nuit',
+    name: 'Showroom du soir',
+    desc: 'Béton ciré, bois et éclairages LED chaleureux',
+    image: '/background/showroom-nuit.jpg',
   },
 ] as const
 

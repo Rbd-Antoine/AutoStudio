@@ -2,10 +2,10 @@ import Image from 'next/image'
 import { CAR_STYLES } from '@/lib/carStyles'
 
 const AUDIENCE: Record<string, string> = {
-  'garage-neon':        'Sportives, véhicules premium, publications sur les réseaux sociaux',
-  'hangar-industriel':  'Utilitaires, SUV et 4x4 — un rendu brut et sérieux',
-  'parking-souterrain': 'Citadines et berlines — sobre, crédible, cohérent sur tout un stock',
-  'piece-vide':         'Annonces façon catalogue : fond clair, le véhicule au centre',
+  'showroom-lumiere': 'Tout le stock : lumineux, rassurant, l’image d’une vraie concession',
+  'studio-noir':      'Sportives, premium et réseaux sociaux : la carrosserie dessinée par la lumière',
+  'studio-blanc':     'Annonces façon catalogue : fond neutre, le véhicule au centre',
+  'showroom-nuit':    'Haut de gamme et véhicules coup de cœur : ambiance chaleureuse et soignée',
 }
 
 export function StyleCardsGrid() {

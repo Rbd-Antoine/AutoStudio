@@ -15,7 +15,7 @@ export const CHAPTERS = ['avant', 'studio', 'fonds', 'tarifs', 'contact'] as con
 export type ChapterId = (typeof CHAPTERS)[number]
 
 /** The four backgrounds of the editor (src/lib/carBackgrounds.ts), in the same order. */
-export const DECORS = ['garage-neon', 'hangar-industriel', 'parking-souterrain', 'piece-vide'] as const
+export const DECORS = ['showroom-nuit', 'studio-noir', 'showroom-lumiere', 'studio-blanc'] as const
 export type DecorSlug = (typeof DECORS)[number]
 
 /** A box of the scene that the camera must keep in view, and how it shares the screen. */
@@ -46,28 +46,23 @@ const SHOTS: Record<ChapterId, Shot> = {
 }
 
 // The studio's lights, in the order they come on (chapter 2), read on the real render of the
-// coupe (garage néon, aligned on the photo's frame, version 3): the two outer neons, the ceiling
-// pair, the glow of the back wall, then the two neons behind the car on the right.
+// coupe in the evening showroom (the editor's "Showroom du soir", aligned on the photo's frame):
+// the LED strip at the foot of the wood wall, the light grazing the slats, then the ceiling's
+// lit cove, its lower edge first.
 export type Light =
   | { kind: 'segment'; a: [number, number]; b: [number, number]; radius: number; tint: [number, number, number] }
   | { kind: 'point'; at: [number, number]; radius: number; tint: [number, number, number] }
 
-const NEON: [number, number, number] = [0.62, 0.7, 1.0]
+const WARM: [number, number, number] = [1.0, 0.82, 0.6]
 export const LIGHTS: Light[][] = [
-  [{ kind: 'segment', a: [62, 60], b: [62, 600], radius: 200, tint: NEON }],
-  [{ kind: 'segment', a: [1135, 60], b: [1135, 600], radius: 200, tint: NEON }],
+  [{ kind: 'segment', a: [0, 470], b: [100, 452], radius: 150, tint: WARM }],
+  [{ kind: 'segment', a: [110, 20], b: [110, 440], radius: 170, tint: WARM }],
+  [{ kind: 'segment', a: [440, 112], b: [790, 112], radius: 170, tint: WARM }],
   [
-    { kind: 'point', at: [445, 88], radius: 260, tint: [1, 0.98, 0.95] },
-    { kind: 'point', at: [755, 88], radius: 260, tint: [1, 0.98, 0.95] },
+    { kind: 'segment', a: [350, 10], b: [440, 112], radius: 120, tint: WARM },
+    { kind: 'segment', a: [870, 10], b: [790, 112], radius: 120, tint: WARM },
   ],
-  [
-    { kind: 'point', at: [450, 152], radius: 200, tint: [1, 1, 1] },
-    { kind: 'point', at: [750, 152], radius: 200, tint: [1, 1, 1] },
-  ],
-  [
-    { kind: 'segment', a: [877, 200], b: [877, 320], radius: 140, tint: NEON },
-    { kind: 'segment', a: [950, 230], b: [950, 335], radius: 120, tint: NEON },
-  ],
+  [{ kind: 'segment', a: [350, 10], b: [870, 10], radius: 200, tint: WARM }],
 ]
 
 export interface SceneState {

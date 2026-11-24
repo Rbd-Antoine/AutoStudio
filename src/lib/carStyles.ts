@@ -4,10 +4,10 @@ import { CAR_BACKGROUNDS } from './carBackgrounds'
 // the site never advertises a style a customer can't pick. Each image is a real render made
 // with that background by the editor's own background swap.
 const EMOJI: Record<(typeof CAR_BACKGROUNDS)[number]['slug'], string> = {
-  'garage-neon': '💡',
-  'hangar-industriel': '🏭',
-  'parking-souterrain': '🅿️',
-  'piece-vide': '⬜',
+  'showroom-lumiere': '☀️',
+  'studio-noir': '⬛',
+  'studio-blanc': '⬜',
+  'showroom-nuit': '✨',
 }
 
 export const CAR_STYLES = CAR_BACKGROUNDS.map(bg => ({

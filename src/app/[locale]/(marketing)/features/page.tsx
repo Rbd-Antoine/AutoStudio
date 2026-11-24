@@ -27,9 +27,9 @@ const FEATURES = [
     eyebrow: 'Le rendu',
     title: 'Une photo de parc. Un rendu de studio.',
     body: "Importez jusqu'à cinq photos d'un véhicule, choisissez un décor, et AutoStudio remplace l'arrière-plan en quelques secondes, avec les ombres et les reflets du nouveau lieu. La voiture, elle, reste celle de la photo : carrosserie, jantes, vitres et plaque.",
-    points: ['Quatre décors prêts : garage néon, hangar industriel, parking souterrain, pièce vide', "Un rendu par photo, toutes traitées en même temps", 'Un échec est remboursé automatiquement'],
+    points: ['Quatre décors haut de gamme : showroom lumière, studio noir, studio blanc, showroom du soir', "Un rendu par photo, toutes traitées en même temps", 'Un échec est remboursé automatiquement'],
     image: '/features/generation.webp',
-    alt: 'Un coupé GT gris : à gauche la photo prise sur un parc, à droite le rendu AutoStudio dans un garage éclairé',
+    alt: 'Un coupé GT gris : à gauche la photo prise sur un parc, à droite le rendu AutoStudio dans un showroom du soir',
     caption: "À gauche, la photo de départ (un exemple généré, pris comme un garagiste le ferait). À droite, le vrai rendu AutoStudio de cette photo, en 2K. La voiture n'a pas bougé.",
   },
   {
@@ -59,7 +59,7 @@ const FEATURES = [
     body: "À partir d'un rendu, le kit crée de courtes vidéos au format Reel, Story, paysage ou carré, avec votre logo, une musique et votre appel à l'action, ainsi qu'un texte de publication prêt à copier.",
     points: ['Quatre formats, vous ne payez que ceux que vous choisissez', 'Votre logo et le nom de votre établissement', 'Un texte de publication proposé gratuitement'],
     image: '/features/kit-marketing.webp',
-    alt: 'Le rendu du coupé GT cadré en paysage 16:9, en carré 1:1 et en format vertical 9:16',
+    alt: 'Le rendu du coupé GT dans le showroom du soir, cadré en paysage 16:9, en carré 1:1 et en format vertical 9:16',
     caption: 'Les cadrages du kit, à partir d’un même rendu (images fixes ; le kit produit des vidéos).',
   },
 ] as const

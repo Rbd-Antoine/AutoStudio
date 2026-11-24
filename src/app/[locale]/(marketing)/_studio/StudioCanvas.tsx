@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { DECORS, LIGHTS, SCENE_H, SCENE_W, sceneAt, type DecorSlug } from './scene'
+import { LIGHTS, SCENE_H, SCENE_W, sceneAt, type DecorSlug } from './scene'
 
 // The studio, drawn by one fragment shader: the scene's layers (the customer's parking photo,
 // the studio render, the editor's backgrounds, the car's shadow, the car itself — real pixels,
@@ -25,8 +25,8 @@ const MAX_LIGHTS = 8
 
 // Floors: the garage's resin and the car park's wet concrete reflect, the hangar's concrete and
 // the white room's matt floor barely. Exposure brings the bright decors into the page's night.
-const REFLECT: Record<DecorSlug, number> = { 'garage-neon': 1, 'parking-souterrain': 0.75, 'hangar-industriel': 0.25, 'piece-vide': 0.3 }
-const EXPOSURE: Record<DecorSlug, number> = { 'garage-neon': 1, 'hangar-industriel': 0.82, 'parking-souterrain': 0.92, 'piece-vide': 0.6 }
+const REFLECT: Record<DecorSlug, number> = { 'showroom-nuit': 1, 'studio-noir': 1, 'showroom-lumiere': 0.6, 'studio-blanc': 0.4 }
+const EXPOSURE: Record<DecorSlug, number> = { 'showroom-nuit': 1, 'studio-noir': 1, 'showroom-lumiere': 0.75, 'studio-blanc': 0.6 }
 
 const VERT = `
 attribute vec2 aPos;
@@ -145,16 +145,10 @@ void main() {
   float glossy = max(uStudio, uDecorSwap);
   vec4 car = texture2D(uCar, clamp(uvC, 0.0, 1.0));
   float carA = car.a * step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
-  // The decor's grade: deeper blacks, and the ceiling's yellow safety stripes calmed so the page
-  // keeps a single accent. Applied around the car only, never to the car's pixels.
-  vec3 graded = mix(col, col * col * (3.0 - 2.0 * col), 0.4);
-  graded = graded / (1.0 + 0.12 * pow(max(graded, 0.0), vec3(4.0)));  // the lamps keep a shape
-  float yellow = smoothstep(0.03, 0.14, min(col.r, col.g) - col.b) * smoothstep(0.12, 0.3, col.r);
-  graded = mix(graded, vec3(dot(graded, vec3(0.3, 0.55, 0.15))) * 0.6, yellow);
-  // The neon blue pulled a third towards cold steel, closer to the car's neutral light.
-  float luma = dot(graded, vec3(0.3, 0.55, 0.15));
-  float blue = smoothstep(0.05, 0.25, graded.b - max(graded.r, graded.g));
-  graded = mix(graded, mix(vec3(luma), graded, 0.62), blue);
+  // The decor's grade: slightly deeper blacks, the lamps keeping a shape. The evening showroom's
+  // own colours (warm wood, blue dusk) are kept. Applied around the car only, never to its pixels.
+  vec3 graded = mix(col, col * col * (3.0 - 2.0 * col), 0.25);
+  graded = graded / (1.0 + 0.12 * pow(max(graded, 0.0), vec3(4.0)));
   col = mix(col, graded, glossy * (1.0 - carA));
 
   // The decor fades towards the dark edges; the car, drawn after, never does (a fade over it would
@@ -212,10 +206,6 @@ function texture(gl: WebGLRenderingContext, img: HTMLImageElement, owned: WebGLT
   return t
 }
 
-/** The decor's plate: the real render for the garage, a fitted editor background otherwise. */
-function decorSrc(slug: DecorSlug, sm: string) {
-  return `/site-3d/decor-${slug}${sm}.webp`
-}
 
 export default function StudioCanvas({ progress, decor, light, onReady }: StudioCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -275,7 +265,7 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
     }
 
     // Decor swap animation state.
-    let shownDecor: DecorSlug = decor.current ?? 'garage-neon'
+    let shownDecor: DecorSlug = decor.current ?? 'showroom-nuit'
     let fromDecor: DecorSlug = shownDecor
     let swapStart = -1
     const SWAP_MS = 900
@@ -308,7 +298,7 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       smoothP += (target - smoothP) * 0.14
       if (Math.abs(target - smoothP) < 1e-4) smoothP = target
 
-      const wanted = decor.current ?? 'garage-neon'
+      const wanted = decor.current ?? 'showroom-nuit'
       if (wanted !== shownDecor && swapStart < 0 && decorTex.has(wanted)) {
         fromDecor = shownDecor
         shownDecor = wanted
@@ -364,7 +354,7 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
       try {
         const [before, after, car, shadow] = await Promise.all([
           loadImage(`/site-3d/plate-before${sm}.webp`),
-          loadImage(`/site-3d/decor-garage-neon${sm}.webp`),
+          loadImage(`/site-3d/decor-showroom-nuit${sm}.webp`),
           loadImage(`/site-3d/car${sm}.webp`),
           loadImage('/site-3d/shadow.webp'),
         ])
@@ -374,21 +364,13 @@ export default function StudioCanvas({ progress, decor, light, onReady }: Studio
         bind(1, afterTex)
         bind(4, texture(gl, car, owned))
         bind(5, texture(gl, shadow, owned))
-        decorTex.set('garage-neon', afterTex)
+        decorTex.set('showroom-nuit', afterTex)
         bind(2, afterTex)
         bind(3, afterTex)
         resize()
         raf = requestAnimationFrame(frame)
         onReady?.()
-        // The other three decors arrive after the first frame: nothing waits for them.
-        for (const slug of DECORS.filter(d => d !== 'garage-neon')) {
-          loadImage(decorSrc(slug, sm)).then(img => {
-            if (!disposed) {
-              decorTex.set(slug, texture(gl, img, owned))
-              lastKey = ''
-            }
-          }).catch(() => {})
-        }
+        // The scene shows one studio: the other backgrounds are the comparator's (chapter 3).
       } catch {
         // Images missing or WebGL lost: the still images underneath stay on screen.
       }

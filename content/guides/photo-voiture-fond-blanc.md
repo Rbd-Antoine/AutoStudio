@@ -10,8 +10,8 @@ date: 2026-11-25
 temps_lecture: 6
 auteur: Antoine R.
 image: /guides/images/photo-voiture-fond-blanc.webp
-image_alt: "Break noir dans une pièce claire aux murs blancs, sol gris clair"
-image_legende: "Un rendu AutoStudio dans le décor pièce vide : un fond clair qui garde une ombre et un sol, plutôt qu'un blanc pur où la voiture flotte."
+image_alt: "Berline électrique blanche dans un studio blanc infini"
+image_legende: "Un rendu AutoStudio dans le décor studio blanc : un fond clair qui garde une ombre et un sol, plutôt qu'un blanc pur où la voiture flotte (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 Le fond blanc est le grand classique de la photo produit : neutre, lisible, homogène d'une annonce à l'autre. Pour une voiture, il est pourtant plus difficile à réussir qu'il n'y paraît. Voici les méthodes, leurs pièges, et une alternative qui donne souvent un meilleur résultat.
@@ -51,7 +51,7 @@ Les outils gratuits font la découpe en un clic, mais rarement l'ombre et les vi
 
 C'est souvent la meilleure option pour une annonce : au lieu d'un blanc infini, un **décor clair** (pièce aux murs blancs, sol gris clair) dans lequel la voiture a un sol, une ombre et des reflets cohérents.
 
-C'est ce que montre l'image en tête de ce guide : un rendu AutoStudio dans le décor « pièce vide ». On garde la neutralité du fond blanc, sans l'effet « voiture découpée ». La voiture est celle de la photo d'origine, seul le décor a été remplacé, avec l'ombre et le reflet recalculés.
+C'est ce que montre l'image en tête de ce guide : un rendu AutoStudio dans le décor « studio blanc ». On garde la neutralité du fond blanc, sans l'effet « voiture découpée ». La voiture est celle de la photo d'origine, seul le décor a été remplacé, avec l'ombre et le reflet recalculés.
 
 ## Et les voitures blanches ?
 
@@ -85,4 +85,4 @@ Un gris très clair, un décor contrasté ou un fond sombre. Un blanc pur efface
 
 ---
 
-*Envie d'un fond clair sans détourage ? Importez une photo dans AutoStudio et choisissez le décor pièce vide. Premier rendu offert, sans carte bancaire.*
+*Envie d'un fond clair sans détourage ? Importez une photo dans AutoStudio et choisissez le décor studio blanc. Premier rendu offert, sans carte bancaire.*

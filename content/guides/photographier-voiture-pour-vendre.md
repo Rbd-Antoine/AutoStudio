@@ -10,8 +10,8 @@ date: 2026-11-17
 temps_lecture: 8
 auteur: Antoine R.
 image: /guides/images/photographier-voiture-pour-vendre.webp
-image_alt: "Le même SUV blanc photographié sur un parking, puis rendu dans un garage éclairé par AutoStudio"
-image_legende: "À gauche, la photo prise au téléphone sur le parking. À droite, le rendu AutoStudio de cette même photo dans le décor garage néon : la voiture n'est pas retouchée, seul le décor change."
+image_alt: "Un coupé GT gris : à gauche sur un parc de véhicules, à droite dans un showroom du soir"
+image_legende: "À gauche, la photo de départ prise sur le parc (un exemple généré). À droite, le vrai rendu AutoStudio de cette même photo dans le décor showroom du soir : la voiture n'est pas retouchée, seul le décor change."
 ---
 
 Sur une annonce de voiture d'occasion, la photo fait le premier tri. L'acheteur fait défiler des dizaines de vignettes, et il ne s'arrête que sur celles qui lui donnent envie d'en savoir plus. Une voiture propre, entière, bien éclairée, prise sous un angle flatteur : c'est ce qui déclenche le clic, puis l'appel.

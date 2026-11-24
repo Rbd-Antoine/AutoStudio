@@ -10,8 +10,8 @@ date: 2026-12-09
 temps_lecture: 6
 auteur: Antoine R.
 image: /guides/images/photo-voiture-fond-noir.webp
-image_alt: "Citadine rouge dans un garage sombre éclairé par des néons bleus, reflet rouge sur le sol"
-image_legende: "Un rendu AutoStudio dans le décor garage néon, à partir d'une photo prise sur un parc de véhicules d'occasion. Le fond sombre fait ressortir la couleur de la carrosserie."
+image_alt: "Compacte sportive rouge dans un studio noir, sous une grande boîte à lumière"
+image_legende: "Un rendu AutoStudio dans le décor studio noir. Le fond sombre fait ressortir la couleur de la carrosserie (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 Le fond noir est le décor des lancements de modèles et des publicités de constructeurs : la voiture surgit de l'ombre, dessinée par quelques lignes de lumière. Pour une annonce d'occasion, il peut faire la différence sur une sportive, une premium ou une voiture de couleur vive. Encore faut-il l'utiliser à bon escient.
@@ -23,7 +23,7 @@ Il y a deux façons de comprendre « fond noir » :
 - **le noir pur**, où la voiture semble flotter dans le vide, seulement dessinée par la lumière : très graphique, mais difficile à réussir et peu lisible en vignette ;
 - **le décor sombre éclairé** : un garage, un hangar ou un studio peu éclairé, avec un sol qui reflète la voiture et quelques sources de lumière visibles. On garde l'ambiance premium, avec un sol et une ombre qui ancrent la voiture.
 
-Pour une annonce, le décor sombre fonctionne presque toujours mieux : la voiture est posée quelque part, l'acheteur comprend son volume. C'est ce que montre l'image en tête de ce guide, un rendu AutoStudio dans le décor garage néon.
+Pour une annonce, le décor sombre fonctionne presque toujours mieux : la voiture est posée quelque part, l'acheteur comprend son volume. C'est ce que montre l'image en tête de ce guide, un rendu AutoStudio dans le décor studio noir.
 
 ## Pour quelles voitures ?
 
@@ -78,4 +78,4 @@ C'est même là qu'il fonctionne le mieux : un visuel contrasté se remarque dan
 
 ---
 
-*Envie de voir une de vos voitures dans un garage sombre ? Importez une photo dans AutoStudio et choisissez le décor garage néon. Premier rendu offert.*
+*Envie de voir une de vos voitures dans un garage sombre ? Importez une photo dans AutoStudio et choisissez le décor studio noir ou showroom du soir. Premier rendu offert.*

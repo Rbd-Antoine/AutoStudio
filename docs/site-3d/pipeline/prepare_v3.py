@@ -28,13 +28,10 @@ OUT = ROOT / "public" / "site-3d"
 DEBUG = HERE / "debug"
 CAR = "coupe"
 BEFORE = ROOT / "public" / "showcase" / "premium" / CAR / "before.webp"
-# The aligned draw for each decor (compare_assets.py checked the car did not move; the coupe has
-# no usable empty-room render, so the white room shows the berline's frame is not used: the home
-# page only shows the studio, the picker is the comparator's).
+# The home page's scene shows one studio: the evening showroom (since 2026-11-24, the editor's
+# premium backgrounds). The other backgrounds are shown by the comparator (compare_assets.py).
 RENDERS = {
-    "garage-neon": f"{CAR}__garage-neon__gemini-nano-banana-2.1__p.png",
-    "hangar-industriel": f"{CAR}__hangar-industriel__gemini-nano-banana-2.1__p.png",
-    "parking-souterrain": f"{CAR}__parking-souterrain__gemini-nano-banana-2.1__p.png",
+    "showroom-nuit": f"{CAR}__showroom-nuit__gemini-nano-banana-2.1__n.png",
 }
 W, H = 1600, 1200
 K = W / 1200
@@ -105,7 +102,7 @@ def main() -> None:
         m = align_to_photo(render, photo_small)
         plates[slug] = cv2.warpAffine(render, to_out @ np.vstack([m, [0, 0, 1]]), (W, H), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_REFLECT)
 
-    studio = plates["garage-neon"]
+    studio = plates["showroom-nuit"]
     alpha = matte(photo, studio)
     preview = (studio * (alpha[..., None] / 255.0) + np.array([255, 0, 255]) * (1 - alpha[..., None] / 255.0)).astype(np.uint8)
     Image.fromarray(preview).save(DEBUG / "v3_matte_preview.jpg", quality=85)

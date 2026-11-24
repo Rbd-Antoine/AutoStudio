@@ -10,8 +10,8 @@ date: 2026-12-02
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/retouche-photo-voiture-ia.webp
-image_alt: "SUV vert dans un garage sombre aux néons bleus, sol béton brillant"
-image_legende: "Un rendu AutoStudio dans le décor garage néon. La photo d'origine montrait ce SUV sur un parc détrempé : le décor, l'ombre et le reflet au sol ont été générés, la voiture est celle de la photo."
+image_alt: "Compacte sportive rouge dans un showroom du soir, béton ciré et bois"
+image_legende: "Un rendu AutoStudio dans le décor showroom du soir. Le décor, l'ombre et le reflet au sol ont été générés, la voiture est celle de la photo (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 En deux ans, l'intelligence artificielle est passée du gadget à l'outil de production pour les photos de voitures. Elle remplace un décor en quelques secondes, recalcule les ombres et les reflets, applique une consigne écrite en français. Elle peut aussi, si on la laisse faire, inventer ce qui n'existe pas. Voici ce qu'il faut savoir pour l'utiliser sur des annonces, sans mauvaise surprise.
@@ -22,7 +22,7 @@ En deux ans, l'intelligence artificielle est passée du gadget à l'outil de pro
 
 C'est l'usage principal. La voiture est photographiée là où elle se trouve, et l'IA redessine tout ce qui l'entoure : studio, garage, hangar, parking couvert. Contrairement à un détourage, elle **recalcule la lumière** : la voiture a une ombre cohérente au sol, la carrosserie reflète le nouveau décor, les vitres laissent voir ce qu'il y a derrière.
 
-L'image en tête de ce guide en est un exemple : ce SUV était garé sur un parc détrempé. Le garage, les néons et leur reflet sur le sol ont été générés ; la voiture, elle, est restée celle de la photo.
+L'image en tête de ce guide en est un exemple : cette compacte était garée sur un parc détrempé. Le showroom, ses éclairages et leur reflet sur le sol ont été générés ; la voiture, elle, est restée celle de la photo.
 
 ### Uniformiser une vitrine
 

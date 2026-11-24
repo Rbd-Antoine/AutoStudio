@@ -10,6 +10,7 @@ import { TrackedLink } from '../_components/TrackedLink'
 import { CHAPTERS, stillFor, type ChapterId, type DecorSlug } from './scene'
 import { Comparator } from './Comparator'
 import { OwnDecor } from './OwnDecor'
+import { BatchSection } from './BatchSection'
 import { display, sans } from './fonts'
 
 // The 3D scene loads after the text: the page reads before a single texture arrives.
@@ -62,8 +63,8 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
   const progress = useRef(0)
   // The scene keeps the studio render throughout; the four backgrounds are shown by the
   // comparator of chapter 3, whole and as delivered.
-  const decorRef = useRef<DecorSlug>('garage-neon')
-  const decor: DecorSlug = 'garage-neon'
+  const decorRef = useRef<DecorSlug>('showroom-nuit')
+  const decor: DecorSlug = 'showroom-nuit'
   const [chapter, setChapter] = useState<ChapterId>('avant')
   const [canvasReady, setCanvasReady] = useState(false)
   const [webgl, setWebgl] = useState<boolean | null>(null)
@@ -209,6 +210,7 @@ export function StudioLanding({ plans }: { plans: StudioPlan[] }) {
               <Comparator />
             </div>
           </div>
+          <BatchSection />
           <OwnDecor />
         </section>
 

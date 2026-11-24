@@ -10,8 +10,8 @@ date: 2026-11-18
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/changer-fond-photo-voiture.webp
-image_alt: "Une citadine rouge sur un parc de véhicules, puis la même voiture dans un parking souterrain"
-image_legende: "À gauche, la photo d'origine sur le parc. À droite, le rendu AutoStudio de cette photo dans le décor parking souterrain."
+image_alt: "Une compacte sportive rouge sur un parc à gauche, la même dans un studio noir à droite"
+image_legende: "À gauche, la photo de départ (un exemple généré). À droite, le vrai rendu AutoStudio de cette photo dans le décor studio noir."
 ---
 
 Une voiture bien préparée, photographiée sous le bon angle, et derrière elle : une benne, un mur tagué, trois autres voitures du parc. Le fond ne dit rien de la voiture, mais il dit beaucoup du vendeur. C'est pour cela que la question revient si souvent chez les professionnels : **comment changer le fond d'une photo de voiture ?**

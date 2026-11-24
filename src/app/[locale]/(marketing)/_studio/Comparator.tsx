@@ -13,7 +13,7 @@ export const CARS = ['coupe', 'suv', 'berline', 'sportive'] as const
 export type CarId = (typeof CARS)[number]
 // Combinations with no render that kept the car exactly as photographed (the model reframed the
 // car, or added a badge): not offered rather than shown wrong.
-const MISSING: Partial<Record<CarId, DecorSlug[]>> = { coupe: ['piece-vide'] }
+const MISSING: Partial<Record<CarId, DecorSlug[]>> = { coupe: ['studio-noir'] }
 const available = (car: CarId) => DECORS.filter(d => !MISSING[car]?.includes(d))
 
 const C = { night: '#0C0D0F', concrete: '#1A1C1F', steel: '#2A2D31', chalk: '#ECE8E1', ash: '#9A968E', tungsten: '#F2A93B' }
@@ -25,7 +25,7 @@ const SIZES = '(min-width: 1024px) 62vw, 100vw'
 export function Comparator() {
   const t = useTranslations('studio.fonds')
   const [car, setCar] = useState<CarId>('coupe')
-  const [decor, setDecor] = useState<DecorSlug>('garage-neon')
+  const [decor, setDecor] = useState<DecorSlug>('showroom-nuit')
   const [pos, setPos] = useState(0.5)
   const frame = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
@@ -148,7 +148,7 @@ export function Comparator() {
           onPick={id => {
             const next = id as CarId
             setCar(next)
-            if (!available(next).includes(decor)) setDecor('garage-neon')
+            if (!available(next).includes(decor)) setDecor('showroom-nuit')
           }}
         />
       </div>

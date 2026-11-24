@@ -10,8 +10,8 @@ date: 2026-12-11
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/photo-voiture-concession.webp
-image_alt: "SUV blanc dans un parking souterrain, sol en béton et éclairage artificiel"
-image_legende: "Un rendu AutoStudio dans le décor parking souterrain, à partir d'une photo prise sur un parking extérieur."
+image_alt: "Grand SUV noir dans un showroom vitré, sol de pierre clair"
+image_legende: "Un rendu AutoStudio dans le décor showroom lumière (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 Pour un particulier, photographier une voiture est un événement. Pour une concession, c'est une production : chaque véhicule qui entre doit être photographié, et chaque jour sans annonce est un jour de stock qui coûte. La qualité des photos compte, mais la **régularité** compte autant. Voici comment organiser cette production.

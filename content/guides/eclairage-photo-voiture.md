@@ -10,8 +10,8 @@ date: 2026-11-27
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/eclairage-photo-voiture.webp
-image_alt: "Break noir dans un garage sombre éclairé par des néons bleus verticaux et des plafonniers"
-image_legende: "Un rendu AutoStudio dans le décor garage néon : les néons dessinent des reflets longs sur la carrosserie noire. La photo d'origine avait été prise sur un parking de supermarché."
+image_alt: "Grand SUV noir dans un showroom du soir, éclairages LED chaleureux et sol de béton ciré"
+image_legende: "Un rendu AutoStudio dans le décor showroom du soir : les éclairages chauds se reflètent sur la carrosserie et le sol (photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc)."
 ---
 
 Une carrosserie est un miroir courbe. Elle ne « prend » pas la lumière comme un objet mat : elle la reflète. C'est pour cela qu'une voiture photographiée sous un mauvais éclairage paraît terne, tachée ou déformée, alors qu'elle est parfaitement propre. Comprendre comment la lumière se comporte sur une voiture, c'est la moitié du travail.
@@ -54,7 +54,7 @@ Dans un studio ou un garage, on ne subit plus la lumière : on la construit. Le 
 - **Sur les côtés**, des sources verticales soulignent les flancs.
 - **Les projecteurs ponctuels** sont à éviter : ils créent des points blancs durs.
 
-L'image en tête de ce guide en est un exemple : dans le décor garage néon, les néons verticaux tracent des lignes de lumière sur la carrosserie noire. Ce sont les reflets du décor rendu par AutoStudio, recalculés pour la voiture. Le guide du [studio photo voiture](/guides/studio-photo-voiture) détaille l'installation d'un vrai studio.
+L'image en tête de ce guide en est un exemple : dans le décor showroom du soir, les éclairages chauds tracent des lignes de lumière sur la carrosserie noire. Ce sont les reflets du décor rendu par AutoStudio, recalculés pour la voiture. Le guide du [studio photo voiture](/guides/studio-photo-voiture) détaille l'installation d'un vrai studio.
 
 ## La couleur de la voiture change tout
 
@@ -82,4 +82,4 @@ En partie : exposition et contraste se corrigent. Mais une ombre partielle, un c
 
 ---
 
-*Envie de voir votre voiture sous un éclairage de studio ? Importez une photo dans AutoStudio et choisissez le décor garage néon. Premier rendu offert.*
+*Envie de voir votre voiture sous un éclairage de studio ? Importez une photo dans AutoStudio et choisissez le décor studio noir ou showroom du soir. Premier rendu offert.*

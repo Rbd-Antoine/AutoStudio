@@ -73,14 +73,14 @@ Chaque photo importée produira un rendu distinct, dans le même décor : c'est 
 
 ## 4. Choisir un décor {#choisir-style}
 
-AutoStudio propose quatre décors, chacun issu d'une vraie photo de référence :
+AutoStudio propose quatre décors haut de gamme, créés pour l'outil :
 
 | Décor | Ce que ça donne | Pour quels véhicules |
 |---|---|---|
-| **Garage néon** | Hangar sombre, lignes lumineuses | Sportives, premium, réseaux sociaux |
-| **Hangar industriel** | Béton poli, charpente apparente | SUV, 4x4, utilitaires |
-| **Parking souterrain** | Parking couvert, éclairage artificiel | Citadines, berlines, gros volumes |
-| **Pièce vide moderne** | Intérieur clair et épuré | Annonces façon catalogue |
+| **Showroom lumière** | Showroom vitré, sol de pierre clair, lumière du jour | Tout le stock, image de concession |
+| **Studio noir** | Fond noir infini, grande boîte à lumière | Sportives, premium, réseaux sociaux |
+| **Studio blanc** | Cyclorama blanc, lumière douce | Annonces façon catalogue |
+| **Showroom du soir** | Béton ciré, bois, éclairages LED chaleureux | Haut de gamme, véhicules coup de cœur |
 
 ### Votre propre fond
 

@@ -10,8 +10,8 @@ date: 2026-12-07
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/enlever-arriere-plan-photo-voiture.webp
-image_alt: "Un break noir sur un parking de supermarché à gauche, le même dans un garage aux néons à droite"
-image_legende: "À gauche, la photo d'origine sur le parking. À droite, le rendu AutoStudio de cette même photo dans le décor garage néon : l'arrière-plan n'a pas été effacé puis collé, il a été redessiné autour de la voiture."
+image_alt: "Un grand SUV noir sur un parc à gauche, le même dans un studio noir à droite"
+image_legende: "À gauche, la photo de départ (un exemple généré). À droite, le vrai rendu AutoStudio de cette même photo dans le décor studio noir : l'arrière-plan n'a pas été effacé puis collé, il a été redessiné autour de la voiture."
 ---
 
 Le parking du supermarché, les chariots, le mur de l'atelier : sur une photo d'annonce, l'arrière-plan raconte souvent une histoire qu'on préférerait taire. L'enlever paraît simple. Le faire sans que l'œil devine le montage l'est beaucoup moins. Voici la méthode, étape par étape, et les points où tout se joue.

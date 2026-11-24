@@ -1669,5 +1669,714 @@
     "ok": true,
     "estEur": 0.05,
     "note": "retouche r\u00e9elle via la route locale, page Fonctionnalit\u00e9s"
+  },
+  {
+    "at": "2026-11-24T08:38:47.718Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "scene",
+    "decor": "fond-showroom-lumiere",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 128,
+      "candidatesTokenCount": 2140,
+      "totalTokenCount": 3079,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 128
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 811,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 22 s"
+  },
+  {
+    "at": "2026-11-24T08:39:13.636Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "scene",
+    "decor": "fond-studio-noir",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 123,
+      "candidatesTokenCount": 2041,
+      "totalTokenCount": 3281,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 123
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 1117,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 24 s"
+  },
+  {
+    "at": "2026-11-24T08:39:41.618Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "scene",
+    "decor": "fond-studio-blanc",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 126,
+      "candidatesTokenCount": 2026,
+      "totalTokenCount": 3152,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 126
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 1000,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 26 s"
+  },
+  {
+    "at": "2026-11-24T08:40:11.406Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "scene",
+    "decor": "fond-showroom-nuit",
+    "tag": "a",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 133,
+      "candidatesTokenCount": 2076,
+      "totalTokenCount": 2966,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 133
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 757,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 21 s"
+  },
+  {
+    "at": "2026-11-24T08:59:11.764Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "coupe",
+    "decor": "showroom-lumiere",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2098,
+      "totalTokenCount": 5141,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 317,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 29 s"
+  },
+  {
+    "at": "2026-11-24T08:59:44.531Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "coupe",
+    "decor": "studio-noir",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2048,
+      "totalTokenCount": 5079,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 305,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 21 s"
+  },
+  {
+    "at": "2026-11-24T09:00:09.873Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "coupe",
+    "decor": "studio-blanc",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2360,
+      "totalTokenCount": 5796,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 710,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 40 s"
+  },
+  {
+    "at": "2026-11-24T09:00:55.260Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "coupe",
+    "decor": "showroom-nuit",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2486,
+      "totalTokenCount": 5649,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 437,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 40 s"
+  },
+  {
+    "at": "2026-11-24T09:01:45.209Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "suv",
+    "decor": "showroom-lumiere",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2067,
+      "totalTokenCount": 5003,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 210,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 23 s"
+  },
+  {
+    "at": "2026-11-24T09:02:16.536Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "suv",
+    "decor": "studio-noir",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2552,
+      "totalTokenCount": 6179,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 901,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 40 s"
+  },
+  {
+    "at": "2026-11-24T09:03:08.471Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "suv",
+    "decor": "studio-blanc",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2080,
+      "totalTokenCount": 5176,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 370,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 24 s"
+  },
+  {
+    "at": "2026-11-24T09:03:38.213Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "suv",
+    "decor": "showroom-nuit",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2187,
+      "totalTokenCount": 5108,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 195,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 23 s"
+  },
+  {
+    "at": "2026-11-24T09:04:08.410Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "berline",
+    "decor": "showroom-lumiere",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2071,
+      "totalTokenCount": 5439,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 642,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 26 s"
+  },
+  {
+    "at": "2026-11-24T09:04:39.934Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "berline",
+    "decor": "studio-noir",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2051,
+      "totalTokenCount": 5283,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 506,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 25 s"
+  },
+  {
+    "at": "2026-11-24T09:05:10.977Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "berline",
+    "decor": "studio-blanc",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2065,
+      "totalTokenCount": 4868,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 77,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 22 s"
+  },
+  {
+    "at": "2026-11-24T09:05:39.896Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "berline",
+    "decor": "showroom-nuit",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2053,
+      "totalTokenCount": 5061,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 282,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 21 s"
+  },
+  {
+    "at": "2026-11-24T09:06:05.442Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "sportive",
+    "decor": "showroom-lumiere",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2055,
+      "totalTokenCount": 5058,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 277,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 22 s"
+  },
+  {
+    "at": "2026-11-24T09:06:34.304Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "sportive",
+    "decor": "studio-noir",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2041,
+      "totalTokenCount": 5386,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 619,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 23 s"
+  },
+  {
+    "at": "2026-11-24T09:07:04.862Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "sportive",
+    "decor": "studio-blanc",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2395,
+      "totalTokenCount": 5245,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 124,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 47 s"
+  },
+  {
+    "at": "2026-11-24T09:07:56.158Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "sportive",
+    "decor": "showroom-nuit",
+    "tag": "n",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2054,
+      "totalTokenCount": 5512,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 732,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 29 s"
+  },
+  {
+    "at": "2026-11-24T09:12:03.866Z",
+    "model": "gemini-nano-banana-2.1",
+    "size": "2K",
+    "car": "coupe",
+    "decor": "studio-noir",
+    "tag": "o",
+    "ok": true,
+    "estEur": 0.05,
+    "usage": {
+      "promptTokenCount": 2726,
+      "candidatesTokenCount": 2094,
+      "totalTokenCount": 5491,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 486
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 2240
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1680
+        }
+      ],
+      "thoughtsTokenCount": 671,
+      "serviceTier": "standard"
+    },
+    "note": "2400x1792, 28 s"
+  },
+  {
+    "at": "2026-11-24T09:20:55.731203+00:00",
+    "model": "app:/api/background-swap",
+    "size": "app",
+    "car": "sportive",
+    "decor": "showroom-nuit",
+    "tag": "e2e-fonds",
+    "ok": true,
+    "estEur": 0.05,
+    "note": "v\u00e9rification de bout en bout des nouveaux fonds de l'\u00e9diteur"
   }
 ]

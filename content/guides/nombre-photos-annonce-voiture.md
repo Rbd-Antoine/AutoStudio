@@ -10,8 +10,8 @@ date: 2026-11-30
 temps_lecture: 6
 auteur: Antoine R.
 image: /guides/images/nombre-photos-annonce-voiture.webp
-image_alt: "Quatre voitures différentes, chacune dans un décor de studio : garage néon, hangar, parking couvert et pièce claire"
-image_legende: "Quatre rendus AutoStudio de quatre voitures photographiées sur des parkings et des parcs. Chaque décor est un des quatre fonds de l'éditeur."
+image_alt: "Quatre voitures premium, chacune dans un décor : showroom du soir, studio noir, showroom lumière, studio blanc"
+image_legende: "Quatre vrais rendus AutoStudio de quatre photos de départ (des exemples générés), chacun dans un des quatre fonds de l'éditeur."
 ---
 
 Une annonce avec trois photos floues ne fait pas appeler. Une annonce avec quarante photos dont la moitié se ressemblent non plus. Entre les deux, il y a un nombre juste, et surtout un **choix** : quelles photos montrer, dans quel ordre.

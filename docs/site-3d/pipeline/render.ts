@@ -25,15 +25,21 @@ const ROOT = process.cwd()
 const HERE = path.join(ROOT, 'docs/site-3d/pipeline')
 const LEDGER = path.join(HERE, 'gemini-ledger.json')
 const OUT = path.join(HERE, 'renders')
-/** The budget the user gave for this work (2026-11-22), with a margin kept back. */
-const BUDGET_EUR = 3
-const STOP_AT_EUR = 2.9
+/** The budget the user gave for this work (3 EUR on 2026-11-22, +1.50 EUR on 2026-11-24), with a margin kept back. */
+const BUDGET_EUR = 4.5
+const STOP_AT_EUR = 4.4
 /** Cautious: Florelis measured about 0.05 EUR per image with the previous model; the newer one is cheaper. */
 const EST_EUR_PER_IMAGE = 0.05
 
 // Empty scenes generated from text, standing in for a dealer's own background photo in the demo.
 // Generic on purpose: no brand, no sign, no car.
 const SCENES: Record<string, string> = {
+  // The editor's four backgrounds since 2026-11-24 (the former ones looked cheap): premium empty
+  // showrooms and studios, generated so their rights are clear.
+  'fond-showroom-lumiere': 'A luxury car dealership showroom in daylight: floor-to-ceiling glass facade on one side with soft natural light, large polished light-grey stone floor with soft reflections, white walls with warm oak panels, slim linear ceiling lights. Empty, no car, no people, no logo, no text, no signage, no brand anywhere. Photographed at the height of the headlights of a car with a 35 mm lens, looking slightly across the room, a wide clear floor area in the centre and foreground where a car will be parked. Photorealistic, high-end architectural photography, sharp, rich detail, 4:3.',
+  'fond-studio-noir': 'A professional automotive photo studio: a deep black seamless infinity cove, one very large rectangular softbox overhead casting a soft pool of light on a glossy black reflective floor, subtle gradient into darkness at the edges. Empty, no car, no people, no logo, no text, no signage, no brand anywhere. Photographed at the height of the headlights of a car with a 35 mm lens, looking slightly across the room, a wide clear floor area in the centre and foreground where a car will be parked. Photorealistic, high-end architectural photography, sharp, rich detail, 4:3.',
+  'fond-studio-blanc': 'A professional automotive photo studio: a bright white seamless infinity cyclorama with a soft curved floor-to-wall junction, even soft diffused lighting, faint natural shadow area in the middle of the floor, clean catalogue look. Empty, no car, no people, no logo, no text, no signage, no brand anywhere. Photographed at the height of the headlights of a car with a 35 mm lens, looking slightly across the room, a wide clear floor area in the centre and foreground where a car will be parked. Photorealistic, high-end architectural photography, sharp, rich detail, 4:3.',
+  'fond-showroom-nuit': 'A premium architect-designed car showroom at dusk: dark anthracite walls, polished concrete floor with warm reflections, vertical walnut wood slats, warm indirect LED strips along the ceiling and floor edges, a few precise spotlights, large window showing a deep blue evening sky. Empty, no car, no people, no logo, no text, no signage, no brand anywhere. Photographed at the height of the headlights of a car with a 35 mm lens, looking slightly across the room, a wide clear floor area in the centre and foreground where a car will be parked. Photorealistic, high-end architectural photography, sharp, rich detail, 4:3.',
   // Sample "before" photos of premium cars (2026-11-23), standing in for a dealer's phone photos on
   // the home page: generic designs, no brand, no plate text. Shown as generated examples.
   coupe: 'A sleek modern two-door grand tourer coupe in metallic graphite grey with large dark alloy wheels, generic design not resembling any specific manufacturer. Realistic smartphone photo taken by a car dealer on his used-car lot, overcast soft daylight, the car seen in three-quarter front view from headlight height, the whole car in frame with some margin, slightly cluttered lot behind it (other cars out of focus, a fence, a low building), wet asphalt. Strictly no brand: no logo, no emblem, no badge, no model name anywhere on the car (smooth grille centre, plain wheel centre caps), plain blank white licence plate with no characters, no text or signs anywhere. Sharp, natural colours, 4:3.',

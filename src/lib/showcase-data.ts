@@ -9,7 +9,8 @@ export interface ShowcaseCar {
   id: string
   /** Standard landscape photo ratio — every sample uses the same 4:3 framing. */
   beforeAspect: { width: number; height: number }
-  style: CarStyleSlug
+  /** The background these older samples were rendered on: the editor's former set, kept as made. */
+  style: string
   styleLabel: string
 }
 

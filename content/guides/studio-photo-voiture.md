@@ -10,8 +10,8 @@ date: 2026-11-22
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/studio-photo-voiture.webp
-image_alt: "SUV blanc dans un hangar au sol de béton poli, sous une charpente métallique"
-image_legende: "Un rendu AutoStudio, pas une séance en studio : la photo a été prise sur un parking, puis rendue dans le décor hangar industriel."
+image_alt: "Coupé GT gris dans un studio blanc, sous une grande lumière douce"
+image_legende: "Un rendu AutoStudio, pas une séance en studio : la photo de départ : un exemple généré, prise comme un garagiste le ferait sur son parc, puis rendue dans le décor studio blanc."
 ---
 
 Les grandes concessions ont souvent une pièce dédiée : un fond uni, des rampes de lumière, un sol propre. Les photos sortent homogènes, nettes, sans reflet parasite. Pour un garage indépendant ou un petit point de vente, la question se pose vite : **faut-il un studio photo pour vendre des voitures ?**
@@ -55,7 +55,7 @@ Pour un volume faible ou un véhicule d'exception, louer un studio à la journé
 
 Depuis peu, une troisième voie existe : photographier la voiture là où elle est, sur le parc, puis **remplacer le décor** par un studio, un hangar ou un garage, avec la lumière, l'ombre et les reflets recalculés.
 
-C'est ce que fait AutoStudio, et c'est ce que montre l'image en tête de ce guide : la voiture n'a jamais vu ce hangar. La photo a été prise au téléphone sur un parking, puis rendue dans le décor hangar industriel. La voiture, elle, est celle de la photo d'origine.
+C'est ce que fait AutoStudio, et c'est ce que montre l'image en tête de ce guide : la voiture n'a jamais vu ce studio. La photo de départ montrait un parc de véhicules (un exemple généré) ; elle a été rendue dans le décor studio blanc. La voiture, elle, est celle de la photo d'origine.
 
 Les avantages pour un professionnel :
 

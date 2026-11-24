@@ -10,8 +10,8 @@ date: 2026-12-14
 temps_lecture: 7
 auteur: Antoine R.
 image: /guides/images/logiciel-retouche-photo-voiture.webp
-image_alt: "Un SUV vert sur un parc à gauche, le même dans un hangar au sol de béton poli à droite"
-image_legende: "À gauche, la photo d'origine sur le parc. À droite, le rendu AutoStudio de cette même photo dans le décor hangar industriel."
+image_alt: "Une berline électrique blanche sur un parc à gauche, la même dans un showroom vitré à droite"
+image_legende: "À gauche, la photo de départ (un exemple généré). À droite, le vrai rendu AutoStudio de cette même photo dans le décor showroom lumière."
 ---
 
 « Quel logiciel pour retoucher mes photos de voitures ? » La question est simple, la réponse dépend de ce qu'on veut faire. Corriger une exposition, détourer une voiture, remplacer un décor, traiter cent photos par semaine : ce ne sont pas les mêmes outils. Plutôt qu'un classement de marques, voici les grandes familles, ce qu'elles font bien, et pour qui.

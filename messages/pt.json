@@ -68,21 +68,21 @@
         "sportive": "Compacte sportive"
       },
       "decors": {
-        "garage-neon": {
-          "name": "Garage néon",
-          "desc": "Hangar industriel, structure métallique et éclairage néon"
+        "showroom-nuit": {
+          "name": "Showroom du soir",
+          "desc": "Béton ciré, bois et éclairages LED chaleureux"
         },
-        "hangar-industriel": {
-          "name": "Hangar industriel",
-          "desc": "Sol en béton poli, structure apparente, ambiance atelier"
+        "studio-noir": {
+          "name": "Studio noir",
+          "desc": "Studio photo, fond noir infini, grande boîte à lumière"
         },
-        "parking-souterrain": {
-          "name": "Parking souterrain",
-          "desc": "Parking couvert de centre commercial, éclairage artificiel"
+        "showroom-lumiere": {
+          "name": "Showroom lumière",
+          "desc": "Showroom vitré, sol de pierre clair, lumière du jour"
         },
-        "piece-vide": {
-          "name": "Pièce vide moderne",
-          "desc": "Intérieur épuré et minimaliste, lumière douce"
+        "studio-blanc": {
+          "name": "Studio blanc",
+          "desc": "Cyclorama blanc, lumière douce, rendu catalogue"
         }
       }
     },
@@ -138,7 +138,7 @@
       "faq": [
         {
           "q": "Comment fonctionne la génération de rendu ?",
-          "a": "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors (garage néon, hangar industriel, parking souterrain, pièce vide) ou votre propre fond, et l'IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque."
+          "a": "Vous importez jusqu'à 5 photos du véhicule, choisissez l'un des 4 décors (showroom lumière, studio noir, studio blanc, showroom du soir) ou votre propre fond, et l'IA remplace l'arrière-plan en quelques secondes. Elle a pour consigne stricte de ne toucher ni à la carrosserie, ni aux vitres, ni aux jantes, ni à la plaque."
         },
         {
           "q": "Puis-je utiliser mon propre fond et mon logo ?",
@@ -186,6 +186,32 @@
       "carAlt": "Photo de départ d'un coupé GT gris sur un parc de véhicules d'occasion",
       "resultAlt": "Rendu AutoStudio : le coupé GT dans le showroom, avec un logo en bas à droite",
       "honesty": "Vrai rendu AutoStudio, logo posé par le même code que l'éditeur. Pour la démonstration, le showroom et la photo du coupé ont été générés et le logo « Votre garage » est fictif : avec votre photo et votre logo, le rendu est le vôtre."
+    },
+    "batch": {
+      "eyebrow": "Plusieurs photos d'un coup",
+      "title": "Cinq photos. Une minute.",
+      "body": "Glissez toutes les vues extérieures d'un véhicule, ou cinq voitures différentes, en une seule fois. Elles sont traitées en même temps, dans le même décor : comptez 30 à 90 secondes pour tout le lot. Pendant ce temps, vous faites autre chose.",
+      "points": [
+        "Jusqu'à 5 photos par lot : JPG, PNG ou HEIC d'iPhone, jusqu'à 20 Mo chacune",
+        "Toutes rendues en parallèle, dans le même décor : une vitrine homogène",
+        "Plus de voiture à déplacer, plus de détourage à la main"
+      ],
+      "dropped": "4 photos importées",
+      "rendered": "4 rendus, même décor",
+      "renderAlt": "Rendu {n} du lot, dans le décor showroom lumière",
+      "caption": "Vrais rendus AutoStudio de quatre photos (exemples générés), traités en un seul lot dans le décor showroom lumière. L'apparition une à une illustre le traitement.",
+      "calcTitle": "Votre temps gagné",
+      "calcBody": "Entrez vos chiffres : le calcul compare le temps que vous passez aujourd'hui sur vos photos (déplacer la voiture, détourer, retoucher) à celui d'un lot AutoStudio.",
+      "vehicles": "Véhicules photographiés",
+      "photos": "Photos extérieures",
+      "minutes": "Votre temps aujourd'hui",
+      "perMonth": "par mois",
+      "perVehicle": "par véhicule",
+      "perPhoto": "min par photo",
+      "today": "Aujourd'hui",
+      "withUs": "Avec AutoStudio",
+      "saved": "Temps gagné chaque mois",
+      "assumption": "Hypothèse : {min} minutes de votre temps par véhicule avec AutoStudio (importer le lot, relire les rendus). Un calcul indicatif sur vos chiffres, pas une promesse."
     }
   }
 }
